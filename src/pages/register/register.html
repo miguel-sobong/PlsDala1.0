@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>Register</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="registerForm" (submit)="registerUser()" novalidate> 
+    <ion-list>
+
+      <ion-item>
+        <ion-label floating>Last Name</ion-label>
+        <ion-input #lastname formControlName="lastname" type="text" name="lastname"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label floating>First Name</ion-label>
+        <ion-input #firstname formControlName="firstname" type="text" name="firstname"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label floating>Birthdate</ion-label>
+        <ion-datetime #birthdate formControlName="birthdate" type="date" name="birthdate" displayFormat="MMM/D/YYYY"></ion-datetime>
+      </ion-item>
+
+      <ion-item>
+        <ion-label floating>Email</ion-label>]
+        <ion-input #email type="text" formControlName="email" [class.invalid]="!registerForm.controls.email.valid &&
+          registerForm.controls.email.dirty"></ion-input>
+      </ion-item>
+      <ion-item class="error-message" *ngIf="!registerForm.controls.email.valid  && registerForm.controls.email.dirty">
+            <p>Please enter a valid email.</p>
+      </ion-item>
+
+      <ion-item>
+        <ion-label floating>Password</ion-label>]
+        <ion-input #password1 type="password" formControlName="password1" [class.invalid]="!registerForm.controls.password1.valid &&
+          registerForm.controls.password1.dirty"></ion-input>
+      </ion-item>
+      <ion-item class="error-message" *ngIf="!registerForm.controls.password1.valid  && registerForm.controls.password1.dirty">
+            <p>Your password needs more than 6 characters.</p>
+      </ion-item>
+
+      <ion-item>
+        <ion-label floating>Password</ion-label>]
+        <ion-input #password2 type="password" formControlName="password2" [class.invalid]="!registerForm.controls.password2.valid &&
+          registerForm.controls.password2.dirty"></ion-input>
+      </ion-item>
+      <ion-item class="error-message" *ngIf="!registerForm.controls.password2.valid  && registerForm.controls.password2.dirty">
+            <p>Your password needs more than 6 characters.</p>
+      </ion-item>
+      <ion-item class="error-mesage" *ngIf="(registerForm.value.password1 != registerForm.value.password2) && registerForm.controls.password1.dirty && registerForm.controls.password1.dirty"><p>Password doesn't match</p></ion-item>
+
+      <div padding>
+        <button ion-button color="primary" round block>Register</button>
+      </div>
+
+    </ion-list>
+  </form>
+</ion-content>

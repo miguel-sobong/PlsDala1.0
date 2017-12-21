@@ -1,0 +1,36 @@
+<ion-content padding>
+  <div class="container" text-center>
+      Logo goes here
+      <div>
+        <h1>PlsDala:</h1>
+        <h4>A Sharing Economy Mobile Application</h4>
+      </div>
+    <form [formGroup]="loginForm" (submit)="loginUser()" novalidate>
+        <ion-list>
+          <ion-item>
+            <ion-label floating>Email Address</ion-label>
+            <ion-input #email type="text" formControlName="email" [class.invalid]="!loginForm.controls.email.valid &&
+          loginForm.controls.email.dirty"></ion-input>
+          </ion-item>
+          <ion-item class="error-message" *ngIf="!loginForm.controls.email.valid  && loginForm.controls.email.dirty">
+            <p>Please enter a valid email.</p>
+          </ion-item>
+          <ion-item>
+            <ion-label floating>Password</ion-label>
+            <ion-input #password type="password" formControlName="password" [class.invalid]="!loginForm.controls.password.valid &&
+          loginForm.controls.password.dirty"></ion-input>
+          </ion-item>
+          <ion-item class="error-message" *ngIf="!loginForm.controls.password.valid  &&
+            loginForm.controls.password.dirty">
+            <p>Your password needs more than 6 characters.</p>
+          </ion-item>
+          <div padding>
+            <button ion-button color="primary" round block>Log me in!</button>
+          </div>
+        </ion-list>
+      </form>
+    <div>
+      <p >No account yet? <a (click)="goToRegister()">Register here!</a></p>
+    </div>
+  </div>
+</ion-content>
