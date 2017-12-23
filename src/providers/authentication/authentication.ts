@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabaseModule } from "angularfire2/database";
-import { AngularFireDatabase, AngularFireList, AngularFireObject } from 'angularfire2/database';
+import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 // import { Observable } from 'rxjs/Observable';
 import { Http } from '@angular/http';
 import 'rxjs/Rx';
@@ -65,6 +64,7 @@ export class AuthenticationProvider {
 
   //register users
   registerUser(lastname, firstname, birthdate, email, password): any{
+    var isTaken = false;
     return new Promise((resolve, reject)=>{
       this.getUsers().then(data=>{
         console.log('function');
@@ -74,12 +74,33 @@ export class AuthenticationProvider {
           if(data[i].email == email){
             console.log('taken');
             reject('Email address already taken');
+            isTaken = true;
             return;
           }
         }
-        resolve(true);
-        return;
-      }else if(!data){
+        if(!isTaken){
+          console.log('not is taken');
+           //make new user by pushing then setting his credentials
+                const newUser = this.RegUser.push({});
+                newUser.set({
+                 lastname: lastname, 
+                 firstname: firstname, 
+                 birthdate: birthdate, 
+                 email: email, 
+                 password: password,
+                 id: newUser.key
+                }).then( 
+                newUser => { 
+                  resolve(true);
+                  return;
+                }, error => {
+                  reject('Cannot connect to the database');
+                  return;
+                });
+        }
+      }
+      // if no user is register
+      else{
               //make new user by pushing then setting his credentials
                 const newUser = this.RegUser.push({});
                 newUser.set({

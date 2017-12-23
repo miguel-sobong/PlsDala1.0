@@ -7,6 +7,8 @@ import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
 import { LoginPage } from '../pages/login/login';
 import { RegisterPage } from '../pages/register/register';
+import { AddtravelPage } from '../pages/addtravel/addtravel';
+import { MapPage } from '../pages/map/map';
 
 import { HttpModule } from '@angular/http';
 import { AngularFireModule } from 'angularfire2';
@@ -35,7 +37,9 @@ import { CommonProvider } from '../providers/common/common';
     HomePage,
     ListPage,
     LoginPage,
-    RegisterPage
+    RegisterPage,
+    AddtravelPage,
+    MapPage
   ],
   imports: [
     BrowserModule,
@@ -52,7 +56,9 @@ import { CommonProvider } from '../providers/common/common';
     HomePage,
     ListPage,
     LoginPage,
-    RegisterPage
+    RegisterPage,
+    AddtravelPage,
+    MapPage
   ],
   providers: [
     StatusBar,

@@ -18,7 +18,7 @@ export class LoginPage {
 
 	constructor(public common: CommonProvider, public navCtrl: NavController, public navParams: NavParams,
     public formBuilder: FormBuilder, public authenticationProvider: AuthenticationProvider, public alertController: AlertController, public loadingController: LoadingController, public toastController: ToastController) {
-  	//validate if input is email
+    //validate if input is email
     this.loginForm = formBuilder.group({ 
       email: ['', Validators.compose([Validators.required, EmailValidator.isValid])], 
       password: ['']
@@ -40,7 +40,6 @@ export class LoginPage {
           if(authData){
           localStorage.setItem('loggedIn', '1');
           localStorage.setItem('email', this.loginForm.value.email);
-          console.log(localStorage.getItem('loggedIn'));
           console.log(localStorage.getItem('email'));
           this.navCtrl.setRoot(HomePage);
           }

@@ -61,7 +61,6 @@ export class RegisterPage {
         toast.present();
         localStorage.setItem('loggedIn', '1');
         localStorage.setItem('email', this.registerForm.value.email);
-        console.log(localStorage.getItem('loggedIn'));
         console.log(localStorage.getItem('email'));
         this.navCtrl.setRoot(HomePage);
         }
