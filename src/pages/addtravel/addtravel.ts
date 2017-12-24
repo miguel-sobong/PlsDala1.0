@@ -31,14 +31,16 @@ export class AddtravelPage {
     let modal = this.modalCtrl.create(MapPage, {
       data: {
         x: '',
-        y: ''
+        y: '',
+        address: ''
       }
     });
     modal.onDidDismiss(data=>{
-      console.log('map data here!');
+      console.log(data);
       var x = data.x;
       var y = data.y;
-      this.addTravelForm.value.toLocation = x + ',' + y;
+      var address = data.address;
+      this.addTravelForm.value.toLocation = address;
       console.log(this.addTravelForm.value.toLocation);
     });
     modal.present();
@@ -46,13 +48,18 @@ export class AddtravelPage {
 
   fromLocation(){
     let modal = this.modalCtrl.create(MapPage, {
-      data: ''
+      data: {
+        x: '',
+        y: '',
+        address: ''
+      }
     });
     modal.onDidDismiss(data=>{
-      console.log('map data here!');
+      console.log(data);
       var x = data.x;
       var y = data.y;
-      this.addTravelForm.value.fromLocation = x + ',' + y;
+      var address = data.address;
+      this.addTravelForm.value.fromLocation = address;
       console.log(this.addTravelForm.value.fromLocation);
     });
     modal.present();
