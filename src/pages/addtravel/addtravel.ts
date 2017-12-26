@@ -27,6 +27,8 @@ export class AddtravelPage {
   	})
   }
 
+  addTravel(){} //call db
+
   toLocation(){
     let modal = this.modalCtrl.create(MapPage, {
       data: {
@@ -37,11 +39,13 @@ export class AddtravelPage {
     });
     modal.onDidDismiss(data=>{
       console.log(data);
+      if(data!=null){
       var x = data.x;
       var y = data.y;
       var address = data.address;
       this.addTravelForm.value.toLocation = address;
       console.log(this.addTravelForm.value.toLocation);
+      }
     });
     modal.present();
   }
@@ -55,12 +59,14 @@ export class AddtravelPage {
       }
     });
     modal.onDidDismiss(data=>{
+      if(data!=null){
       console.log(data);
       var x = data.x;
       var y = data.y;
       var address = data.address;
       this.addTravelForm.value.fromLocation = address;
       console.log(this.addTravelForm.value.fromLocation);
+      }
     });
     modal.present();
   }

@@ -25,7 +25,7 @@
 
       <ion-item>
         <ion-label floating>Email</ion-label>]
-        <ion-input #email type="text" formControlName="email" [class.invalid]="!registerForm.controls.email.valid &&
+        <ion-input #email type="email" formControlName="email" [class.invalid]="!registerForm.controls.email.valid &&
           registerForm.controls.email.dirty"></ion-input>
       </ion-item>
       <ion-item class="error-message" *ngIf="!registerForm.controls.email.valid  && registerForm.controls.email.dirty">

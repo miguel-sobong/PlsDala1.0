@@ -35,7 +35,7 @@ export class LoginPage {
       });
       loader.present();
       if(this.loginForm.valid){
-        this.authenticationProvider.loginUser(this.loginForm.value.email, this.loginForm.value.password).then(authData=>{
+        this.authenticationProvider.loginUser(this.loginForm.value.email.toLowerCase(), this.loginForm.value.password).then(authData=>{
           loader.dismiss();
           if(authData){
           localStorage.setItem('loggedIn', '1');

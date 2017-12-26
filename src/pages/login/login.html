@@ -9,7 +9,7 @@
         <ion-list>
           <ion-item>
             <ion-label floating>Email Address</ion-label>
-            <ion-input #email type="text" formControlName="email" [class.invalid]="!loginForm.controls.email.valid &&
+            <ion-input #email type="email" formControlName="email" [class.invalid]="!loginForm.controls.email.valid &&
           loginForm.controls.email.dirty"></ion-input>
           </ion-item>
           <ion-item class="error-message" *ngIf="!loginForm.controls.email.valid  && loginForm.controls.email.dirty">

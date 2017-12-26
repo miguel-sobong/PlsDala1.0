@@ -50,7 +50,7 @@ export class RegisterPage {
       loader.present();
       if(this.registerForm.valid){
       this.authenticationProvider.registerUser(this.registerForm.value.lastname, this.registerForm.value.firstname, this.registerForm.value.birthdate,
-      this.registerForm.value.email, this.registerForm.value.password1).then(authData=>
+      this.registerForm.value.email.toLowerCase(), this.registerForm.value.password1).then(authData=>
       {
         loader.dismiss();
         if(authData){
