@@ -11,22 +11,6 @@
 	<form [formGroup]="addTravelForm" (submit)="addTravel()" novalidate>
 		<ion-card>
 		  <ion-card-header>
-		    To
-		  </ion-card-header>
-		  <ion-card-content>
-		    <ion-item (click)="toLocation()">
-				<ion-label floating>Location</ion-label>
-	        	<ion-input #location formControlName="toLocation" type="text" disabled="true" [value]="addTravelForm.value.toLocation"></ion-input>
-			</ion-item>
-	      <ion-item>
-	        <ion-label floating>Arrival Date</ion-label>
-	        <ion-datetime #toDate formControlName="toDate" type="date" name="toDate" displayFormat="MMM/D/YYYY"></ion-datetime>
-	      </ion-item>
-		  </ion-card-content>
-		</ion-card>
-
-		<ion-card>
-		  <ion-card-header>
 		    From
 		  </ion-card-header>
 		  <ion-card-content>
@@ -36,7 +20,23 @@
 			</ion-item>
 	      <ion-item>
 	        <ion-label floating>Departure Date</ion-label>
-	        <ion-datetime #fromDate formControlName="fromDate" type="date" name="fromDate" displayFormat="MMM/D/YYYY"></ion-datetime>
+	        <ion-datetime #fromDate formControlName="fromDate" type="date" name="fromDate" min="{{today | date:'yyyy-MM-dd'}}" max="2100" displayFormat="MMM/D/YYYY"></ion-datetime>
+	      </ion-item>
+		  </ion-card-content>
+		</ion-card>
+		
+		<ion-card>
+		  <ion-card-header>
+		    To
+		  </ion-card-header>
+		  <ion-card-content>
+		    <ion-item (click)="toLocation()">
+				<ion-label floating>Location</ion-label>
+	        	<ion-input #location formControlName="toLocation" type="text" disabled="true" [value]="addTravelForm.value.toLocation" id="toDate"></ion-input>
+			</ion-item>
+	      <ion-item>
+	        <ion-label floating>Arrival Date</ion-label>
+	        <ion-datetime #toDate formControlName="toDate" type="date" name="toDate" min="{{today | date:'yyyy-MM-dd'}}" max="2100" displayFormat="MMM/D/YYYY"></ion-datetime>
 	      </ion-item>
 		  </ion-card-content>
 		</ion-card>

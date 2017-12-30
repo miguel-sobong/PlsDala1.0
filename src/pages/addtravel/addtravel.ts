@@ -14,6 +14,7 @@ export class AddtravelPage {
 
   toData: any;
   fromData: any;
+  today = new Date();
   addTravelForm: FormGroup;
 
   constructor(public common: CommonProvider, public loadingCtrl: LoadingController, public formBuilder: FormBuilder, 
@@ -30,29 +31,27 @@ export class AddtravelPage {
   addTravel(){
     var toDate = new Date(this.addTravelForm.value.toDate);
     var fromDate = new Date(this.addTravelForm.value.fromDate);
+    // var options = {month: 'short', day: 'numeric', year: 'numeric'};
     // console.log(toDate.getTime() == fromDate.getTime());
     // console.log(toDate.getTime() > fromDate.getTime())
-    var a = new Date(toDate.toLocaleString("en-US", {
-      month: 'short', 
-      day: 'numeric',
-      year: 'numeric'
-      })
-    );
-    console.log(a.getTime());
+    // var a = new Date(toDate.toLocaleString("en-US", options));
+    // var b = new Date(fromDate.toLocaleString("en-US", options));
+    // console.log(a.getTime());
     if(this.addTravelForm.value.toLocation == '' || this.addTravelForm.value.toDate == '' 
       || this.addTravelForm.value.fromLocation == '' || this.addTravelForm.value.fromDate == ''){
       this.common.isMissingInput();
     }
     else if(toDate.getTime() < fromDate.getTime()){
-      let alert = this.alertCtrl.create({
+      this.alertCtrl.create({
         message: "Arrival date is earlier than departure date",
         buttons: [
                 {
                   text: "Ok",
                   role: 'cancel'
                 }
-              ]});
-      alert.present();
+              ]
+            }).present();
+
     }
     else{
       var loader = this.loadingCtrl.create({
@@ -60,20 +59,18 @@ export class AddtravelPage {
       });
       loader.present();
       this.plsdala.addTravel(this.toData, this.fromData, this.addTravelForm.value.toDate, this.addTravelForm.value.fromDate).then(added=>{
-        let toast = this.toastCtrl.create({
+        this.toastCtrl.create({
           message: 'Added to travel list!',
           duration: 3000
-        });
+        }).present();
         loader.dismiss();
-        toast.present();
         this.navCtrl.pop();
       }, error => {
-        let toast = this.toastCtrl.create({
+        this.toastCtrl.create({
           message: error,
           duration: 3000,
-          });
+          }).present();
           loader.dismiss();
-          toast.present();
       });
     }
   }
@@ -123,8 +120,4 @@ export class AddtravelPage {
   Cancel(){
     this.navCtrl.pop();
   }
-  // change(location){
-  // 	this.addTravelForm.value.location = location;
-  // }
-
 }

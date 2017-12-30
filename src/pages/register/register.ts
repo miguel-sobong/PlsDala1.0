@@ -54,11 +54,10 @@ export class RegisterPage {
       {
         loader.dismiss();
         if(authData){
-        let toast = this.toastController.create({
+        this.toastController.create({
            message: 'Account registered!',
            duration: 3000,
-        });
-        toast.present();
+        }).present();
         localStorage.setItem('loggedIn', '1');
         localStorage.setItem('email', this.registerForm.value.email);
         console.log(localStorage.getItem('email'));
@@ -66,11 +65,10 @@ export class RegisterPage {
         }
       }, error => {
         loader.dismiss();
-        let toast = this.toastController.create({
+        this.toastController.create({
            message: error,
            duration: 3000,
-        });
-        toast.present();
+        }).present();
       }, error => {
         console.log('error');
       });

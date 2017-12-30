@@ -48,6 +48,7 @@ export class AuthenticationProvider {
       if(data){
         for(var i in data){
           if(data[i].email == email && data[i].password == password){
+            localStorage.setItem('name', data[i].firstname + ' ' + data[i].lastname);
             resolve(true);
             return;
           }

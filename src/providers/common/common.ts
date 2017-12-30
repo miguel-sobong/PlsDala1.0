@@ -15,51 +15,47 @@ export class CommonProvider {
   }
 
     isMissingInput(){
-      let alert = this.alertController.create({
+      this.alertController.create({
         message: "Please fill all the input fields.",
         buttons: [
                 {
                   text: "Ok",
                   role: 'cancel'
                 }
-              ]});
-      alert.present();
+              ]}).present();
   }
 
   wrongEmailOrPassword(){
-          let alert = this.alertController.create({
+          this.alertController.create({
           message: "Wrong email address or password credentials. Please try again",
           buttons: [
                 {
                   text: "Ok",
                   role: 'cancel'
                 }
-              ]});
-      alert.present();
+              ]}).present();
   }
 
   emailNotValid(){
-      let alert = this.alertController.create({
+      this.alertController.create({
         message: "Email address is not valid",
         buttons: [
                 {
                   text: "Ok",
                   role: 'cancel'
                 }
-              ]});
-      alert.present();
+              ]}).present();
   }
 
   emailNotValidAndPassword(){
-      let alert = this.alertController.create({
+      this.alertController.create({
         message: "Email address is not valid or password doesn't match",
         buttons: [
                 {
                   text: "Ok",
                   role: 'cancel'
                 }
-              ]});
-      alert.present();
+              ]}).present();
   }
 
 }

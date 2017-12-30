@@ -16,7 +16,7 @@ export class PlsdalaProvider {
   travelList: AngularFireList<any>;
 
   constructor(public afd: AngularFireDatabase) {
-  	this.travelList = this.afd.list('travel');
+  	this.travelList = this.afd.list('travels');
     console.log('Hello PlsdalaProvider Provider');
   }
 
@@ -31,7 +31,9 @@ export class PlsdalaProvider {
   		toX: to.x,
   		toY: to.y,
   		toAddress: to.address,
-  		toDate: toDate 
+  		toDate: toDate,
+      name: localStorage.getItem('name'),
+      email: localStorage.getItem('email')
   	}).then(
   	newTravel => {
   		resolve(true);
@@ -41,6 +43,10 @@ export class PlsdalaProvider {
   		return;
   	})
   });
+  }
+
+  getTravelList(){
+    return this.travelList;
   }
 
 }
