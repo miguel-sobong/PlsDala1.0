@@ -83,10 +83,18 @@ export class MapPage {
           console.log(results[0].formatted_address);
           this.address = results[0].formatted_address;
         } else {
-          window.alert('No results found');
+          let toast = this.toastController.create({
+            message: 'No results found',
+            duration: 3000
+          })
+          toast.present();
         }
       } else {
-        window.alert('Geocoder failed due to: ' + status);
+          let toast = this.toastController.create({
+            message: 'No internet connection',
+            duration: 3000
+          })
+          toast.present();
       }
     });
   }

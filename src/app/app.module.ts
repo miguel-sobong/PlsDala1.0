@@ -20,6 +20,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { AuthenticationProvider } from '../providers/authentication/authentication';
 import { CommonProvider } from '../providers/common/common';
+import { PlsdalaProvider } from '../providers/plsdala/plsdala';
 
   // Initialize Firebase
   var firebaseConfig = {
@@ -66,6 +67,7 @@ import { CommonProvider } from '../providers/common/common';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthenticationProvider,
     CommonProvider,
+    PlsdalaProvider,
   ]
 })
 export class AppModule {}

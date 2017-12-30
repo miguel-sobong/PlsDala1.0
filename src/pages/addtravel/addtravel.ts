@@ -1,13 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, ToastController, LoadingController, AlertController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { PlsdalaProvider } from '../../providers/plsdala/plsdala';
 import { MapPage } from '../map/map';
-/**
- * Generated class for the AddtravelPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { CommonProvider } from '../../providers/common/common';
 
 @IonicPage()
 @Component({
@@ -16,18 +12,71 @@ import { MapPage } from '../map/map';
 })
 export class AddtravelPage {
 
+  toData: any;
+  fromData: any;
   addTravelForm: FormGroup;
 
-  constructor(public formBuilder: FormBuilder, public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController) {
+  constructor(public common: CommonProvider, public loadingCtrl: LoadingController, public formBuilder: FormBuilder, 
+    public toastCtrl: ToastController, public navCtrl: NavController, public navParams: NavParams, 
+    public modalCtrl: ModalController, public plsdala: PlsdalaProvider, public alertCtrl: AlertController) {
   	this.addTravelForm = formBuilder.group({
   		toLocation: '',
-      aDate: '',
+      toDate: '',
       fromLocation: '',
-      dDate: ''
-  	})
+      fromDate: ''
+  	});
   }
 
-  addTravel(){} //call db
+  addTravel(){
+    var toDate = new Date(this.addTravelForm.value.toDate);
+    var fromDate = new Date(this.addTravelForm.value.fromDate);
+    // console.log(toDate.getTime() == fromDate.getTime());
+    // console.log(toDate.getTime() > fromDate.getTime())
+    var a = new Date(toDate.toLocaleString("en-US", {
+      month: 'short', 
+      day: 'numeric',
+      year: 'numeric'
+      })
+    );
+    console.log(a.getTime());
+    if(this.addTravelForm.value.toLocation == '' || this.addTravelForm.value.toDate == '' 
+      || this.addTravelForm.value.fromLocation == '' || this.addTravelForm.value.fromDate == ''){
+      this.common.isMissingInput();
+    }
+    else if(toDate.getTime() < fromDate.getTime()){
+      let alert = this.alertCtrl.create({
+        message: "Arrival date is earlier than departure date",
+        buttons: [
+                {
+                  text: "Ok",
+                  role: 'cancel'
+                }
+              ]});
+      alert.present();
+    }
+    else{
+      var loader = this.loadingCtrl.create({
+        content: 'Please wait...'
+      });
+      loader.present();
+      this.plsdala.addTravel(this.toData, this.fromData, this.addTravelForm.value.toDate, this.addTravelForm.value.fromDate).then(added=>{
+        let toast = this.toastCtrl.create({
+          message: 'Added to travel list!',
+          duration: 3000
+        });
+        loader.dismiss();
+        toast.present();
+        this.navCtrl.pop();
+      }, error => {
+        let toast = this.toastCtrl.create({
+          message: error,
+          duration: 3000,
+          });
+          loader.dismiss();
+          toast.present();
+      });
+    }
+  }
 
   toLocation(){
     let modal = this.modalCtrl.create(MapPage, {
@@ -40,10 +89,8 @@ export class AddtravelPage {
     modal.onDidDismiss(data=>{
       console.log(data);
       if(data!=null){
-      var x = data.x;
-      var y = data.y;
-      var address = data.address;
-      this.addTravelForm.value.toLocation = address;
+      this.toData = data;
+      this.addTravelForm.value.toLocation = data.address;
       console.log(this.addTravelForm.value.toLocation);
       }
     });
@@ -61,10 +108,8 @@ export class AddtravelPage {
     modal.onDidDismiss(data=>{
       if(data!=null){
       console.log(data);
-      var x = data.x;
-      var y = data.y;
-      var address = data.address;
-      this.addTravelForm.value.fromLocation = address;
+      this.fromData = data;
+      this.addTravelForm.value.fromLocation = data.address;
       console.log(this.addTravelForm.value.fromLocation);
       }
     });

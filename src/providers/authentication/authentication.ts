@@ -55,6 +55,11 @@ export class AuthenticationProvider {
           resolve(false);
           return;
       }
+      else{
+        console.log(data);
+        reject('User does not exist. Please register first before logging in');
+        return;
+      }
     }, reason => {
         reject(reason);
         console.log(reason);

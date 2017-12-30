@@ -35,7 +35,9 @@ export class LoginPage {
       });
       loader.present();
       if(this.loginForm.valid){
-        this.authenticationProvider.loginUser(this.loginForm.value.email.toLowerCase(), this.loginForm.value.password).then(authData=>{
+        this.authenticationProvider.loginUser(this.loginForm.value.email.toLowerCase(), 
+          this.loginForm.value.password).then(authData=>{
+            console.log(authData);
           loader.dismiss();
           if(authData){
           localStorage.setItem('loggedIn', '1');
@@ -43,15 +45,18 @@ export class LoginPage {
           console.log(localStorage.getItem('email'));
           this.navCtrl.setRoot(HomePage);
           }
+          else if(authData==null){
+            console.log('no account');
+          }
           else{
             this.common.wrongEmailOrPassword();
           }
         }, error => {
           loader.dismiss();
-          let toast = this.toastController.create({
+          this.toastController.create({
              message: error,
              duration: 3000,
-          })
+          }).present();
         });
       }
       else{
