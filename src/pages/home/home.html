@@ -20,11 +20,10 @@
 
   <ion-list>
       <button ion-item *ngFor="let item of travelList$ | async" (click)="itemTapped($event, item)">
-          <h4>{{item.name}} ({{item.email}})</h4>
-          <h6>From</h6>
+          <h4><b>{{item.name}} ({{item.email}})</b></h4>
+          <!-- <h6>From</h6> -->
           <h5>{{item.fromAddress}}</h5>
           <p>at {{item.fromDate}}</p>
-          <br>
           <h6>To</h6>
           <h5>{{item.toAddress}}</h5>
           <p>at {{item.toDate}} </p>
