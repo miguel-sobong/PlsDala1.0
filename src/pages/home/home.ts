@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { AddtravelPage } from '../addtravel/addtravel';
 import { PlsdalaProvider } from '../../providers/plsdala/plsdala';
+import { TravelPage } from '../../pages/travel/travel';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
@@ -46,7 +47,7 @@ export class HomePage {
 
   itemTapped(event, item) {
     // That's right, we're pushing to ourselves!
-    this.navCtrl.push(HomePage, {
+    this.navCtrl.push(TravelPage, {
       item: item
     });
   }

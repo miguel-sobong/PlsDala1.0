@@ -4,11 +4,11 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
-import { ListPage } from '../pages/list/list';
 import { LoginPage } from '../pages/login/login';
 import { RegisterPage } from '../pages/register/register';
 import { AddtravelPage } from '../pages/addtravel/addtravel';
 import { MapPage } from '../pages/map/map';
+import { TravelPage } from '../pages/travel/travel';
 
 import { HttpModule } from '@angular/http';
 import { AngularFireModule } from 'angularfire2';
@@ -36,11 +36,11 @@ import { PlsdalaProvider } from '../providers/plsdala/plsdala';
   declarations: [
     MyApp,
     HomePage,
-    ListPage,
     LoginPage,
     RegisterPage,
     AddtravelPage,
-    MapPage
+    MapPage,
+    TravelPage
   ],
   imports: [
     BrowserModule,
@@ -55,11 +55,11 @@ import { PlsdalaProvider } from '../providers/plsdala/plsdala';
   entryComponents: [
     MyApp,
     HomePage,
-    ListPage,
     LoginPage,
     RegisterPage,
     AddtravelPage,
-    MapPage
+    MapPage,
+    TravelPage
   ],
   providers: [
     StatusBar,
