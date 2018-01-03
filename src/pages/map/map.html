@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-searchbar [(ngModel)]="autocomplete.query" (ionInput)="updateSearch()" id="autocompleteInputBox" [showCancelButton]="true" (ionCancel)="Cancel()">
     </ion-searchbar>
   </ion-toolbar>
@@ -13,7 +13,7 @@
   </ion-list>
   <div #map id="map"></div>
   <div padding>
-    <button ion-button block (click)="AddLocation()">Add</button>
+    <button ion-button round block (click)="AddLocation()">Add</button>
     <button ion-button block clear (click)="Cancel()">Cancel</button>
   </div>
 </ion-content>

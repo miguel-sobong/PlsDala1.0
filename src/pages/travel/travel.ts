@@ -1,5 +1,7 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+import { AdditemPage } from '../additem/additem';
+import { ChatPage } from '../chat/chat';
 
 declare var google;
 
@@ -12,6 +14,7 @@ export class TravelPage {
   @ViewChild('map') mapElement: ElementRef;
   selectedItem: any;
   map;
+  poster = false;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public toastCtrl: ToastController) {
     this.selectedItem = navParams.get('item');
@@ -21,7 +24,9 @@ export class TravelPage {
           //change to user location later
           let from = new google.maps.LatLng(this.selectedItem.fromX, this.selectedItem.fromY);
           let to = new google.maps.LatLng(this.selectedItem.toX, this.selectedItem.toY);
-          this.map = new google.maps.Map(document.getElementById('map'));
+          this.map = new google.maps.Map(document.getElementById('map'), {
+              center: from
+          });
 
 
           let directionsService = new google.maps.DirectionsService;
@@ -46,8 +51,20 @@ export class TravelPage {
         }
 
   ionViewDidLoad() {
+    if(localStorage.getItem('email')===this.selectedItem.email){
+      this.poster = true;
+    }
   	this.initMap();
     console.log('ionViewDidLoad TravelPage');
   }
 
+  addItem(event){
+    this.navCtrl.push(AdditemPage);
+  }
+
+  messageUser(event){
+    this.navCtrl.push(ChatPage,{
+      item: this.selectedItem
+    });
+  }
 }

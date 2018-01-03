@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>Adding Item</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content>
+	<form [formGroup]="addItemForm" (submit)="addItem()" novalidate>
+    <input type="file" #fileInput style="visibility: hidden; height: 0px" name="files[]" />
+    <div class="item-image-wrapper">
+      <div class="item-image-placeholder">
+        <ion-icon name="add"></ion-icon>
+        <div>
+          Add Image
+        </div>
+      </div>
+      <div class="item-image"></div>
+    </div>
+
+      <ion-item>
+        <ion-label floating>Photo</ion-label>
+        <ion-input #photo formControlName="photo" type="text" name="photo"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label floating>Item Name</ion-label>
+        <ion-input #name formControlName="name" type="text" name="name"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label floating>Item Description</ion-label>
+        <ion-textarea #description formControlName="description" type="date" name="description" displayFormat="MMM/D/YYYY"></ion-textarea>
+      </ion-item>
+
+      <div padding>
+        <button ion-button color="primary" round block>Add Item</button>
+      </div>
+  </form>
+</ion-content>

@@ -6,6 +6,7 @@ import { AngularFirestoreModule, AngularFirestoreCollection, AngularFirestoreDoc
 
 import { HomePage } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
+import { TravelPage } from '../pages/travel/travel'; //temporary working directory
 
 @Component({
   templateUrl: 'app.html'
@@ -19,7 +20,6 @@ export class MyApp {
 
   constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen) {
     this.initializeApp();
-
     // used for an example of ngFor and navigation
     this.pages = [
       { title: 'Home', component: HomePage },
@@ -27,7 +27,7 @@ export class MyApp {
 
     if(localStorage.getItem('loggedIn')==='1')
     {
-      this.rootPage = HomePage;
+      this.rootPage = HomePage; //HomePage
     }
     else{
       this.rootPage = LoginPage;

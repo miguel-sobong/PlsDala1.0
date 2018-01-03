@@ -9,6 +9,8 @@ import { RegisterPage } from '../pages/register/register';
 import { AddtravelPage } from '../pages/addtravel/addtravel';
 import { MapPage } from '../pages/map/map';
 import { TravelPage } from '../pages/travel/travel';
+import { AdditemPage } from '../pages/additem/additem';
+import { ChatPage } from '../pages/chat/chat';
 
 import { HttpModule } from '@angular/http';
 import { AngularFireModule } from 'angularfire2';
@@ -32,6 +34,8 @@ import { PlsdalaProvider } from '../providers/plsdala/plsdala';
     messagingSenderId: "861667074134"
   };
 
+  
+
 @NgModule({
   declarations: [
     MyApp,
@@ -40,7 +44,9 @@ import { PlsdalaProvider } from '../providers/plsdala/plsdala';
     RegisterPage,
     AddtravelPage,
     MapPage,
-    TravelPage
+    TravelPage,
+    AdditemPage,
+    ChatPage
   ],
   imports: [
     BrowserModule,
@@ -59,7 +65,9 @@ import { PlsdalaProvider } from '../providers/plsdala/plsdala';
     RegisterPage,
     AddtravelPage,
     MapPage,
-    TravelPage
+    TravelPage,
+    AdditemPage,
+    ChatPage
   ],
   providers: [
     StatusBar,

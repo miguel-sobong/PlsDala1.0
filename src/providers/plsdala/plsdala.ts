@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 // import { Observable } from 'rxjs/Observable';
 import { Http } from '@angular/http';
+import firebase from 'firebase';
 
 /*
   Generated class for the PlsdalaProvider provider.
@@ -13,10 +14,14 @@ import { Http } from '@angular/http';
 @Injectable()
 export class PlsdalaProvider {
 
+
   travelList: AngularFireList<any>;
+  messagelist: AngularFireList<any>;
+  baseUrl = 'https://plsdala-8609a.firebaseio.com/';
 
   constructor(public afd: AngularFireDatabase) {
-  	this.travelList = this.afd.list('travels');
+    this.messagelist = this.afd.list('messages');
+    this.travelList = this.afd.list('travels');
     console.log('Hello PlsdalaProvider Provider');
   }
 
@@ -47,6 +52,21 @@ export class PlsdalaProvider {
 
   getTravelList(){
     return this.travelList;
+  }
+
+  addMessage(message, user){
+    return new Promise((resolve, reject)=>{
+
+      const newMessage = this.afd.list('messages').push({
+        message: 'hello',
+        user: localStorage.getItem('name'),
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+      });
+    });
+  }
+
+  getMessage(): any{
+    return this.messagelist;
   }
 
 }

@@ -4,6 +4,12 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>Travel Board</ion-title>
+
+    <ion-buttons end (click)="addTravel($event)">
+      <button ion-button icon-only>
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
@@ -22,7 +28,4 @@
   <div *ngIf="selectedItem" padding>
     You navigated here from <b>{{selectedItem.title}}</b>
   </div>
-  <ion-fab bottom right class="fabBottom" (click)="addTravel($event)">
-    <button ion-fab><ion-icon name="add"></ion-icon></button>
-  </ion-fab>
 </ion-content>

@@ -6,8 +6,6 @@
 
 <ion-content>
   <form [formGroup]="registerForm" (submit)="registerUser()" novalidate> 
-    <ion-list>
-
       <ion-item>
         <ion-label floating>Last Name</ion-label>
         <ion-input #lastname formControlName="lastname" type="text" name="lastname"></ion-input>
@@ -54,7 +52,5 @@
       <div padding>
         <button ion-button color="primary" round block>Register</button>
       </div>
-
-    </ion-list>
   </form>
 </ion-content>
