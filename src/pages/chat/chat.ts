@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { IonicPage, NavController, NavParams, Content } from 'ionic-angular';
 import { PlsdalaProvider } from '../../providers/plsdala/plsdala';
 import { Observable } from 'rxjs/Observable';
 
@@ -9,10 +9,12 @@ import { Observable } from 'rxjs/Observable';
   templateUrl: 'chat.html',
 })
 export class ChatPage {
+  @ViewChild('content') content: Content;
 
   user: any;
   messageList$: Observable<any>;
   loggedInUser: any;
+  newmessage: string;
   	
   constructor(public navCtrl: NavController, public navParams: NavParams, public plsdala: PlsdalaProvider) {
   	    this.loggedInUser = localStorage.getItem('name');
@@ -34,7 +36,12 @@ export class ChatPage {
   }
 
   addMessage(){
-  	this.plsdala.addMessage(1, 2);
+    if(this.newmessage){
+    	this.plsdala.addMessage(this.newmessage, 2).then(()=>{
+        this.content.scrollToBottom();
+        this.newmessage = '';
+      });
+    }
   }
 
 }

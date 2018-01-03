@@ -4,18 +4,18 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content>
+<ion-content #content>
   <ion-item no-lines *ngFor="let item of messageList$ | async">
 
-    <div item-right *ngIf="item.user != user.name">
-      <div class="bubble">
+    <div item-right *ngIf="item.user === loggedInUser">
+      <div class="me bubble">
         {{item.message}} {{item.timestamp}} a
       </div>
     </div>
 
-    <div item-left *ngIf="item.user === user.name">
+    <div item-left *ngIf="item.user != loggedInUser">
         {{item.user}}: 
-      <div class="bubble">
+      <div class="you bubble">
         {{item.message}} {{item.timestamp}} b
       </div>
     </div>
@@ -25,7 +25,7 @@
 
 <ion-footer ion-fixed>
 	<ion-toolbar class="no-border" color="white">
-		<ion-input type="text" [(ngModel)]="newmessage" placeholder="Write your message..."></ion-input>
+		<ion-input type="text" [(ngModel)]="newmessage" placeholder="Type a message..."></ion-input>
 		<ion-buttons end>
 	      <button ion-button (click)="addMessage()">
 	        <ion-icon name="send" color="primary"></ion-icon>

@@ -54,14 +54,14 @@ export class PlsdalaProvider {
     return this.travelList;
   }
 
-  addMessage(message, user){
+  addMessage(cmessage, user){
     return new Promise((resolve, reject)=>{
-
       const newMessage = this.afd.list('messages').push({
-        message: 'hello',
+        message: cmessage,
         user: localStorage.getItem('name'),
         timestamp: firebase.database.ServerValue.TIMESTAMP
       });
+      resolve(true);
     });
   }
 
