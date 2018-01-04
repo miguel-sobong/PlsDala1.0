@@ -3,48 +3,42 @@ import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 // import { Observable } from 'rxjs/Observable';
 import { Http } from '@angular/http';
 import 'rxjs/Rx';
-// import * as firebase from 'firebase';
+import * as firebase from 'firebase';
 
 @Injectable()
 export class AuthenticationProvider {
 
+
 	RegUser: AngularFireList<any>;
-  user: any;
-  baseUrl = 'https://plsdala-8609a.firebaseio.com/';
+  db = firebase.database().ref();
 
   constructor(public afd: AngularFireDatabase, public http: Http) {
     this.RegUser = this.afd.list('users');
+    // this.getUser('m1s@gmail.com');
     console.log('Hello AuthenticationProvider Provider');
   }
 
 
   //get users from database
-  getUsers():any{
+  getUser(email):any{
     return new Promise((resolve, reject)=>{
-    this.http.get(this.baseUrl + 'users.json').map(res => res.json()).subscribe(data => {
-      //if no registered user
-        if(data==null){
-          console.log('null');
-          resolve(data);
+      const users = this.db.child('users').orderByChild('email').equalTo(email).limitToFirst(1);
+      users.once('value', snap => {
+        if(snap){
+          resolve(snap.val());
           return;
         }
-      //if there is registerd users
-        else{
-          console.log('!null');
-          resolve(data);
-          return;
-        }
-      }, data => { //if no internet
+      }, reject => {
         reject('Cannot connect to the database')
         return;
       });
-    })
+    });
   }
 
   //login users
   loginUser(email, password):any{
     return new Promise((resolve, reject)=>{
-      this.getUsers().then(data=>{
+      this.getUser(email).then(data=>{
       if(data){
         for(var i in data){
           if(data[i].email == email && data[i].password == password){
