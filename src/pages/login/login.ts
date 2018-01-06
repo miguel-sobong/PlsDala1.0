@@ -40,9 +40,6 @@ export class LoginPage {
             console.log(authData);
           loader.dismiss();
           if(authData){
-          localStorage.setItem('loggedIn', '1');
-          localStorage.setItem('email', this.loginForm.value.email);
-          console.log(localStorage.getItem('email'));
           this.navCtrl.setRoot(HomePage);
           }
           else if(authData==null){

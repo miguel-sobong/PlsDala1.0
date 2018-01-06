@@ -63,6 +63,7 @@ export class TravelPage {
   }
 
   messageUser(event){
+      console.log(this.selectedItem.userId);
     this.navCtrl.push(ChatPage,{
       item: this.selectedItem
     });

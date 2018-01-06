@@ -5,18 +5,18 @@
 </ion-header>
 
 <ion-content #content>
-  <ion-item no-lines *ngFor="let item of messageList$ | async">
+  <ion-item no-lines *ngFor="let item of items | async">
 
-    <div item-right *ngIf="item.user === loggedInUser">
+    <div item-right *ngIf="item.userName === loggedInUser">
       <div class="me bubble">
-        {{item.message}} {{item.timestamp}} a
+        {{item.content}} {{item.timestamp}} a
       </div>
     </div>
 
-    <div item-left *ngIf="item.user != loggedInUser">
-        {{item.user}}: 
+    <div item-left *ngIf="item.userName != loggedInUser">
+        {{item.userName}}: 
       <div class="you bubble">
-        {{item.message}} {{item.timestamp}} b
+        {{item.content}} {{item.timestamp}} b
       </div>
     </div>
 

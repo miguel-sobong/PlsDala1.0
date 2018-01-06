@@ -2,6 +2,10 @@ import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, Content } from 'ionic-angular';
 import { PlsdalaProvider } from '../../providers/plsdala/plsdala';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/fromPromise';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/mergeMap';
+import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 
 @IonicPage()
 @Component({
@@ -12,22 +16,26 @@ export class ChatPage {
   @ViewChild('content') content: Content;
 
   user: any;
-  messageList$: Observable<any>;
   loggedInUser: any;
   newmessage: string;
-  	
-  constructor(public navCtrl: NavController, public navParams: NavParams, public plsdala: PlsdalaProvider) {
-  	    this.loggedInUser = localStorage.getItem('name');
-  	    this.user = navParams.get('item');
-		this.messageList$ = this.plsdala.getMessage()
-	    .snapshotChanges()
-	    .map(
-	      changes => {
-	        return changes.map(c=>({
-	          key: c.payload.key, ...c.payload.val()
-	        }))
-	      }
-	      );
+  items: Observable<any>;
+    
+  constructor(public afd:  AngularFireDatabase, public navCtrl: NavController, public navParams: NavParams, public plsdala: PlsdalaProvider) {
+    this.loggedInUser = localStorage.getItem('name');
+    this.user = this.navParams.get('item');
+    this.plsdala.getMessages({user1: localStorage.getItem('id'), user2: this.user.userId}).then(data=>{
+      console.log(data);
+    this.items = data.snapshotChanges()
+    .map(
+      changes => {
+        return changes.map(c=>({
+          key: c.payload.key, ...c.payload.val()
+        }))
+      }
+      );
+    console.log(this.items);
+    })
+
   }
 
   ionViewDidLoad() {
@@ -36,12 +44,15 @@ export class ChatPage {
   }
 
   addMessage(){
+      console.log(this.items);
     if(this.newmessage){
-    	this.plsdala.addMessage(this.newmessage, 2).then(()=>{
-        this.content.scrollToBottom();
-        this.newmessage = '';
+      this.plsdala.addMessage({
+        content: this.newmessage,
+        sentBy: this.user.userId,
+        name: localStorage.getItem('name')
       });
+      this.content.scrollToBottom();
+      this.newmessage = '';
+      }
     }
   }
-
-}
