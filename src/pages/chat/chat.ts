@@ -19,40 +19,45 @@ export class ChatPage {
   loggedInUser: any;
   newmessage: string;
   items: Observable<any>;
+  link: any;
+  check: boolean;
     
   constructor(public afd:  AngularFireDatabase, public navCtrl: NavController, public navParams: NavParams, public plsdala: PlsdalaProvider) {
+    
     this.loggedInUser = localStorage.getItem('name');
     this.user = this.navParams.get('item');
-    this.plsdala.getMessages({user1: localStorage.getItem('id'), user2: this.user.userId}).then(data=>{
-      console.log(data);
-    this.items = data.snapshotChanges()
-    .map(
-      changes => {
-        return changes.map(c=>({
-          key: c.payload.key, ...c.payload.val()
-        }))
-      }
-      );
-    console.log(this.items);
-    })
 
+    this.plsdala.getMessages({user1: localStorage.getItem('id'), user2: this.user.userId})
+    .then(data=>{
+      this.items = this.afd.list('messages/' + data).snapshotChanges()
+      .map(
+        changes => {
+          this.content.scrollToBottom();
+          return changes.map(c=>({
+            key: c.payload.key, ...c.payload.val()
+          }))
+        }
+        );
+      })
   }
 
   ionViewDidLoad() {
-
     console.log('ionViewDidLoad ChatPage');
   }
 
   addMessage(){
-      console.log(this.items);
+    console.log(this.items);
     if(this.newmessage){
       this.plsdala.addMessage({
         content: this.newmessage,
         sentBy: this.user.userId,
-        name: localStorage.getItem('name')
+        name: localStorage.getItem('name'),
+      }, {
+        user1: localStorage.getItem('id'),
+        user2: this.user.userId
       });
       this.content.scrollToBottom();
       this.newmessage = '';
       }
     }
-  }
+  }  

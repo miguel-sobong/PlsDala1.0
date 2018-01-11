@@ -11,9 +11,11 @@ export class PlsdalaProvider {
 
   db = firebase.database().ref();
   travelList: AngularFireList<any>;
-  messagelist: AngularFireList<any>;
   baseUrl = 'https://plsdala-8609a.firebaseio.com/';
   chatId;
+  threadId;
+  newThreadKey;
+  users: any;
 
   constructor(public afd: AngularFireDatabase, public http: Http) {
     this.travelList = this.afd.list('travels');
@@ -47,153 +49,94 @@ export class PlsdalaProvider {
   }
 
   getTravelList(){
-    return this.travelList;
+    return this.afd.list('travels');
   }
 
-  addMessage(details){
+  checkUsers(users){
+      console.log('run');
+      return new Promise((resolve, reject)=>{
+      var clUserCount = Object.keys(users).length;
+      var dbUserCount = 0;
+      var finalCheck = 0;
+      var threadId: string;
+      const checkUsersInDb = firebase.database().ref('threads');
+      checkUsersInDb.on('value', snapshot=>{
 
-  }  
-
-
-  // getMessages(users):any{
-  //   var data = this.checkUsers(users);
-  //     console.log(data);
-  //     console.log(this.afd.list('threads/'+data+'/messages'));
-  //     return this.afd.list('threads/'+data+'/messages');
-  //   // });
-  // }
+        //for adding when no thread is present
+        if(!snapshot.val()){
+          resolve(null);
+        }
+        snapshot.forEach(snap=>{
+          snap.child('users').forEach(snap2=>{
+            for(let user in users){
+              if(threadId){
+                break;
+              }
+              if(snap2.key == users[user]){
+                finalCheck++;
+                console.log(finalCheck);
+                if(finalCheck == clUserCount){
+                  console.log('here');
+                  threadId = snap.key;
+                  resolve(threadId);
+                  return true;
+                }
+                break;
+              }
+            }
+            dbUserCount++;
+            return false;
+          })
+          finalCheck=0;
+          return false;
+        })
+        resolve(null);
+        return;
+      })
+    });
+  }
 
   getMessages(users):any{
     return new Promise(resolve=>{
-    var dbNumUsersChat = 0;
-    var clNumUsersChat = 0;
-    var finalCheck = 0;
-    var usersChat = [];
-    var threadUsers = [];
-    var threadId: string;
-      for(var key in users){
-        dbNumUsersChat++;
-        console.log(dbNumUsersChat);
-        usersChat.push(users[key]);
-      }
-
-      const dbCheckUsers = firebase.database().ref().child('threads');
-      dbCheckUsers.once('value', snapshot =>{
-        console.log(snapshot);
-        snapshot.forEach(snap=>{
-          snap.child('users').forEach(data=>{
-            clNumUsersChat++;
-            threadUsers.push(data.key);
-            return false;
-          });
-        if(dbNumUsersChat === clNumUsersChat){
-          usersChat.forEach(userChat=>{
-            threadUsers.forEach(threadUser=>{
-              if(userChat == threadUser){
-                console.log(threadUser, userChat);
-                // console.log(threadId);
-                finalCheck++;
-                console.log(finalCheck);
-              }
-            });
-          });
+      this.checkUsers(users).then(data=>{
+        if(data){
+          resolve(data);
+          return;
         }
-        if(finalCheck === dbNumUsersChat){
-          threadId = snap.key;
-          console.log(threadId);
-        }  
-          return false;
+        else{
+          const newThread = this.afd.list('threads').push({});
+          newThread.set({
+            users:{
+              [users.user1]: true,
+              [users.user2]: true
+            }
+          });
+          this.newThreadKey = newThread.key;
+          resolve(newThread.key);
+        }
+      });
+    })
+  }
 
-
-        });
-      }).then(_=>{
-
-      }).then(_=>{
-        console.log(finalCheck, dbNumUsersChat);
-
-      }).then(_=>{
-        console.log('1');
-        resolve(this.afd.list('threads/'+threadId+'/messages'));
-        return;
-      });});
-      }
-
-    //   }).then(()=>{
-    //     if(numberOfUsers == check){
-    //       chatUsers.forEach(chatUser=>{
-    //         threadUsers.forEach(threadUser=>{
-    //           if(chatUser == threadUser){
-    //             finalCheck++;
-    //           }
-    //         })
-    //       })
-    //     }
-    //     if(finalCheck == check){
-    //       var callbackData = [];
-    //       messageIds.forEach(data=>{
-    //         var messageDetails = firebase.database().ref().child('messages/' + data);
-    //         messageDetails.on('value', messageDetail=>{
-    //           callbackData.push(messageDetail.val());
-    //           console.log(messageDetail.val());
-    //         });
-    //         console.log(callbackData);
-    //         return resolve(callbackData);
-    //       })
-    //     }
-    //   })
-    // });
-        // return this.afd.list('threads/' + key + '/messages');
-  // }
-
-  getMessage(users):any{
+  addMessage(details, users){
     this.checkUsers(users).then(data=>{
-      var messages = this.http.get('https://plsdala-8609a.firebaseio.com/threads/' + data + '/messages');
-    console.log(messages);
+      console.log(data);
+      if(data){
+      const newMessage = this.afd.list('messages/' + data).push({});
+      newMessage.set({
+        content: details.content,
+        userId: details.sentBy,
+        name: details.name
+      })
+      }
+      else{
+        const newMessage = this.afd.list('messages/' + this.newThreadKey).push({});
+        newMessage.set({
+          content: details.content,
+          userId: details.sentBy,
+          name: details.name
+        })
+      }
     });
-    // return new Promise(resolve=>{
-    //   this.checkUsers(users).then(data=>{
-    //     resolve(this.afd.list('threads/' + data + '/messages'));
-    //     return;
-    //    });
-    // })
-    }
-
-  // checkUsers(users): any{
-  //   console.log('here');
-  //   var numUsers = 0;
-  //   var chatCheck = false;
-  //   return new Promise((resolve, reject) => {
-  //     const checker = firebase.database().ref().child('threads');
-  //     checker.once('value', snapshot => {
-  //     snapshot.forEach(snap=>{
-  //       this.chatId = snap.key;
-  //       console.log(this.chatId);
-  //       snap.child('users').forEach(data=>{
-  //         console.log(users.user1)
-  //         console.log(users.user2);
-  //         console.log(data.key);
-  //         if(users.user1 == data.key || users.user2 == data.key){
-  //           numUsers++;
-  //           console.log(numUsers);
-  //           if(numUsers === snap.val().numberOfUsers){
-  //             console.log(chatCheck);
-  //             resolve(this.chatId);
-  //             chatCheck = true;
-  //             return true;
-  //           }
-  //         }
-  //         console.log(numUsers);
-  //         return false;
-  //       });
-  //       if(chatCheck){
-  //         console.log(chatCheck);
-  //         return true;
-  //       }
-  //         console.log(chatCheck);
-  //       return false;
-  //     })
-  //   });  
-  //   })    
-  // }
-
+  }
 }

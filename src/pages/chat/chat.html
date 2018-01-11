@@ -7,16 +7,16 @@
 <ion-content #content>
   <ion-item no-lines *ngFor="let item of items | async">
 
-    <div item-right *ngIf="item.userName === loggedInUser">
+    <div item-right *ngIf="item.name === loggedInUser">
       <div class="me bubble">
-        {{item.content}} {{item.timestamp}} a
+        {{item.content}} {{item.timestamp}}
       </div>
     </div>
 
-    <div item-left *ngIf="item.userName != loggedInUser">
-        {{item.userName}}: 
+    <div item-left *ngIf="item.name != loggedInUser">
+        {{item.name}}: 
       <div class="you bubble">
-        {{item.content}} {{item.timestamp}} b
+        {{item.content}} {{item.timestamp}}
       </div>
     </div>
 
