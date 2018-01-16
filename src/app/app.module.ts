@@ -24,6 +24,8 @@ import { AuthenticationProvider } from '../providers/authentication/authenticati
 import { CommonProvider } from '../providers/common/common';
 import { PlsdalaProvider } from '../providers/plsdala/plsdala';
 
+import { Camera } from '@ionic-native/camera';
+
   // Initialize Firebase
   var firebaseConfig = {
     apiKey: "AIzaSyATmp3oSFtqK4gHK2ZQs9-NBrBYcXjvakc",
@@ -76,6 +78,7 @@ import { PlsdalaProvider } from '../providers/plsdala/plsdala';
     AuthenticationProvider,
     CommonProvider,
     PlsdalaProvider,
+    Camera
   ]
 })
 export class AppModule {}

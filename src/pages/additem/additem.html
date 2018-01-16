@@ -1,40 +1,36 @@
 <ion-header>
-  <ion-navbar color="primary">
-    <ion-title>Adding Item</ion-title>
+  <ion-navbar>
+    <ion-title>Home</ion-title>
   </ion-navbar>
 </ion-header>
-
-
-<ion-content>
-	<form [formGroup]="addItemForm" (submit)="addItem()" novalidate>
-    <input type="file" #fileInput style="visibility: hidden; height: 0px" name="files[]" />
-    <div class="item-image-wrapper">
-      <div class="item-image-placeholder">
-        <ion-icon name="add"></ion-icon>
-        <div>
-          Add Image
-        </div>
-      </div>
-      <div class="item-image"></div>
-    </div>
-
-      <ion-item>
-        <ion-label floating>Photo</ion-label>
-        <ion-input #photo formControlName="photo" type="text" name="photo"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label floating>Item Name</ion-label>
-        <ion-input #name formControlName="name" type="text" name="name"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label floating>Item Description</ion-label>
-        <ion-textarea #description formControlName="description" type="date" name="description" displayFormat="MMM/D/YYYY"></ion-textarea>
-      </ion-item>
-
-      <div padding>
-        <button ion-button color="primary" round block>Add Item</button>
-      </div>
-  </form>
+<ion-content padding text-center>
+  <button ion-button block [disabled]="disabled" (click)="presentActionSheet()">
+    <ion-icon name="camera"></ion-icon>&nbsp;Add Photo
+  </button>
+  <br>You may upload up to 3 pictures
+  <ion-grid>
+    <ion-row>
+      <ion-col col-6 *ngFor="let photo of photos; let id = index">
+        <ion-card class="block">
+          <ion-icon name="trash" class="deleteIcon" (click)="deletePhoto(id)"></ion-icon>
+          <img [src]="photo" *ngIf="photo" />
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-list no-lines>
+    <ion-item>
+      <ion-label floating>Item Name</ion-label>
+      <ion-input type="text" [(ngModel)]="ItemName"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label floating>Item Description</ion-label>
+      <ion-textarea type="text" [(ngModel)]="ItemDescription"></ion-textarea>
+    </ion-item>
+  </ion-list>
 </ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <button ion-button block (click)="uploadFirebase()">Add</button>
+  </ion-toolbar>
+</ion-footer>

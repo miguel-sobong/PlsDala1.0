@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 // import { Observable } from 'rxjs/Observable';
-import { Http } from '@angular/http';
+import { Http, Headers } from '@angular/http';
 import firebase from 'firebase';
 
 @Injectable()
@@ -139,4 +139,31 @@ export class PlsdalaProvider {
       }
     });
   }
+
+  postData(credentials, type){
+    return new Promise((resolve, reject) =>{
+        let headers = new Headers();
+        this.http.post("http://localhost/PHP-Slim-Restful/api/"+type, JSON.stringify(credentials), {headers: headers}).
+        subscribe(res =>{
+          resolve(res.json());
+        }, (err) =>{
+        reject(err);
+      });
+    });
+  }
+
+  uploadPhoto(picdata, uploadData){
+    for (let i in picdata)
+      this.upload(picdata[i],i, uploadData);
+  }
+
+  upload(x ,y, uploadData){
+    var picurl = [];      
+    firebase.storage().ref('items').child('user-'+localStorage.getItem('id')).child(uploadData.imageName.concat('.png'))
+    //add child for transaction id
+
+    .putString(x,'base64',{contentType:'image/png'})
+    .then(savepic=>{
+      picurl[y]=savepic.downloadURL;              // DOWNLOAD URL FOR EACH PIC. MUST BE STORED 
+    })}
 }
