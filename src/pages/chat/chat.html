@@ -1,25 +1,25 @@
 <ion-header>
   <ion-navbar color="primary">
-    <ion-title>{{user.name}}</ion-title>
+    <ion-title>{{user.firstname}} {{user.lastname}}</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content #content>
   <ion-item no-lines *ngFor="let item of items | async">
-
-    <div item-right *ngIf="item.name === loggedInUser">
+    <div item-right *ngIf="item.senderId === loggedInUser" >
       <div class="me bubble">
-        {{item.content}} {{item.timestamp}}
+        {{item.content}}<br><br>
+        <div class="chatTimestamp">{{item.timestamp | date:'mediumDate'}} {{item.timestamp | date:'shortTime'}}</div>
       </div>
     </div>
 
-    <div item-left *ngIf="item.name != loggedInUser">
-        {{item.name}}: 
+    <div item-left *ngIf="item.senderId != loggedInUser">
+        {{item.senderFirstname}} {{item.senderLastname}}:
       <div class="you bubble">
-        {{item.content}} {{item.timestamp}}
+        {{item.content}}<br><br>
+        <div class="chatTimestamp">{{item.timestamp | date:'mediumDate'}} {{item.timestamp | date:'shortTime'}}</div>
       </div>
     </div>
-
   </ion-item>
 </ion-content>
 

@@ -1,0 +1,21 @@
+<ion-header>
+
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Chat Threads</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list>
+      <button ion-item *ngFor="let item of chatList$ | async" (click)="messageUser($event, item)">
+        <ion-badge *ngIf="!item.seen" color="danger">unread</ion-badge>
+      	{{item.lastMessage}}<br><br>
+        <div class="chatTimestamp">{{item.timestamp | date:'mediumDate'}} {{item.timestamp | date:'shortTime'}}</div>
+      </button>
+  </ion-list>
+</ion-content>

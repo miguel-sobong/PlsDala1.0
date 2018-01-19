@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef, NgZone } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, ToastController, LoadingController } from 'ionic-angular';
 
 declare var google;
 
@@ -22,7 +22,7 @@ export class MapPage {
   serviceTest = new google.maps.places.AutocompleteService();
   map;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, private zone: NgZone, public toastController: ToastController) {
+  constructor(public loadingController: LoadingController, public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, private zone: NgZone, public toastController: ToastController) {
     this.autocompleteItems = [];
     this.autocomplete = {
       query: ''
@@ -73,6 +73,10 @@ export class MapPage {
 
     //turn x, y to readable
   geocodeLatLng(geocoder, map, event) {
+    var loader = this.loadingController.create({
+      content: 'Getting location details...'
+    });
+    loader.present();
     geocoder.geocode({location: {
       lat: event.latLng.lat(),
       lng: event.latLng.lng()
@@ -81,13 +85,20 @@ export class MapPage {
         if (results[0]) {
           console.log(results[0].formatted_address);
           this.address = results[0].formatted_address;
+          loader.dismiss();
+          this.toastController.create({
+            message: results[0].formatted_address,
+            duration: 3000
+          }).present();
         } else {
+          loader.dismiss();
           this.toastController.create({
             message: 'No results found',
             duration: 3000
           }).present();
         }
       } else {
+          loader.dismiss();
           this.toastController.create({
             message: 'No internet connection',
             duration: 3000
@@ -125,6 +136,7 @@ export class MapPage {
   }
 
   geoCode(address:any) {
+
     let geocoder = new google.maps.Geocoder();
     geocoder.geocode({ 'address': address }, (results, status) => {
     this.address = address;

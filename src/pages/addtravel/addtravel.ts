@@ -109,6 +109,12 @@ export class AddtravelPage {
       this.addTravelForm.value.fromLocation = data.address;
       console.log(this.addTravelForm.value.fromLocation);
       }
+      else{
+        this.toastCtrl.create({
+          message: 'Error getting information from marker',
+          duration: 3000
+        }).present();
+      }
     });
     modal.present();
   }

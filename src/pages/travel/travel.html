@@ -12,12 +12,12 @@
 
 <ion-content>
   <div padding>
-    <p>Name: {{selectedItem.name}} ({{selectedItem.email}})</p>
+    <p>Name: {{selectedItem.firstname}} {{selectedItem.lastname}} ({{selectedItem.email}})</p>
     <p>From: {{selectedItem.fromAddress}} on {{selectedItem.fromDate}}</p>
     <p>To: {{selectedItem.toAddress}} and will arrive at {{selectedItem.toDate}}</p>
   </div>
   <div #map id="map"></div>
   <div padding *ngIf="!poster">
-    <button ion-button color="primary" block margin-bottom (click)="messageUser($event)">Message {{selectedItem.name}}</button>
+    <button ion-button color="primary" block margin-bottom (click)="messageUser($event)">Message {{selectedItem.firstname}} {{selectedItem.lastname}}</button>
   </div>
 </ion-content>

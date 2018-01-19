@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { IonicPage, NavController, NavParams, Content } from 'ionic-angular';
 import { PlsdalaProvider } from '../../providers/plsdala/plsdala';
 import { Observable } from 'rxjs/Observable';
@@ -23,22 +23,30 @@ export class ChatPage {
   check: boolean;
     
   constructor(public afd:  AngularFireDatabase, public navCtrl: NavController, public navParams: NavParams, public plsdala: PlsdalaProvider) {
-    
-    this.loggedInUser = localStorage.getItem('name');
-    this.user = this.navParams.get('item');
 
-    this.plsdala.getMessages({user1: localStorage.getItem('id'), user2: this.user.userId})
+    this.loggedInUser = localStorage.getItem('id');
+    console.log(this.loggedInUser);
+    this.user = this.navParams.get('item');
+    console.log(this.user);
+    var users = {
+      user1: localStorage.getItem('id'), 
+      user2: this.user.userId
+    };
+    this.plsdala.getMessages(users)
     .then(data=>{
+      console.log(data);
       this.items = this.afd.list('messages/' + data).snapshotChanges()
       .map(
         changes => {
-          this.content.scrollToBottom();
           return changes.map(c=>({
             key: c.payload.key, ...c.payload.val()
           }))
-        }
-        );
-      })
+        })
+    })
+  }
+
+  ngAfterViewInit() {
+    this.content.scrollToBottom(0);
   }
 
   ionViewDidLoad() {
@@ -48,15 +56,26 @@ export class ChatPage {
   addMessage(){
     console.log(this.items);
     if(this.newmessage){
-      this.plsdala.addMessage({
+      var details = {
         content: this.newmessage,
-        sentBy: this.user.userId,
-        name: localStorage.getItem('name'),
-      }, {
-        user1: localStorage.getItem('id'),
-        user2: this.user.userId
-      });
-      this.content.scrollToBottom();
+        senderFirstname: localStorage.getItem('firstname'),
+        senderLastname: localStorage.getItem('lastname'),
+        receiverFirstname: this.user.firstname,
+        receiverLastname: this.user.lastname
+      }
+      var users = {
+        senderId: localStorage.getItem('id'),
+        receiverId: this.user.userId
+      }
+
+      // {
+      //   content: this.newmessage,
+      //   sentBy: this.user.userId,
+      //   name: localStorage.getItem('name'),
+      // }
+
+      this.plsdala.addMessage(details, users);
+      // this.content.scrollToBottom();
       this.newmessage = '';
       }
     }

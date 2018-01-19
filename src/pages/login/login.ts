@@ -37,7 +37,7 @@ export class LoginPage {
       if(this.loginForm.valid){
         this.authenticationProvider.loginUser(this.loginForm.value.email.toLowerCase(), 
           this.loginForm.value.password).then(authData=>{
-            console.log(authData);
+          console.log(authData);
           loader.dismiss();
           if(authData){
           this.navCtrl.setRoot(HomePage);

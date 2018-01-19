@@ -45,13 +45,17 @@ export class AuthenticationProvider {
   loginUser(email, password):any{
     return new Promise((resolve, reject)=>{
       this.getUsers().then(data=>{
+        console.log(data);
       if(data){
         for(var i in data){
+          console.log('loginUser here');
           if(data[i].email == email && data[i].password == password){
-            localStorage.setItem('loggedIn', '1');
             localStorage.setItem('email', data[i].email);
-            localStorage.setItem('name', data[i].firstname + ' ' + data[i].lastname);
+            localStorage.setItem('firstname', data[i].firstname);
+            localStorage.setItem('lastname', data[i].lastname);
             localStorage.setItem('id', data[i].id);
+            localStorage.setItem('loggedIn', '1');
+            console.log('name: ' + localStorage.getItem('firstname') + ' ' + localStorage.getItem('lastname'));
             resolve(true);
             return;
           }

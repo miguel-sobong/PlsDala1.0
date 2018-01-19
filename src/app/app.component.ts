@@ -6,6 +6,7 @@ import { AngularFirestoreModule, AngularFirestoreCollection, AngularFirestoreDoc
 
 import { HomePage } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
+import { ChatlistPage } from '../pages/chatlist/chatlist';
 import { TravelPage } from '../pages/travel/travel'; //temporary working directory
 
 @Component({
@@ -23,6 +24,7 @@ export class MyApp {
     // used for an example of ngFor and navigation
     this.pages = [
       { title: 'Home', component: HomePage },
+      { title: 'Chat Threads', component: ChatlistPage }
     ];
 
     if(localStorage.getItem('loggedIn')==='1')
@@ -50,7 +52,7 @@ export class MyApp {
   }
 
   logoutUser() {
-    localStorage.setItem('loggedIn', '0');
+    localStorage.clear();
     this.nav.setRoot(LoginPage);
   }
 }

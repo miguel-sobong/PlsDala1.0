@@ -16,7 +16,7 @@
 <ion-content>
   <ion-list>
       <button ion-item *ngFor="let item of travelList$ | async" (click)="itemTapped($event, item)">
-          <h4><b>{{item.name}} ({{item.email}})</b></h4>
+          <h4><b>{{item.firstname}} {{item.lastname}} ({{item.email}})</b></h4>
           <!-- <h6>From</h6> -->
           <h5>{{item.fromAddress}}</h5>
           <p>at {{item.fromDate}}</p>
@@ -25,7 +25,4 @@
           <p>at {{item.toDate}} </p>
       </button>
   </ion-list>
-  <div *ngIf="selectedItem" padding>
-    You navigated here from <b>{{selectedItem.title}}</b>
-  </div>
 </ion-content>

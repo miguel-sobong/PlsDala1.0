@@ -1,4 +1,10 @@
 page-chat {
+
+    .chatTimestamp{
+        display: flex;
+        font-size: 1.3rem;
+    }
+
 	.bubble{
 	    background-color: #F2F2F2;
 	    border-radius: 5px;
@@ -10,6 +16,10 @@ page-chat {
 	    text-align: right;
 	    color: #fff;
 	    background-color: #4080ff;
+	    .chatTimestamp{
+  	      	justify-content: flex-end;
+        	color: #EEE
+	    }
 	}
 
 	 
@@ -17,5 +27,9 @@ page-chat {
 	    text-align: left;
 	    background-color: #f1f0f0;
 	    color: #4b4f56;
+	    .chatTimestamp{
+  	      	justify-content: flex-start;
+  	      	color: #7F848E
+	    }
 	}
 }

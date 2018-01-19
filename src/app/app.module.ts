@@ -11,6 +11,7 @@ import { MapPage } from '../pages/map/map';
 import { TravelPage } from '../pages/travel/travel';
 import { AdditemPage } from '../pages/additem/additem';
 import { ChatPage } from '../pages/chat/chat';
+import { ChatlistPage } from '../pages/chatlist/chatlist';
 
 import { HttpModule } from '@angular/http';
 import { AngularFireModule } from 'angularfire2';
@@ -48,7 +49,8 @@ import { Camera } from '@ionic-native/camera';
     MapPage,
     TravelPage,
     AdditemPage,
-    ChatPage
+    ChatPage,
+    ChatlistPage
   ],
   imports: [
     BrowserModule,
@@ -69,7 +71,8 @@ import { Camera } from '@ionic-native/camera';
     MapPage,
     TravelPage,
     AdditemPage,
-    ChatPage
+    ChatPage,
+    ChatlistPage
   ],
   providers: [
     StatusBar,

@@ -34,7 +34,8 @@ export class PlsdalaProvider {
       toY: to.y,
       toAddress: to.address,
       toDate: toDate,
-      name: localStorage.getItem('name'),
+      firstname: localStorage.getItem('firstname'),
+      lastname: localStorage.getItem('lastname'),
       email: localStorage.getItem('email'),
       userId: localStorage.getItem('id')
     }).then(
@@ -59,7 +60,7 @@ export class PlsdalaProvider {
       var dbUserCount = 0;
       var finalCheck = 0;
       var threadId: string;
-      const checkUsersInDb = firebase.database().ref('threads');
+      const checkUsersInDb = firebase.database().ref('thread_users');
       checkUsersInDb.on('value', snapshot=>{
 
         //for adding when no thread is present
@@ -67,7 +68,7 @@ export class PlsdalaProvider {
           resolve(null);
         }
         snapshot.forEach(snap=>{
-          snap.child('users').forEach(snap2=>{
+          snap.forEach(snap2=>{
             for(let user in users){
               if(threadId){
                 break;
@@ -76,7 +77,6 @@ export class PlsdalaProvider {
                 finalCheck++;
                 console.log(finalCheck);
                 if(finalCheck == clUserCount){
-                  console.log('here');
                   threadId = snap.key;
                   resolve(threadId);
                   return true;
@@ -104,40 +104,43 @@ export class PlsdalaProvider {
           return;
         }
         else{
-          const newThread = this.afd.list('threads').push({});
+          const newThread = this.afd.list('thread_users').push({});
           newThread.set({
-            users:{
-              [users.user1]: true,
-              [users.user2]: true
-            }
+            [users.user1]: true,
+            [users.user2]: true
           });
           this.newThreadKey = newThread.key;
           resolve(newThread.key);
         }
+        return;
       });
     })
   }
 
   addMessage(details, users){
     this.checkUsers(users).then(data=>{
-      console.log(data);
       if(data){
-      const newMessage = this.afd.list('messages/' + data).push({});
-      newMessage.set({
-        content: details.content,
-        userId: details.sentBy,
-        name: details.name
-      })
-      }
-      else{
-        const newMessage = this.afd.list('messages/' + this.newThreadKey).push({});
+        const newMessage = this.afd.list('messages/' + data).push({});
         newMessage.set({
           content: details.content,
-          userId: details.sentBy,
-          name: details.name
-        })
+          senderFirstname: details.senderFirstname,
+          senderLastname: details.senderLastname,
+          senderId: users.senderId,
+          timestamp: firebase.database.ServerValue.TIMESTAMP
+        });
+        firebase.database().ref().child('threads/' + users.senderId + '/' + data).update({
+          lastMessage: details.senderFirstname + details.senderLastname + ': ' + details.content,
+          seen: false,
+          timestamp: firebase.database.ServerValue.TIMESTAMP
+        });
+        firebase.database().ref().child('threads/' + users.receiverId + '/' + data).update({
+          lastMessage: details.senderFirstname + details.senderLastname + ': ' + details.content,
+          seen: false,
+          timestamp: firebase.database.ServerValue.TIMESTAMP
+        });
       }
     });
+
   }
 
   postData(credentials, type){
@@ -166,4 +169,19 @@ export class PlsdalaProvider {
     .then(savepic=>{
       picurl[y]=savepic.downloadURL;              // DOWNLOAD URL FOR EACH PIC. MUST BE STORED 
     })}
+
+
+  getChatList(){
+    return this.afd.list('threads/' + localStorage.getItem('id'));
+  }
+
+  getUserInChatList(threadId){
+    return new Promise(resolve=>{
+      const checkUsersInDb = firebase.database().ref('thread_users/' + threadId);
+      checkUsersInDb.once('value', snapshot=>{
+        resolve(snapshot.val());
+        console.log(snapshot, snapshot.val());
+      });
+    });
+  }      // return resolve(this.afd.list('thread_users/' + threadId));
 }

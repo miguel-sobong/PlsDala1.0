@@ -1,0 +1,15 @@
+page-chatlist {
+	ion-badge {
+		position: absolute;
+		top: -0.2rem;
+		right: -0.2rem;
+		opacity: 0.9;
+	}
+
+	.chatTimestamp{
+        display: flex;
+        justify-content: flex-end;
+        font-size: 1.3rem;
+        color: grey
+    }
+}

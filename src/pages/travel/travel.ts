@@ -54,6 +54,7 @@ export class TravelPage {
     if(localStorage.getItem('email')===this.selectedItem.email){
       this.poster = true;
     }
+    
   	this.initMap();
     console.log('ionViewDidLoad TravelPage');
   }
@@ -63,7 +64,7 @@ export class TravelPage {
   }
 
   messageUser(event){
-      console.log(this.selectedItem.userId);
+    console.log(this.selectedItem);
     this.navCtrl.push(ChatPage,{
       item: this.selectedItem
     });

@@ -21,20 +21,17 @@ export class HomePage {
       changes => {
         return changes.map(c=>({
           key: c.payload.key, ...c.payload.val()
-        }))
-      }
-      );
+        })).slice().reverse(); //to reverse order
+      });
   }
-  
+
   addTravel(event){
     this.navCtrl.push(AddtravelPage);
   }
 
   itemTapped(event, item) {
-    // That's right, we're pushing to ourselves!
     this.navCtrl.push(TravelPage, {
       item: item
     });
   }
-
   }
