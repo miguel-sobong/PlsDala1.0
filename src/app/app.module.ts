@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import * as firebase from 'firebase';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -12,6 +13,8 @@ import { TravelPage } from '../pages/travel/travel';
 import { AdditemPage } from '../pages/additem/additem';
 import { ChatPage } from '../pages/chat/chat';
 import { ChatlistPage } from '../pages/chatlist/chatlist';
+import { ContinuechatPage } from '../pages/continuechat/continuechat';
+import { ProfilePage } from '../pages/profile/profile';
 
 import { HttpModule } from '@angular/http';
 import { AngularFireModule } from 'angularfire2';
@@ -36,8 +39,7 @@ import { Camera } from '@ionic-native/camera';
     storageBucket: "plsdala-8609a.appspot.com",
     messagingSenderId: "861667074134"
   };
-
-  
+  firebase.initializeApp(firebaseConfig);
 
 @NgModule({
   declarations: [
@@ -50,7 +52,9 @@ import { Camera } from '@ionic-native/camera';
     TravelPage,
     AdditemPage,
     ChatPage,
-    ChatlistPage
+    ChatlistPage,
+    ContinuechatPage,
+    ProfilePage
   ],
   imports: [
     BrowserModule,
@@ -59,7 +63,7 @@ import { Camera } from '@ionic-native/camera';
     AngularFireAuthModule,
     AngularFirestoreModule,
     HttpModule,
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -72,7 +76,9 @@ import { Camera } from '@ionic-native/camera';
     TravelPage,
     AdditemPage,
     ChatPage,
-    ChatlistPage
+    ChatlistPage,
+    ContinuechatPage,
+    ProfilePage
   ],
   providers: [
     StatusBar,

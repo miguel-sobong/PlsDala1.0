@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Profile</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content text-center>
+  <img class="pp" src="{{profileimage}}" (click)="presentActionSheet()">
+  <h2>{{profileName}}</h2>
+  <p>{{profileEmail}}</p>
+  <p class="description">{{profileDescription}}</p>
+  <button ion-button (click)="EditProfile()">Edit Profile</button>
+  <div *ngIf="editProfile" class="editProfile">
+    <form novalidate>
+      <ion-list>
+        <ion-item>
+          <ion-label floating>First Name</ion-label>
+          <ion-input type="text" name="fname" [(ngModel)]="fname"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label floating>Last Name</ion-label>
+          <ion-input type="text" name="lname" [(ngModel)]="lname"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label floating>Description</ion-label>
+          <ion-textarea type="text" name="description" [(ngModel)]="description"></ion-textarea>
+        </ion-item>
+        <div padding>
+          <button ion-button color="primary" round block (click)="submitEdit()">Submit Edit</button>
+        </div>
+      </ion-list>
+    </form>
+  </div>
+</ion-content>

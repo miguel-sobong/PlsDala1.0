@@ -42,7 +42,9 @@ export class ChatlistPage {
       console.log(data);
     });
 
-    this.navCtrl.push(ContinuechatPage);
+    this.navCtrl.push(ContinuechatPage, {
+      item: item
+    });
   	// this.navCtrl.push(ChatPage,{
    //    item: item.user1
    //  });

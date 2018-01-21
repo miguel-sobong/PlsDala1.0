@@ -1,142 +1,40 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
-// import { Observable } from 'rxjs/Observable';
-import { Http } from '@angular/http';
-import 'rxjs/Rx';
-// import * as firebase from 'firebase';
+import { Events } from 'ionic-angular';
+import * as firebase from 'firebase';
 
 @Injectable()
 export class AuthenticationProvider {
 
-	RegUser: AngularFireList<any>;
-  user: any;
-  baseUrl = 'https://plsdala-8609a.firebaseio.com/';
+  constructor() {}
 
-  constructor(public afd: AngularFireDatabase, public http: Http) {
-    this.RegUser = this.afd.list('users');
-    console.log('Hello AuthenticationProvider Provider');
-  }
-
-
-  //get users from database
-  getUsers():any{
-    return new Promise((resolve, reject)=>{
-    this.http.get(this.baseUrl + 'users.json').map(res => res.json()).subscribe(data => {
-      //if no registered user
-        if(data==null){
-          console.log('null');
-          resolve(data);
-          return;
-        }
-      //if there is registerd users
-        else{
-          console.log('!null');
-          resolve(data);
-          return;
-        }
-      }, data => { //if no internet
-        reject('Cannot connect to the database')
-        return;
-      });
-    })
-  }
+  registerUser(userData){
+      return firebase.auth().createUserWithEmailAndPassword(userData.email, userData.password1).then(user=>{
+        console.log(user);
+        firebase.database().ref().child('users').child(user.uid).set({
+          lastname: userData.lastname, 
+          firstname: userData.firstname, 
+          birthdate: userData.birthdate, 
+          email: user.email,
+          password: userData.password1,
+          id: user.uid,
+          profileimage: "https://firebasestorage.googleapis.com/v0/b/plsdala-8609a.appspot.com/o/users%2Fdefault.jpg?alt=media&token=fce4cb44-fc6e-4b05-a1c3-29a18833b515"
+        });
+    });
+}
 
   //login users
-  loginUser(email, password):any{
-    return new Promise((resolve, reject)=>{
-      this.getUsers().then(data=>{
-        console.log(data);
-      if(data){
-        for(var i in data){
-          console.log('loginUser here');
-          if(data[i].email == email && data[i].password == password){
-            localStorage.setItem('email', data[i].email);
-            localStorage.setItem('firstname', data[i].firstname);
-            localStorage.setItem('lastname', data[i].lastname);
-            localStorage.setItem('id', data[i].id);
-            localStorage.setItem('loggedIn', '1');
-            console.log('name: ' + localStorage.getItem('firstname') + ' ' + localStorage.getItem('lastname'));
-            resolve(true);
-            return;
-          }
-        }
-          resolve(false);
-          return;
-      }
-      else{
-        console.log(data);
-        reject('User does not exist. Please register first before logging in');
-        return;
-      }
-    }, reason => {
-        reject(reason);
-        console.log(reason);
-      })
-  });
+  loginUser(userData){
+     return firebase.auth().signInWithEmailAndPassword(userData.email, userData.password);
+          //query users table here using success.uid then check for if the users is verified
   }
 
-  //register users
-  registerUser(lastname, firstname, birthdate, email, password): any{
-    var isTaken = false;
+  logoutUser(){
     return new Promise((resolve, reject)=>{
-      this.getUsers().then(data=>{
-        console.log('function');
-        console.log(data);
-        if(data){
-        for(var i in data){
-          if(data[i].email == email){
-            console.log('taken');
-            reject('Email address already taken');
-            isTaken = true;
-            return;
-          }
-        }
-        if(!isTaken){
-          console.log('not is taken');
-           //make new user by pushing then setting his credentials
-                const newUser = this.RegUser.push({});
-                newUser.set({
-                 lastname: lastname, 
-                 firstname: firstname, 
-                 birthdate: birthdate, 
-                 email: email, 
-                 password: password,
-                 id: newUser.key
-                }).then( 
-                newUser => { 
-                  resolve(true);
-                  return;
-                }, error => {
-                  reject('Cannot connect to the database');
-                  return;
-                });
-        }
-      }
-      // if no user is register
-      else{
-              //make new user by pushing then setting his credentials
-                const newUser = this.RegUser.push({});
-                newUser.set({
-                 lastname: lastname, 
-                 firstname: firstname, 
-                 birthdate: birthdate, 
-                 email: email, 
-                 password: password,
-                 id: newUser.key
-                }).then( 
-                newUser => { 
-                  resolve(true);
-                  return;
-                }, error => {
-                  reject('Cannot connect to the database');
-                  return;
-                });
-          }
-      }, reason => {
-        reject(reason);
-        console.log(reason);
+      firebase.auth().signOut().then(user=>{
+        return resolve(user);
+      }, error=>{
+        return reject(error);
       })
-  	});
+    })
   }
-
 }

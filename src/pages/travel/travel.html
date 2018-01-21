@@ -17,7 +17,7 @@
     <p>To: {{selectedItem.toAddress}} and will arrive at {{selectedItem.toDate}}</p>
   </div>
   <div #map id="map"></div>
-  <div padding *ngIf="!poster">
+  <div padding *ngIf="poster != selectedItem.userId">
     <button ion-button color="primary" block margin-bottom (click)="messageUser($event)">Message {{selectedItem.firstname}} {{selectedItem.lastname}}</button>
   </div>
 </ion-content>

@@ -1,20 +1,25 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, ToastController } from 'ionic-angular';
 import { AddtravelPage } from '../addtravel/addtravel';
 import { PlsdalaProvider } from '../../providers/plsdala/plsdala';
 import { TravelPage } from '../../pages/travel/travel';
+import { LoginPage } from '../../pages/login/login'
 import { Observable } from 'rxjs/Observable';
+import * as firebase from 'firebase';
+
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
-export class HomePage {
+export class HomePage 
+{
   // selectedItem: any;
   // icons: string[];
   // items: Array<{title: string, note: string, icon: string}>;
   travelList$: Observable<any>;
-  constructor(public navCtrl: NavController, public navParams: NavParams, public plsdala: PlsdalaProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, 
+    public plsdala: PlsdalaProvider, public toastCtrl: ToastController) {
     this.travelList$ = this.plsdala.getTravelList()
     .snapshotChanges()
     .map(
@@ -34,4 +39,4 @@ export class HomePage {
       item: item
     });
   }
-  }
+}

@@ -10,9 +10,10 @@
 </ion-header>
 
 
-<ion-content padding>
-  <ion-list>
+<ion-content>
+  <ion-list padding-bottom>
       <button ion-item *ngFor="let item of chatList$ | async" (click)="messageUser($event, item)">
+        <h2 text-center class="chatListName">{{item.title}}</h2>
         <ion-badge *ngIf="!item.seen" color="danger">unread</ion-badge>
       	{{item.lastMessage}}<br><br>
         <div class="chatTimestamp">{{item.timestamp | date:'mediumDate'}} {{item.timestamp | date:'shortTime'}}</div>

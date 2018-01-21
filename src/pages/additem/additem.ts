@@ -108,31 +108,31 @@ export class AdditemPage {
   }
 
   OpenGallery(){
-    console.log("opengallery");
-    const options: CameraOptions = {
-     sourceType:this.camera.PictureSourceType.PHOTOLIBRARY,
-     destinationType:this.camera.DestinationType.DATA_URL, 
-     quality:50,
-     targetWidth:450,
-     targetHeight:450,
-     encodingType:this.camera.EncodingType.JPEG,
-     correctOrientation:true,
-     mediaType: this.camera.MediaType.PICTURE
-    };
+    // console.log("opengallery");
+    // const options: CameraOptions = {
+    //  sourceType:this.camera.PictureSourceType.PHOTOLIBRARY,
+    //  destinationType:this.camera.DestinationType.DATA_URL, 
+    //  quality:50,
+    //  targetWidth:450,
+    //  targetHeight:450,
+    //  encodingType:this.camera.EncodingType.JPEG,
+    //  correctOrientation:true,
+    //  mediaType: this.camera.MediaType.PICTURE
+    // };
 
-    this.camera.getPicture(options).then(
-      imageData => {
-        this.base64Image = "data:image/jpeg;base64," + imageData;
-        this.photos.push(this.base64Image);
-        this.photos.reverse();
-        this.sendData(imageData);
-        this.picdata.push(imageData); 
-        this.maxImage();     
-      },
-      err => {
-        console.log(err);
-      }
-    );
+    // this.camera.getPicture(options).then(
+    //   imageData => {
+    //     this.base64Image = "data:image/jpeg;base64," + imageData;
+    //     this.photos.push(this.base64Image);
+    //     this.photos.reverse();
+    //     this.sendData(imageData);
+    //     this.picdata.push(imageData); 
+    //     this.maxImage();     
+    //   },
+    //   err => {
+    //     console.log(err);
+    //   }
+    // );
   }
 
   uploadFirebase(){

@@ -4,7 +4,6 @@ import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 // import { Observable } from 'rxjs/Observable';
 import { Http, Headers } from '@angular/http';
 import firebase from 'firebase';
-
 @Injectable()
 export class PlsdalaProvider {
 
@@ -16,10 +15,15 @@ export class PlsdalaProvider {
   threadId;
   newThreadKey;
   users: any;
+  user: any;
 
   constructor(public afd: AngularFireDatabase, public http: Http) {
     this.travelList = this.afd.list('travels');
-    console.log('Hello PlsdalaProvider Provider');
+    firebase.database().ref('users/')
+    .child(firebase.auth().currentUser.uid)
+    .once('value', user => {
+      this.user = user;
+    });
   }
 
   addTravel(to, from, toDate, fromDate){
@@ -34,10 +38,10 @@ export class PlsdalaProvider {
       toY: to.y,
       toAddress: to.address,
       toDate: toDate,
-      firstname: localStorage.getItem('firstname'),
-      lastname: localStorage.getItem('lastname'),
-      email: localStorage.getItem('email'),
-      userId: localStorage.getItem('id')
+      firstname: this.user.val().firstname,
+      lastname: this.user.val().lastname,
+      email: this.user.val().email,
+      userId: this.user.key
     }).then(
     newTravel => {
       resolve(true);
@@ -119,28 +123,33 @@ export class PlsdalaProvider {
 
   addMessage(details, users){
     this.checkUsers(users).then(data=>{
+      console.log(this.user.key);
+      console.log(users);
       if(data){
         const newMessage = this.afd.list('messages/' + data).push({});
         newMessage.set({
           content: details.content,
-          senderFirstname: details.senderFirstname,
-          senderLastname: details.senderLastname,
-          senderId: users.senderId,
+          senderFirstname: this.user.val().firstname,
+          senderLastname: this.user.val().lastname,
+          senderId: this.user.key,
           timestamp: firebase.database.ServerValue.TIMESTAMP
         });
-        firebase.database().ref().child('threads/' + users.senderId + '/' + data).update({
-          lastMessage: details.senderFirstname + details.senderLastname + ': ' + details.content,
-          seen: false,
-          timestamp: firebase.database.ServerValue.TIMESTAMP
+
+        firebase.database().ref().child('threads/' + this.user.key + '/' + data).update({
+          title: details.receiverFirstname + ' ' + details.receiverLastname,
+          lastMessage: this.user.val().firstname + ' ' + this.user.val().lastname + ': ' + details.content,
+          seen: true,
+          timestamp: firebase.database.ServerValue.TIMESTAMP,
         });
+
         firebase.database().ref().child('threads/' + users.receiverId + '/' + data).update({
-          lastMessage: details.senderFirstname + details.senderLastname + ': ' + details.content,
+          title: this.user.val().firstname + ' ' + this.user.val().lastname,
+          lastMessage: this.user.val().firstname + ' ' + this.user.val().lastname + ': ' + details.content,
           seen: false,
           timestamp: firebase.database.ServerValue.TIMESTAMP
         });
       }
     });
-
   }
 
   postData(credentials, type){
@@ -162,7 +171,7 @@ export class PlsdalaProvider {
 
   upload(x ,y, uploadData){
     var picurl = [];      
-    firebase.storage().ref('items').child('user-'+localStorage.getItem('id')).child(uploadData.imageName.concat('.png'))
+    firebase.storage().ref('items').child('user-'+this.user.key).child(uploadData.imageName.concat('.png'))
     //add child for transaction id
 
     .putString(x,'base64',{contentType:'image/png'})
@@ -172,7 +181,7 @@ export class PlsdalaProvider {
 
 
   getChatList(){
-    return this.afd.list('threads/' + localStorage.getItem('id'));
+    return this.afd.list('threads/' + this.user.key);
   }
 
   getUserInChatList(threadId){
@@ -183,5 +192,18 @@ export class PlsdalaProvider {
         console.log(snapshot, snapshot.val());
       });
     });
-  }      // return resolve(this.afd.list('thread_users/' + threadId));
+  }
+
+  editProfile(uid, data){
+    return new Promise(resolve=>{
+      firebase.database().ref('users').child(uid).update(data);
+      return resolve(true);
+    });
+  }
+
+  saveUserImage(uid, photo){
+    firebase.database().ref('users').child(uid).update({
+      profileImage: photo
+    });
+  }
 }

@@ -6,14 +6,14 @@
 
 <ion-content #content>
   <ion-item no-lines *ngFor="let item of items | async">
-    <div item-right *ngIf="item.senderId === loggedInUser" >
+    <div item-right *ngIf="item.senderId === userInChat" >
       <div class="me bubble">
         {{item.content}}<br><br>
         <div class="chatTimestamp">{{item.timestamp | date:'mediumDate'}} {{item.timestamp | date:'shortTime'}}</div>
       </div>
     </div>
 
-    <div item-left *ngIf="item.senderId != loggedInUser">
+    <div item-left *ngIf="item.senderId != userInChat">
         {{item.senderFirstname}} {{item.senderLastname}}:
       <div class="you bubble">
         {{item.content}}<br><br>

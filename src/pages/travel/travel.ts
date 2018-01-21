@@ -2,6 +2,7 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
 import { AdditemPage } from '../additem/additem';
 import { ChatPage } from '../chat/chat';
+import * as firebase from 'firebase';
 
 declare var google;
 
@@ -14,10 +15,12 @@ export class TravelPage {
   @ViewChild('map') mapElement: ElementRef;
   selectedItem: any;
   map;
-  poster = false;
+  poster;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public toastCtrl: ToastController) {
     this.selectedItem = navParams.get('item');
+    console.log(this.selectedItem);
+    this.poster = firebase.auth().currentUser.uid;
   }
 
    initMap() {
@@ -27,13 +30,9 @@ export class TravelPage {
           this.map = new google.maps.Map(document.getElementById('map'), {
               center: from
           });
-
-
           let directionsService = new google.maps.DirectionsService;
           let directionsDisplay = new google.maps.DirectionsRenderer;
-
           directionsDisplay.setMap(this.map);
-
           directionsService.route({
             origin: from,
             destination: to,
@@ -51,10 +50,6 @@ export class TravelPage {
         }
 
   ionViewDidLoad() {
-    if(localStorage.getItem('email')===this.selectedItem.email){
-      this.poster = true;
-    }
-    
   	this.initMap();
     console.log('ionViewDidLoad TravelPage');
   }
