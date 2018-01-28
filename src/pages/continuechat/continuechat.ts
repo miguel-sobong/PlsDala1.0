@@ -31,7 +31,6 @@ export class ContinuechatPage {
         .map(
           changes => {
             this.content.scrollToBottom();
-            this.newmessage = '';
             return changes.map(c=>({
               key: c.payload.key, ...c.payload.val()
             }))
@@ -43,8 +42,10 @@ export class ContinuechatPage {
     console.log('ionViewDidLoad ContinuechatPage');
   }
 
-  addMessage(){
-	  if(this.newmessage){
+  addMessage()
+  {
+	  if(this.newmessage)
+    {
 	  	const newMessage = this.afd.list('messages/' + this.selectedItem['key']).push({});
 	  	newMessage.set({
 	  		content: this.newmessage,
@@ -53,20 +54,26 @@ export class ContinuechatPage {
 	  		senderId: this.user.key,
 	  		timestamp: firebase.database.ServerValue.TIMESTAMP
 	  	});
-
-      firebase.database().ref().child('threads/' + this.user.key + '/' + this.selectedItem['key']).update({
-        title: this.selectedItem['title'],
-        lastMessage: this.user.val().firstname + ' ' + this.user.val().lastname + ': ' + this.newmessage,
-        seen: true,
-        timestamp: firebase.database.ServerValue.TIMESTAMP
+      const check = firebase.database().ref('threads');
+      check.once('value', snapshot=>{
+        snapshot.forEach(snap=>{
+          if(snap.hasChild(this.selectedItem['key'])){
+            firebase.database().ref().child('threads/').child(snap.key).child(this.selectedItem['key']).update({
+              lastMessage: this.user.val().firstname + ' ' + this.user.val().lastname + ': ' + this.newmessage,
+              seen: false,
+              timestamp: firebase.database.ServerValue.TIMESTAMP
+            }).then(_=>{
+              firebase.database().ref('threads/').child(this.loggedInUser).child(this.selectedItem['key']).update({
+                seen: true
+              });
+              return true;
+            });
+          }
+          return false;
+        })
+        this.newmessage = '';
       });
-
-      // firebase.database().ref().child('threads/' + users.receiverId + '/' + this.selectedItem['key']).update({
-      //   title: this.user.val().firstname + ' ' + this.user.val().lastname,
-      //   lastMessage: this.user.val().firstname + ' ' + this.user.val().lastname + ': ' + this.newmessage,
-      //   seen: false,
-      //   timestamp: firebase.database.ServerValue.TIMESTAMP
-      // });
 	  }
   }
+
 }

@@ -1,7 +1,9 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
 import { AdditemPage } from '../additem/additem';
 import { ChatPage } from '../chat/chat';
+import { ViewprofilePage } from '../viewprofile/viewprofile';
+import { ProfilePage } from '../profile/profile';
 import * as firebase from 'firebase';
 
 declare var google;
@@ -15,12 +17,31 @@ export class TravelPage {
   @ViewChild('map') mapElement: ElementRef;
   selectedItem: any;
   map;
-  poster;
+  user;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public toastCtrl: ToastController) {
+  posterName: string;
+  posterEmail: string;
+  posterDescription: string;
+  posterImage: string;
+
+  constructor(public loadingCtrl: LoadingController, public navCtrl: NavController, public navParams: NavParams, public toastCtrl: ToastController) {
+    var loader = this.loadingCtrl.create({
+      content: 'Getting user information'
+    });
+    loader.present();
     this.selectedItem = navParams.get('item');
     console.log(this.selectedItem);
-    this.poster = firebase.auth().currentUser.uid;
+    this.user = firebase.auth().currentUser.uid;
+    firebase.database().ref('users/')
+    .child(this.selectedItem['userId'])
+    .once('value', user => {
+      console.log(user.val());
+      this.posterName = user.val().firstname + ' ' + user.val().lastname;
+      this.posterEmail = user.val().email;
+      this.posterDescription = user.val().description;
+      this.posterImage = user.val().profileimage;
+      loader.dismiss();
+    });
   }
 
    initMap() {
@@ -55,7 +76,7 @@ export class TravelPage {
   }
 
   addItem(event){
-    this.navCtrl.push(AdditemPage);
+    this.navCtrl.push(AdditemPage, {item: this.selectedItem});
   }
 
   messageUser(event){
@@ -63,5 +84,12 @@ export class TravelPage {
     this.navCtrl.push(ChatPage,{
       item: this.selectedItem
     });
+  }
+
+  viewProfile(){
+    if(this.selectedItem['userId'] == this.user)
+      this.navCtrl.push(ProfilePage);
+    else
+      this.navCtrl.push(ViewprofilePage, {item: this.selectedItem['userId']});
   }
 }

@@ -15,6 +15,10 @@ import { ChatPage } from '../pages/chat/chat';
 import { ChatlistPage } from '../pages/chatlist/chatlist';
 import { ContinuechatPage } from '../pages/continuechat/continuechat';
 import { ProfilePage } from '../pages/profile/profile';
+import { ViewprofilePage } from '../pages/viewprofile/viewprofile';
+import { ChoosereceiverPage } from '../pages/choosereceiver/choosereceiver';
+import { MytravelsPage } from '../pages/mytravels/mytravels';
+import { MytravelPage } from '../pages/mytravel/mytravel';
 
 import { HttpModule } from '@angular/http';
 import { AngularFireModule } from 'angularfire2';
@@ -54,7 +58,11 @@ import { Camera } from '@ionic-native/camera';
     ChatPage,
     ChatlistPage,
     ContinuechatPage,
-    ProfilePage
+    ProfilePage,
+    ViewprofilePage,
+    ChoosereceiverPage,
+    MytravelsPage,
+    MytravelPage
   ],
   imports: [
     BrowserModule,
@@ -78,7 +86,11 @@ import { Camera } from '@ionic-native/camera';
     ChatPage,
     ChatlistPage,
     ContinuechatPage,
-    ProfilePage
+    ProfilePage,
+    ViewprofilePage,
+    ChoosereceiverPage,
+    MytravelsPage,
+    MytravelPage
   ],
   providers: [
     StatusBar,

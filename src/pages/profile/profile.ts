@@ -60,16 +60,16 @@ export class ProfilePage {
 
   takePhoto(){
   	this.camera.getPicture({
-  		quality: 75,
+  		quality: 100,
   		destinationType: this.camera.DestinationType.DATA_URL,
   		sourceType: this.camera.PictureSourceType.CAMERA,
   		encodingType: this.camera.EncodingType.JPEG,
-  		targetHeight: 500,
-  		targetWidth: 500,
+  		targetHeight: 450,
+  		targetWidth: 450,
       	mediaType: this.camera.MediaType.PICTURE,
       	saveToPhotoAlbum: false
   	}).then(imageData=>{
-  		this.pushToFirebase(imageData);
+  		this.plsdala.uploadProfilePhoto(imageData);
   	}, error=>{
   		console.log(error);
   	})
@@ -88,26 +88,12 @@ export class ProfilePage {
     };
     this.camera.getPicture(options).then(
       imageData => {
-  		this.pushToFirebase(imageData);
+  		  this.plsdala.uploadProfilePhoto(imageData);
       },
       err => {
         console.log(err);
       }
     );
-  }
-
-  pushToFirebase(imageData){
-    const photoRef = firebase.storage().ref('users').child(this.currentUser);
-    photoRef.putString(imageData, 'base64', { contentType: 'image/png'})
-    .then(savedPhoto=>{
-	  	this.toastCtrl.create({
-	   		message: 'Photo uploaded!',
-	   		duration: 3000
-	   	}).present();
-    	firebase.database().ref('users').child(this.currentUser).update({
-    		profileimage: savedPhoto.downloadURL
-    	});
-    });
   }
 
   EditProfile(){

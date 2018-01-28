@@ -10,7 +10,7 @@
   <img class="pp" src="{{profileimage}}" (click)="presentActionSheet()">
   <h2>{{profileName}}</h2>
   <p>{{profileEmail}}</p>
-  <p class="description">{{profileDescription}}</p>
+  <p class="description" *ngIf="profileDescription==''">{{profileDescription}}</p>
   <button ion-button (click)="EditProfile()">Edit Profile</button>
   <div *ngIf="editProfile" class="editProfile">
     <form novalidate>

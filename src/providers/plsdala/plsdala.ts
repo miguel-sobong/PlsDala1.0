@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';;
+import { ToastController } from 'ionic-angular'
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 // import { Observable } from 'rxjs/Observable';
-import { Http, Headers } from '@angular/http';
+import { Http } from '@angular/http';
 import firebase from 'firebase';
 @Injectable()
 export class PlsdalaProvider {
@@ -17,7 +18,7 @@ export class PlsdalaProvider {
   users: any;
   user: any;
 
-  constructor(public afd: AngularFireDatabase, public http: Http) {
+  constructor(public toastCtrl: ToastController, public afd: AngularFireDatabase, public http: Http) {
     this.travelList = this.afd.list('travels');
     firebase.database().ref('users/')
     .child(firebase.auth().currentUser.uid)
@@ -42,8 +43,14 @@ export class PlsdalaProvider {
       lastname: this.user.val().lastname,
       email: this.user.val().email,
       userId: this.user.key
-    }).then(
+    });
+    const updateUser = firebase.database().ref('users').child(firebase.auth().currentUser.uid).child('travels').update({
+      [newTravel.key]: true
+    })
+    .then(
     newTravel => {
+      console.log(newTravel);
+
       resolve(true);
       return;
     }, error => {
@@ -55,6 +62,10 @@ export class PlsdalaProvider {
 
   getTravelList(){
     return this.afd.list('travels');
+  }
+
+  getUserList(){
+    return this.afd.list('users');
   }
 
   checkUsers(users){
@@ -139,7 +150,7 @@ export class PlsdalaProvider {
           title: details.receiverFirstname + ' ' + details.receiverLastname,
           lastMessage: this.user.val().firstname + ' ' + this.user.val().lastname + ': ' + details.content,
           seen: true,
-          timestamp: firebase.database.ServerValue.TIMESTAMP,
+          timestamp: firebase.database.ServerValue.TIMESTAMP
         });
 
         firebase.database().ref().child('threads/' + users.receiverId + '/' + data).update({
@@ -151,34 +162,6 @@ export class PlsdalaProvider {
       }
     });
   }
-
-  postData(credentials, type){
-    return new Promise((resolve, reject) =>{
-        let headers = new Headers();
-        this.http.post("http://localhost/PHP-Slim-Restful/api/"+type, JSON.stringify(credentials), {headers: headers}).
-        subscribe(res =>{
-          resolve(res.json());
-        }, (err) =>{
-        reject(err);
-      });
-    });
-  }
-
-  uploadPhoto(picdata, uploadData){
-    for (let i in picdata)
-      this.upload(picdata[i],i, uploadData);
-  }
-
-  upload(x ,y, uploadData){
-    var picurl = [];      
-    firebase.storage().ref('items').child('user-'+this.user.key).child(uploadData.imageName.concat('.png'))
-    //add child for transaction id
-
-    .putString(x,'base64',{contentType:'image/png'})
-    .then(savepic=>{
-      picurl[y]=savepic.downloadURL;              // DOWNLOAD URL FOR EACH PIC. MUST BE STORED 
-    })}
-
 
   getChatList(){
     return this.afd.list('threads/' + this.user.key);
@@ -201,9 +184,97 @@ export class PlsdalaProvider {
     });
   }
 
+  uploadProfilePhoto(imageData){
+    const photoRef = firebase.storage().ref('users').child(this.user.uid);
+    photoRef.putString(imageData, 'base64', { contentType: 'image/png'})
+    .then(savedPhoto=>{
+      this.toastCtrl.create({
+         message: 'Photo uploaded!',
+         duration: 3000
+       }).present();
+      firebase.database().ref('users').child(this.user.uid).update({
+        profileimage: savedPhoto.downloadURL
+      });
+    });
+  }
+
   saveUserImage(uid, photo){
     firebase.database().ref('users').child(uid).update({
       profileImage: photo
     });
+  }
+
+  addItem(data, item){
+    return new Promise(resolve=>{
+      const newItem = this.afd.list('travel_items/' + item.key).push({});
+      newItem.set({
+       itemName: data.name,
+       sender: this.user.key,
+       receiverName: data.receiverName,
+       receiverId: data.receiverId
+      }).then(_=>{
+        if(data.description){
+          firebase.database().ref('travel_items/' + item.key).child(newItem.key).update({
+            itemDescription: data.description,
+          });
+        }
+      });
+      return resolve(newItem.key);
+    });
+  }
+
+  uploadItemPhoto(picdata, index, itemkey, dbkey){
+    var image = [];
+    firebase.storage().ref('items').child(firebase.auth().currentUser.uid)
+    .child(this.photoId().concat('png'))
+    .putString(picdata, 'base64', {contentType: 'image/png'})
+    .then(savedPhoto=>{
+      firebase.database().ref('travel_items/' + itemkey).child(dbkey).child('images').update({
+        [index]: savedPhoto.downloadURL
+      })
+    });
+  }
+
+  photoId(){
+    var d = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx'.replace(/[xy]/g, function (c) {
+      var r = (d + Math.random() * 16) % 16 | 0;
+      d = Math.floor(d / 16);
+      return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+    return uuid;
+  }
+
+  addItemMessage(users){    
+    this.checkUsers(users).then(data=>{
+      if(data){
+        const newMessage = this.afd.list('messages/' + data).push({});
+        newMessage.set({
+          isItem: true,
+          senderFirstname: this.user.val().firstname,
+          senderLastname: this.user.val().lastname,
+          senderId: this.user.key,
+          timestamp: firebase.database.ServerValue.TIMESTAMP
+        });
+
+        // firebase.database().ref().child('threads/' + this.user.key + '/' + data).update({
+        //   title: details.receiverFirstname + ' ' + details.receiverLastname,
+        //   lastMessage: this.user.val().firstname + ' ' + this.user.val().lastname + ': ' + details.content,
+        //   seen: true,
+        //   timestamp: firebase.database.ServerValue.TIMESTAMP
+        // });
+
+        // firebase.database().ref().child('threads/' + users.receiverId + '/' + data).update({
+        //   title: this.user.val().firstname + ' ' + this.user.val().lastname,
+        //   lastMessage: this.user.val().firstname + ' ' + this.user.val().lastname + ': ' + details.content,
+        //   seen: false,
+        //   timestamp: firebase.database.ServerValue.TIMESTAMP
+        // });
+      }
+    });
+  }
+
+  getItemsAtTravel(travelKey){
+    return this.afd.list('travel_items/' + travelKey);
   }
 }

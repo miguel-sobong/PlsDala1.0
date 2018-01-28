@@ -12,8 +12,9 @@
     </ion-item>
   </ion-list>
   <div #map id="map"></div>
-  <div padding>
-    <button ion-button round block (click)="AddLocation()">Add</button>
-    <button ion-button block clear (click)="Cancel()">Cancel</button>
-  </div>
 </ion-content>
+
+<ion-footer ion-fixed>    
+    <button ion-button block (click)="AddLocation()">Add</button>
+    <button ion-button block clear (click)="Cancel()">Cancel</button>
+</ion-footer>

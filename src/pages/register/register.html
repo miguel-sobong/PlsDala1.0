@@ -49,8 +49,10 @@
       </ion-item>
       <ion-item class="error-mesage" *ngIf="(registerForm.value.password1 != registerForm.value.password2) && registerForm.controls.password1.dirty && registerForm.controls.password1.dirty"><p>Password doesn't match</p></ion-item>
 
-      <div padding>
-        <button ion-button color="primary" round block>Register</button>
-      </div>
+      <ion-footer>
+        <ion-toolbar>
+            <button ion-button color="primary" round block>Register</button>
+        </ion-toolbar>
+      </ion-footer>
   </form>
 </ion-content>

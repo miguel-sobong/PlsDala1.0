@@ -3,7 +3,7 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Travel Board</ion-title>
+    <ion-title>My Travels</ion-title>
 
     <ion-buttons end (click)="addTravel($event)">
       <button ion-button icon-only>
@@ -13,10 +13,11 @@
   </ion-navbar>
 </ion-header>
 
+
 <ion-content>
   <ion-list>
       <button ion-item *ngFor="let item of travelList$ | async" (click)="itemTapped($event, item)">
-        <div *ngIf="item.userId != currentUserId">
+        <div *ngIf="item.userId == currentUserId">
           <h4><b>{{item.firstname}} {{item.lastname}} ({{item.email}})</b></h4>
           <!-- <h6>From</h6> -->
           <h5>{{item.fromAddress}}</h5>

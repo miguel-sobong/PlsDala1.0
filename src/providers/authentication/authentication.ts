@@ -17,7 +17,11 @@ export class AuthenticationProvider {
           email: user.email,
           password: userData.password1,
           id: user.uid,
-          profileimage: "https://firebasestorage.googleapis.com/v0/b/plsdala-8609a.appspot.com/o/users%2Fdefault.jpg?alt=media&token=fce4cb44-fc6e-4b05-a1c3-29a18833b515"
+          profileimage: "https://firebasestorage.googleapis.com/v0/b/plsdala-8609a.appspot.com/o/users%2Fdefault.jpg?alt=media&token=fce4cb44-fc6e-4b05-a1c3-29a18833b515",
+          isVerified: 0,
+          isTerminated: 0,
+          isDeclined: 0,
+          timestamp: firebase.database.ServerValue.TIMESTAMP
         });
     });
 }

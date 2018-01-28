@@ -1,0 +1,23 @@
+
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>Choose Receiver</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content>
+  <div>
+  	<ion-list *ngFor="let item of userlist | async">
+  		<ion-item *ngIf="item.id != user">
+	  			<ion-label (click)="viewProfile(item.id)" >
+	  				<h4><b>{{item.firstname}} {{item.lastname}} ({{item.email}})</b></h4>
+	  			</ion-label>
+	  			<button ion-button item-right (click)="AddReceiver(item)">Choose user</button>
+  		</ion-item>
+  	</ion-list>
+  </div>
+</ion-content>
+<ion-footer ion-fixed>
+    <button ion-button block clear (click)="Cancel()">Cancel</button>
+</ion-footer>

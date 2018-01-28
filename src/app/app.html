@@ -8,6 +8,7 @@
   <ion-content>
     <ion-list>
       <button menuClose ion-item class="profileContainer" text-center (click)="openProfile()">
+        <img src="{{profileImage}}" style="height: 20%; width: 50%;">
         <h1>{{profileName}}</h1><p>{{profileEmail}}</p>
       </button>
       <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">

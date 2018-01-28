@@ -1,16 +1,16 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>Home</ion-title>
+  <ion-navbar color="primary">
+    <ion-title>Add Item</ion-title>
   </ion-navbar>
 </ion-header>
-<ion-content padding text-center>
-  <button ion-button block [disabled]="disabled" (click)="presentActionSheet()">
+<ion-content text-center margin-top>
+  <button ion-button [disabled]="disabled" (click)="presentActionSheet()">
     <ion-icon name="camera"></ion-icon>&nbsp;Add Photo
   </button>
   <br>You may upload up to 3 pictures
   <ion-grid>
     <ion-row>
-      <ion-col col-6 *ngFor="let photo of photos; let id = index">
+      <ion-col col-4 *ngFor="let photo of photos; let id = index ">
         <ion-card class="block">
           <ion-icon name="trash" class="deleteIcon" (click)="deletePhoto(id)"></ion-icon>
           <img [src]="photo" *ngIf="photo" />
@@ -19,6 +19,10 @@
     </ion-row>
   </ion-grid>
   <ion-list no-lines>
+    <ion-item (click)="chooseReceiver()">
+      <ion-label floating>Receiver</ion-label>
+      <ion-input type="text" [(ngModel)]="receiver" disabled="true"></ion-input>
+    </ion-item>
     <ion-item>
       <ion-label floating>Item Name</ion-label>
       <ion-input type="text" [(ngModel)]="ItemName"></ion-input>
@@ -29,8 +33,6 @@
     </ion-item>
   </ion-list>
 </ion-content>
-<ion-footer>
-  <ion-toolbar>
-    <button ion-button block (click)="uploadFirebase()">Add</button>
-  </ion-toolbar>
+<ion-footer ion-fixed>
+  <button ion-button block (click)="addItem()">Add</button>
 </ion-footer>

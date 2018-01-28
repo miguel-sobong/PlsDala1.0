@@ -10,14 +10,20 @@
 </ion-header>
 
 
-<ion-content>
-  <div padding>
-    <p>Name: {{selectedItem.firstname}} {{selectedItem.lastname}} ({{selectedItem.email}})</p>
+<ion-content margin-top>
+  <div text-center>
+    <div (click)="viewProfile()">
+      <img src="{{posterImage}}" style="height: 150px; width: 150px;">
+      <p text><b>{{posterName}} ({{posterEmail}})</b></p>
+    </div>
     <p>From: {{selectedItem.fromAddress}} on {{selectedItem.fromDate}}</p>
     <p>To: {{selectedItem.toAddress}} and will arrive at {{selectedItem.toDate}}</p>
   </div>
   <div #map id="map"></div>
-  <div padding *ngIf="poster != selectedItem.userId">
-    <button ion-button color="primary" block margin-bottom (click)="messageUser($event)">Message {{selectedItem.firstname}} {{selectedItem.lastname}}</button>
-  </div>
+
 </ion-content>
+<ion-footer *ngIf="user != selectedItem.userId" ion-fixed>
+  <button ion-button color="primary" block (click)="messageUser($event)">
+    Message {{selectedItem.firstname}} {{selectedItem.lastname}}
+  </button>
+</ion-footer>

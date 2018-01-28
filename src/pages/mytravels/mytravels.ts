@@ -1,23 +1,22 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AddtravelPage } from '../addtravel/addtravel';
-import { PlsdalaProvider } from '../../providers/plsdala/plsdala';
-import { TravelPage } from '../../pages/travel/travel';
-import { LoginPage } from '../../pages/login/login'
+import { MytravelPage } from '../../pages/mytravel/mytravel';
 import { Observable } from 'rxjs/Observable';
+import { PlsdalaProvider } from '../../providers/plsdala/plsdala';
 import * as firebase from 'firebase';
 
-
+@IonicPage()
 @Component({
-  selector: 'page-home',
-  templateUrl: 'home.html'
+  selector: 'page-mytravels',
+  templateUrl: 'mytravels.html',
 })
-export class HomePage 
-{
-  currentUserId;
+export class MytravelsPage {
+
   travelList$: Observable<any>;
-  constructor(public navCtrl: NavController, public navParams: NavParams, 
-    public plsdala: PlsdalaProvider, public toastCtrl: ToastController) {
+  currentUserId;
+
+  constructor(public plsdala: PlsdalaProvider, public navCtrl: NavController, public navParams: NavParams) {
     this.currentUserId = firebase.auth().currentUser.uid;
     this.travelList$ = this.plsdala.getTravelList()
     .snapshotChanges()
@@ -29,12 +28,16 @@ export class HomePage
       });
   }
 
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad MytravelsPage');
+  }
+
   addTravel(event){
     this.navCtrl.push(AddtravelPage);
   }
 
   itemTapped(event, item) {
-    this.navCtrl.push(TravelPage, {
+    this.navCtrl.push(MytravelPage, {
       item: item
     });
   }

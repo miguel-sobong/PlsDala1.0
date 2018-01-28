@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform, Events, AlertController, ToastController } from 'ionic-angular';
+import { Nav, Platform, Events, AlertController, ToastController, LoadingController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import firebase from 'firebase';
@@ -8,6 +8,7 @@ import { HomePage } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
 import { ProfilePage } from '../pages/profile/profile';
 import { ChatlistPage } from '../pages/chatlist/chatlist';
+import { MytravelsPage } from '../pages/mytravels/mytravels';
 import { AngularFireAuth } from 'angularfire2/auth';
 
 import { AuthenticationProvider } from '../providers/authentication/authentication';
@@ -21,9 +22,10 @@ export class MyApp {
   rootPage: any;
   public profileName: string;
   public profileEmail: string;
+  public profileImage: string;
   pages: Array<{title: string, component: any}>;
 
-  constructor(public afAuth: AngularFireAuth, public toastController: ToastController, public alert: AlertController, 
+  constructor(public loadingCtrl: LoadingController, public afAuth: AngularFireAuth, public toastController: ToastController, public alert: AlertController, 
     public authenticationProvider: AuthenticationProvider, public events: Events, public platform: Platform,
    public statusBar: StatusBar, public splashScreen: SplashScreen) {
     this.initializeApp();
@@ -41,15 +43,25 @@ export class MyApp {
   }
 
   getUserInfo(uid){
-    firebase.database().ref('users/').child(uid).on('value', user => {
-        this.profileName = user.val().firstname + ' ' + user.val().lastname;
-        this.profileEmail = user.val().email;
+    var loader = this.loadingCtrl.create({
+      content: 'Getting user data. Please wait'
     });
+    loader.present().then(_=>{
+      firebase.database().ref('users/').child(uid).on('value', user => {
+          this.profileName = user.val().firstname + ' ' + user.val().lastname;
+          this.profileEmail = user.val().email;
+          this.profileImage = user.val().profileimage;
+      });
+    }).then(_=>{
+      loader.dismiss();
+    })
+
   }
 
   setPages(){
     this.pages = [
-      { title: 'Home', component: HomePage },
+      { title: 'Travel Board', component: HomePage },
+      { title: 'My Travels', component: MytravelsPage },
       { title: 'Messages', component: ChatlistPage }
     ];
   }
