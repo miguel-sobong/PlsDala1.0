@@ -6,7 +6,7 @@
 
 
 <ion-content text-center>
-  <img class="pp" src="{{profileImage}}">
+  <img class="pp" src="{{profileImage}}" (click)="openModal(profileImage)">
   <h2>{{profileName}}</h2>
   <p>{{profileEmail}}</p>
   <p class="description">{{profileDescription}}</p>

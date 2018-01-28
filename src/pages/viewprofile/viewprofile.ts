@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { ViewphotoPage } from '../viewphoto/viewphoto'
 import * as firebase from 'firebase';
 
 @IonicPage()
@@ -16,7 +17,7 @@ export class ViewprofilePage {
 	profileImage: any;
   user: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public modal: ModalController, public navCtrl: NavController, public navParams: NavParams) {
     this.selectedItem = navParams.get('item');
     this.user = this.selectedItem;
     console.log(this.selectedItem);
@@ -35,5 +36,9 @@ export class ViewprofilePage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad ViewprofilePage');
   }
+
+ openModal(images){
+  this.modal.create(ViewphotoPage, {imgurl: images}).present();
+ }
 
 }

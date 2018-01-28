@@ -4,6 +4,7 @@ import { Camera, CameraOptions } from "@ionic-native/camera";
 import { ChatPage } from '../chat/chat';
 import { ChoosereceiverPage } from '../choosereceiver/choosereceiver';
 import { PlsdalaProvider } from '../../providers/plsdala/plsdala';
+import * as firebase from 'firebase';
 
 @IonicPage()
 @Component({
@@ -33,6 +34,7 @@ export class AdditemPage {
     public navCtrl: NavController, public navParams: NavParams, public actionSheetCtrl: ActionSheetController,
     public alertCtrl: AlertController, public plsdala: PlsdalaProvider) {
     this.selectedItem = navParams.get('item');
+    console.log(this.selectedItem);
   }
 
   ngOnInit() 
@@ -127,8 +129,7 @@ export class AdditemPage {
   }
 
   addItem(){
-    console.log(this.selectedItem['key']);
-    // if(this.photos > 0){
+    if(this.photos.length > 0){
       if(this.receiverId){
         if(this.ItemName){
           var data = {
@@ -149,7 +150,11 @@ export class AdditemPage {
               for (let i in this.picdata){
                 this.plsdala.uploadItemPhoto(this.picdata[i], i, this.selectedItem['key'], keyData)
               }
-              this.plsdala.addItemMessage(this.selectedItem);
+              var users = {
+                user1: firebase.auth().currentUser.uid,
+                user2: this.selectedItem['userId']
+              }
+              this.plsdala.addItemMessage(users, keyData);
             }, error=>{
               console.log(error);
             });
@@ -166,12 +171,12 @@ export class AdditemPage {
           duration: 3000
         }).present();
       }
-    // }else{
-    //   this.toastCtrl.create({
-    //     message: 'Please add photos of your item',
-    //     duration: 3000
-    //   }).present();
-    // }
+    }else{
+      this.toastCtrl.create({
+        message: 'Please add photos of your item',
+        duration: 3000
+      }).present();
+    }
   }
 
   chooseReceiver(){
@@ -190,12 +195,6 @@ export class AdditemPage {
     });
     modal.present();
   }
-
-  // uploadFirebase(){
-  //   this.plsdala.uploadPhoto(this.picdata, {
-  //     imageName: this.photoId(),
-  //   });
-  // }
 
   deletePhoto(index)    //index, refer home.html line 19
    {

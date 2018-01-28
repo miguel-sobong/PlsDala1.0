@@ -1,6 +1,7 @@
 import { Component,ViewChild, ElementRef } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, ModalController } from 'ionic-angular';
 import { PlsdalaProvider } from '../../providers/plsdala/plsdala';
+import { ViewphotoPage } from '../viewphoto/viewphoto'
 import * as firebase from 'firebase';
 import { Observable } from 'rxjs/Observable';
 declare var google;
@@ -16,7 +17,8 @@ export class MytravelPage {
   items$: Observable<any>;
   map;
 
-  constructor(public plsdala: PlsdalaProvider, public toastCtrl: ToastController, public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public modal: ModalController, public plsdala: PlsdalaProvider, public toastCtrl: ToastController, 
+  	public navCtrl: NavController, public navParams: NavParams) {
     this.selectedItem = navParams.get('item');
   	this.items$ = this.plsdala.getItemsAtTravel(this.selectedItem['key'])
   	.snapshotChanges()
@@ -59,10 +61,9 @@ export class MytravelPage {
           });
         }
 
-
-  getItemsAtTravel(){
-
-
+        openModal(imgurl){
+        	this.modal.create(ViewphotoPage, {imgurl: imgurl}).present();
+        }
 
   	 //    this.travelList$ = this.plsdala.getTravelList()
     // .snapshotChanges()
@@ -90,5 +91,4 @@ export class MytravelPage {
 	// 	})
 	// });
 	// return itemsArr;
-  }
 }

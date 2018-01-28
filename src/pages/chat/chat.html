@@ -3,33 +3,46 @@
     <ion-title>{{user.firstname}} {{user.lastname}}</ion-title>
   </ion-navbar>
 </ion-header>
-
 <ion-content #content>
   <ion-item no-lines *ngFor="let item of items | async">
-    <div item-right *ngIf="item.senderId === userInChat" >
-      <div class="me bubble">
-        {{item.content}}<br><br>
+    <div item-right *ngIf="item.senderId === userInChat">
+      <div class="me bubble" *ngIf="!item.isItem">
+        {{item.content}}
+        <br>
+        <br>
+        <div class="chatTimestamp">{{item.timestamp | date:'mediumDate'}} {{item.timestamp | date:'shortTime'}}</div>
+      </div>
+      <div class="me bubble" *ngIf="item.isItem">
+        {{item.item}}
+        <br>{{item.itemDescription}}
+        <br>{{item.senderFirstname}} {{item.senderLastname}}
         <div class="chatTimestamp">{{item.timestamp | date:'mediumDate'}} {{item.timestamp | date:'shortTime'}}</div>
       </div>
     </div>
-
     <div item-left *ngIf="item.senderId != userInChat">
-        {{item.senderFirstname}} {{item.senderLastname}}:
-      <div class="you bubble">
-        {{item.content}}<br><br>
+      {{item.senderFirstname}} {{item.senderLastname}}:
+      <div class="you bubble" *ngIf="!isItem">
+        {{item.content}}
+        <br>
+        <br>
+        <div class="chatTimestamp">{{item.timestamp | date:'mediumDate'}} {{item.timestamp | date:'shortTime'}}</div>
+      </div>
+      <div class="you bubble" *ngIf="item.isItem">
+        {{item.item}}
+        <br>{{item.itemDescription}}
+        <br>{{item.senderFirstname}} {{item.senderLastname}}
         <div class="chatTimestamp">{{item.timestamp | date:'mediumDate'}} {{item.timestamp | date:'shortTime'}}</div>
       </div>
     </div>
   </ion-item>
 </ion-content>
-
 <ion-footer ion-fixed>
-	<ion-toolbar class="no-border" color="white">
-		<ion-input type="text" [(ngModel)]="newmessage" placeholder="Type a message..."></ion-input>
-		<ion-buttons end>
-	      <button ion-button (click)="addMessage()">
-	        <ion-icon name="send" color="primary"></ion-icon>
-	      </button>
-	    </ion-buttons>
-	</ion-toolbar>
+  <ion-toolbar class="no-border" color="white">
+    <ion-input type="text" [(ngModel)]="newmessage" placeholder="Type a message..."></ion-input>
+    <ion-buttons end>
+      <button ion-button (click)="addMessage()">
+        <ion-icon name="send" color="primary"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-footer>

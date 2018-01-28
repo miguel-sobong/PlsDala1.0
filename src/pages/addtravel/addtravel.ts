@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PlsdalaProvider } from '../../providers/plsdala/plsdala';
 import { MapPage } from '../map/map';
 import { CommonProvider } from '../../providers/common/common';
+import { MytravelsPage } from '../mytravels/mytravels';
 
 @IonicPage()
 @Component({
@@ -65,6 +66,7 @@ export class AddtravelPage {
         }).present();
         loader.dismiss();
         this.navCtrl.pop();
+        this.navCtrl.setRoot(MytravelsPage);
       }, error => {
         this.toastCtrl.create({
           message: error,

@@ -43,14 +43,9 @@ export class PlsdalaProvider {
       lastname: this.user.val().lastname,
       email: this.user.val().email,
       userId: this.user.key
-    });
-    const updateUser = firebase.database().ref('users').child(firebase.auth().currentUser.uid).child('travels').update({
-      [newTravel.key]: true
     })
     .then(
     newTravel => {
-      console.log(newTravel);
-
       resolve(true);
       return;
     }, error => {
@@ -245,7 +240,7 @@ export class PlsdalaProvider {
     return uuid;
   }
 
-  addItemMessage(users){    
+  addItemMessage(users, keydata){   
     this.checkUsers(users).then(data=>{
       if(data){
         const newMessage = this.afd.list('messages/' + data).push({});
@@ -254,7 +249,8 @@ export class PlsdalaProvider {
           senderFirstname: this.user.val().firstname,
           senderLastname: this.user.val().lastname,
           senderId: this.user.key,
-          timestamp: firebase.database.ServerValue.TIMESTAMP
+          timestamp: firebase.database.ServerValue.TIMESTAMP,
+          item: keydata
         });
 
         // firebase.database().ref().child('threads/' + this.user.key + '/' + data).update({
@@ -275,6 +271,7 @@ export class PlsdalaProvider {
   }
 
   getItemsAtTravel(travelKey){
+    console.log(travelKey);
     return this.afd.list('travel_items/' + travelKey);
   }
 }

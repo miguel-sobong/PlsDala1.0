@@ -24,7 +24,7 @@ export class MytravelsPage {
       changes => {
         return changes.map(c=>({
           key: c.payload.key, ...c.payload.val()
-        })).slice().reverse(); //to reverse order
+        })).slice().reverse();
       });
   }
 

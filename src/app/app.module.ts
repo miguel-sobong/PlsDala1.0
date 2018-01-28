@@ -19,6 +19,7 @@ import { ViewprofilePage } from '../pages/viewprofile/viewprofile';
 import { ChoosereceiverPage } from '../pages/choosereceiver/choosereceiver';
 import { MytravelsPage } from '../pages/mytravels/mytravels';
 import { MytravelPage } from '../pages/mytravel/mytravel';
+import { ViewphotoPage } from '../pages/viewphoto/viewphoto';
 
 import { HttpModule } from '@angular/http';
 import { AngularFireModule } from 'angularfire2';
@@ -62,7 +63,8 @@ import { Camera } from '@ionic-native/camera';
     ViewprofilePage,
     ChoosereceiverPage,
     MytravelsPage,
-    MytravelPage
+    MytravelPage,
+    ViewphotoPage
   ],
   imports: [
     BrowserModule,
@@ -90,7 +92,8 @@ import { Camera } from '@ionic-native/camera';
     ViewprofilePage,
     ChoosereceiverPage,
     MytravelsPage,
-    MytravelPage
+    MytravelPage,
+    ViewphotoPage
   ],
   providers: [
     StatusBar,
