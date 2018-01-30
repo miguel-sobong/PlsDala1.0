@@ -199,32 +199,108 @@ export class PlsdalaProvider {
     });
   }
 
-  addItem(data, item){
+  addItem(users, data, item){
     return new Promise(resolve=>{
-      const newItem = this.afd.list('travel_items/' + item.key).push({});
-      newItem.set({
-       itemName: data.name,
-       sender: this.user.key,
-       receiverName: data.receiverName,
-       receiverId: data.receiverId
-      }).then(_=>{
-        if(data.description){
-          firebase.database().ref('travel_items/' + item.key).child(newItem.key).update({
-            itemDescription: data.description,
-          });
+      this.checkUsers(users).then(dbkey=>{
+        if(dbkey)
+        {
+          const newItem = this.afd.list('messages/' + dbkey).push({});
+          newItem.set({
+           isItem: true,
+           senderFirstname: this.user.val().firstname,
+           senderLastname: this.user.val().lastname,
+           itemName: data.name,
+           senderId: this.user.key,
+           receiverName: data.receiverName,
+           receiverId: data.receiverId,
+           courierId: users.user2,
+           isAccepted: false,
+           isDeclined: false,
+           timestamp: firebase.database.ServerValue.TIMESTAMP
+          }).then(_=>{
+            if(data.description){
+              firebase.database().ref('messages/' + dbkey).child(newItem.key).update({
+                itemDescription: data.description,
+              });
+            }
+            firebase.database().ref().child('threads/' + this.user.key + '/' + dbkey).update({
+              title: data.receiverName,
+              lastMessage: this.user.val().firstname + ' ' + this.user.val().lastname + ' sent an item!',
+              seen: true,
+              timestamp: firebase.database.ServerValue.TIMESTAMP
+            });
+
+            firebase.database().ref().child('threads/' + users.user2 + '/' + dbkey).update({
+              title: this.user.val().firstname + ' ' + this.user.val().lastname,
+              lastMessage: this.user.val().firstname + ' ' + this.user.val().lastname + ' sent an item!',
+              seen: false,
+              timestamp: firebase.database.ServerValue.TIMESTAMP
+            });
+          }).then(_=>{
+            var returnData = {
+              threadkey: dbkey,
+              msgkey: newItem.key
+            }
+            return resolve(returnData);
+          })
         }
       });
-      return resolve(newItem.key);
+   });
+  }
+
+  addReceiverInChat(users){
+    return new Promise(resolve=>{
+      this.checkUsers(users).then(res=>{
+        if(!res){
+          const threadUsers = firebase.database().ref('thread_users').push({});
+          threadUsers.set({
+            [users.user1]: true,
+            [users.user2]: true,
+            [users.user3]: true,
+          });
+          resolve(threadUsers.key);
+         }
+         else{
+           resolve(res);
+         }
+      });
     });
   }
 
+  getUsersInThree(users, key){
+    var url = "https://plsdala-8609a.firebaseio.com/users/";
+      this.http.get(url + users.user1 + '.json').map(res => res.json()).subscribe(user1data => {
+        this.http.get(url + users.user2 + '.json').map(res => res.json()).subscribe(user2data => {
+          this.http.get(url + users.user3 + '.json').map(res => res.json()).subscribe(user3data => {
+            firebase.database().ref().child('threads/' + users.user1 + '/' + key).set({
+              lastMessage: user1data['firstname'] + ' ' + user1data['lastname'] +' sent an item!',
+              seen: true,
+              timestamp: firebase.database.ServerValue.TIMESTAMP,
+              title: user2data['firstname'] + ' ' + user2data['lastname'] + ' and ' + user3data['firstname'] + ' ' + user3data['lastname']
+            });
+            firebase.database().ref().child('threads/' + users.user2 + '/' + key).set({
+              lastMessage: user1data['firstname'] + ' ' + user1data['lastname'] +' sent an item!',
+              seen: false,
+              timestamp: firebase.database.ServerValue.TIMESTAMP,
+              title: user1data['firstname'] + ' ' + user1data['lastname'] + ' and ' + user3data['firstname'] + ' ' + user3data['lastname']
+            });
+            firebase.database().ref().child('threads/' + users.user3 + '/' + key).set({
+              lastMessage: user1data['firstname'] + ' ' + user1data['lastname'] +' sent an item!',
+              seen: false,
+              timestamp: firebase.database.ServerValue.TIMESTAMP,
+              title: user1data['firstname'] + ' ' + user1data['lastname'] + ' and ' + user2data['firstname'] + ' ' + user2data['lastname']
+            });
+          });
+        });
+      });
+  }
+
   uploadItemPhoto(picdata, index, itemkey, dbkey){
-    var image = [];
     firebase.storage().ref('items').child(firebase.auth().currentUser.uid)
     .child(this.photoId().concat('png'))
     .putString(picdata, 'base64', {contentType: 'image/png'})
     .then(savedPhoto=>{
-      firebase.database().ref('travel_items/' + itemkey).child(dbkey).child('images').update({
+      firebase.database().ref('messages/' + dbkey.threadkey).child(dbkey.msgkey).child('images').update({
         [index]: savedPhoto.downloadURL
       })
     });
@@ -238,36 +314,6 @@ export class PlsdalaProvider {
       return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
     });
     return uuid;
-  }
-
-  addItemMessage(users, keydata){   
-    this.checkUsers(users).then(data=>{
-      if(data){
-        const newMessage = this.afd.list('messages/' + data).push({});
-        newMessage.set({
-          isItem: true,
-          senderFirstname: this.user.val().firstname,
-          senderLastname: this.user.val().lastname,
-          senderId: this.user.key,
-          timestamp: firebase.database.ServerValue.TIMESTAMP,
-          item: keydata
-        });
-
-        // firebase.database().ref().child('threads/' + this.user.key + '/' + data).update({
-        //   title: details.receiverFirstname + ' ' + details.receiverLastname,
-        //   lastMessage: this.user.val().firstname + ' ' + this.user.val().lastname + ': ' + details.content,
-        //   seen: true,
-        //   timestamp: firebase.database.ServerValue.TIMESTAMP
-        // });
-
-        // firebase.database().ref().child('threads/' + users.receiverId + '/' + data).update({
-        //   title: this.user.val().firstname + ' ' + this.user.val().lastname,
-        //   lastMessage: this.user.val().firstname + ' ' + this.user.val().lastname + ': ' + details.content,
-        //   seen: false,
-        //   timestamp: firebase.database.ServerValue.TIMESTAMP
-        // });
-      }
-    });
   }
 
   getItemsAtTravel(travelKey){

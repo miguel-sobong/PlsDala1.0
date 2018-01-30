@@ -146,18 +146,15 @@ export class AdditemPage {
               message: 'Adding item',
               duration: 3000
             }).present();
-            this.plsdala.addItem(data, this.selectedItem).then(keyData=>{
+            var users = {
+              user1: firebase.auth().currentUser.uid,
+              user2: this.selectedItem['userId']
+            }
+            this.plsdala.addItem(users, data, this.selectedItem).then(keyData=>{
               for (let i in this.picdata){
-                this.plsdala.uploadItemPhoto(this.picdata[i], i, this.selectedItem['key'], keyData)
-              }
-              var users = {
-                user1: firebase.auth().currentUser.uid,
-                user2: this.selectedItem['userId']
-              }
-              this.plsdala.addItemMessage(users, keyData);
-            }, error=>{
-              console.log(error);
-            });
+                this.plsdala.uploadItemPhoto(this.picdata[i], i, this.selectedItem['key'], keyData);
+              };
+            })
           });
         }else{
           this.toastCtrl.create({
@@ -179,9 +176,12 @@ export class AdditemPage {
     }
   }
 
+
+
   chooseReceiver(){
     let modal = this.modalCtrl.create(ChoosereceiverPage, {
       data: {
+        courierId: this.selectedItem['userId'],
         name: '',
         uid: ''
       }

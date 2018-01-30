@@ -13,10 +13,13 @@ export class ChoosereceiverPage {
 
 	userlist: Observable<any>;
 	selectedUser;
+  selectedItem;
 	user;
 
   constructor(public viewCtrl: ViewController, public loadingCtrl: LoadingController, public plsdala: PlsdalaProvider, 
     public navCtrl: NavController, public navParams: NavParams) {
+    this.selectedItem = navParams.get('data').courierId;
+    console.log(this.selectedItem);
   	var loader = this.loadingCtrl.create({
   		content: 'Getting user list'
   	});

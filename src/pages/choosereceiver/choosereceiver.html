@@ -9,7 +9,7 @@
 <ion-content>
   <div>
   	<ion-list *ngFor="let item of userlist | async">
-  		<ion-item *ngIf="item.id != user">
+  		<ion-item *ngIf="item.id != user && item.id != selectedItem">
 	  			<ion-label (click)="viewProfile(item.id)" >
 	  				<h4><b>{{item.firstname}} {{item.lastname}} ({{item.email}})</b></h4>
 	  			</ion-label>

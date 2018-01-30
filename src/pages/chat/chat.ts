@@ -1,7 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, Content } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Content, ModalController } from 'ionic-angular';
 import { PlsdalaProvider } from '../../providers/plsdala/plsdala';
+import { ViewphotoPage } from '../viewphoto/viewphoto';
 import { Observable } from 'rxjs/Observable';
+import { ViewprofilePage } from '../viewprofile/viewprofile';
+import { ProfilePage } from '../profile/profile';
 import 'rxjs/add/observable/fromPromise';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
@@ -22,11 +25,13 @@ export class ChatPage {
   newmessage: string;
   items: Observable<any>;
   link: any;
+  key: any;
   check: boolean;
     
-  constructor(public afd:  AngularFireDatabase, public navCtrl: NavController, 
+  constructor(public modal: ModalController, public afd:  AngularFireDatabase, public navCtrl: NavController, 
     public navParams: NavParams, public plsdala: PlsdalaProvider) {
     this.user = this.navParams.get('item');
+    console.log(this.user);
     firebase.database().ref('users/')
     .child(firebase.auth().currentUser.uid)
     .once('value', user => {
@@ -41,6 +46,7 @@ export class ChatPage {
 
       this.plsdala.getMessages(users)
       .then(data=>{
+        this.key = data;
         this.items = this.afd.list('messages/' + data).snapshotChanges()
         .map(
           changes => {
@@ -52,7 +58,6 @@ export class ChatPage {
             }))
           })
       })
-
     });
   }
 
@@ -74,16 +79,40 @@ export class ChatPage {
         senderId: this.loggedInUser.key,
         receiverId: this.user.userId,
       }
-
-      // {
-      //   content: this.newmessage,
-      //   sentBy: this.user.userId,
-      //   name: localStorage.getItem('name'),
-      // }
-
       this.plsdala.addMessage(details, users);
-      // this.newmessage = '';
-      // this.content.scrollToBottom();
       }
     }
-  }  
+
+        openModal(imgurl){
+          this.modal.create(ViewphotoPage, {imgurl: imgurl}).present();
+        }
+
+          viewProfile(key){
+    if(key == this.user)
+      this.navCtrl.push(ProfilePage);
+    else
+      this.navCtrl.push(ViewprofilePage, {item: key});
+  }
+
+  Accept(item){
+    console.log(this.items);
+    var usersWithReceiver = {
+      user1: firebase.auth().currentUser.uid,
+      user2: this.user.userId,
+      user3: item.receiverId
+      };
+    this.plsdala.addReceiverInChat(usersWithReceiver).then(key=>{
+      console.log(key, item.key);
+      this.plsdala.getUsersInThree(usersWithReceiver, key);
+      firebase.database().ref('messages/' + this.key).child(item.key).update({
+        isAccepted: true
+      });
+    });
+  }
+
+  Decline(item){
+    firebase.database().ref('messages/' + this.key).child(item.key).update({
+      isDeclined: true
+     });  
+  }
+}  
