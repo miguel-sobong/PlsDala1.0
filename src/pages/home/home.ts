@@ -16,9 +16,32 @@ export class HomePage
 {
   currentUserId;
   travelList$: Observable<any>;
+  UserIsVerified: any;
+  searchTravel = '';
   constructor(public navCtrl: NavController, public navParams: NavParams, 
     public plsdala: PlsdalaProvider, public toastCtrl: ToastController) {
     this.currentUserId = firebase.auth().currentUser.uid;
+    this.initializeItems();
+    firebase.database().ref('users/' + firebase.auth().currentUser.uid)
+    .child('isVerified')
+    .on('value', isVerified => {
+        this.UserIsVerified = isVerified.val();
+        console.log(isVerified.val());
+    });
+ }
+
+  addTravel(event){
+    this.navCtrl.push(AddtravelPage);
+  }
+
+  itemTapped(event, item) {
+    console.log(this.UserIsVerified);
+    this.navCtrl.push(TravelPage, {
+      item: item
+    });
+  }
+
+  initializeItems(){
     this.travelList$ = this.plsdala.getTravelList()
     .snapshotChanges()
     .map(
@@ -27,15 +50,5 @@ export class HomePage
           key: c.payload.key, ...c.payload.val()
         })).slice().reverse(); //to reverse order
       });
-  }
-
-  addTravel(event){
-    this.navCtrl.push(AddtravelPage);
-  }
-
-  itemTapped(event, item) {
-    this.navCtrl.push(TravelPage, {
-      item: item
-    });
   }
 }

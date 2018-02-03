@@ -35,6 +35,8 @@ export class AdditemPage {
     public alertCtrl: AlertController, public plsdala: PlsdalaProvider) {
     this.selectedItem = navParams.get('item');
     console.log(this.selectedItem);
+
+
   }
 
   ngOnInit() 

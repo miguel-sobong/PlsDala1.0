@@ -15,6 +15,7 @@ export class MytravelsPage {
 
   travelList$: Observable<any>;
   currentUserId;
+  UserIsVerified;
 
   constructor(public plsdala: PlsdalaProvider, public navCtrl: NavController, public navParams: NavParams) {
     this.currentUserId = firebase.auth().currentUser.uid;
@@ -25,6 +26,11 @@ export class MytravelsPage {
         return changes.map(c=>({
           key: c.payload.key, ...c.payload.val()
         })).slice().reverse();
+      });
+      firebase.database().ref('users/' + firebase.auth().currentUser.uid)
+      .child('isVerified')
+      .on('value', isVerified => {
+          this.UserIsVerified = isVerified.val();
       });
   }
 

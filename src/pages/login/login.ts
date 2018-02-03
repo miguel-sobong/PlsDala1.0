@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, Events, NavController, NavParams, AlertController, LoadingController, ToastController } from 'ionic-angular';
+import { IonicPage, Events, NavController, LoadingController, ToastController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RegisterPage } from '../register/register';
 import { AuthenticationProvider } from '../../providers/authentication/authentication';
@@ -17,8 +17,8 @@ export class LoginPage {
 
 	loginForm: FormGroup;
 
-	constructor(public events: Events, public common: CommonProvider, public navCtrl: NavController, public navParams: NavParams,
-    public formBuilder: FormBuilder, public authenticationProvider: AuthenticationProvider, public alertController: AlertController, public loadingController: LoadingController, public toastController: ToastController) {
+	constructor(public events: Events, public common: CommonProvider, public navCtrl: NavController,
+    public formBuilder: FormBuilder, public authenticationProvider: AuthenticationProvider, public loadingController: LoadingController, public toastController: ToastController) {
     //validate if input is email
     this.loginForm = formBuilder.group({ 
       email: ['', Validators.compose([Validators.required, EmailValidator.isValid])], 
@@ -39,7 +39,6 @@ export class LoginPage {
       if(this.loginForm.valid)
       {
         this.authenticationProvider.loginUser(this.loginForm.value).then(success=>{
-          console.log(success);
           loader.dismiss();
           this.navCtrl.setRoot(HomePage);
         }, fail => {
@@ -58,12 +57,7 @@ export class LoginPage {
     }
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad LoginPage');
-  }
-
   goToRegister(){
     this.navCtrl.push(RegisterPage);
   }
-
 }

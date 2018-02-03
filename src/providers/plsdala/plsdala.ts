@@ -11,6 +11,7 @@ export class PlsdalaProvider {
 
   db = firebase.database().ref();
   travelList: AngularFireList<any>;
+  public userIsVerified;
   baseUrl = 'https://plsdala-8609a.firebaseio.com/';
   chatId;
   threadId;
@@ -28,17 +29,19 @@ export class PlsdalaProvider {
   }
 
   addTravel(to, from, toDate, fromDate){
+    var fromParse = Date.parse(fromDate)/1000;
+    var toParse = Date.parse(toDate)/1000;
     return new Promise((resolve, reject)=>{
     const newTravel = this.travelList.push({});
     newTravel.set({
       fromX: from.x,
       fromY: from.y,
       fromAddress: from.address,
-      fromDate: fromDate,
+      fromDate: fromParse,
       toX: to.x,
       toY: to.y,
       toAddress: to.address,
-      toDate: toDate,
+      toDate: toParse,
       firstname: this.user.val().firstname,
       lastname: this.user.val().lastname,
       email: this.user.val().email,
@@ -320,4 +323,5 @@ export class PlsdalaProvider {
     console.log(travelKey);
     return this.afd.list('travel_items/' + travelKey);
   }
+ 
 }

@@ -5,7 +5,7 @@
     </button>
     <ion-title>My Travels</ion-title>
 
-    <ion-buttons end (click)="addTravel($event)">
+    <ion-buttons end (click)="addTravel($event)" *ngIf="UserIsVerified">
       <button ion-button icon-only>
         <ion-icon name="add"></ion-icon>
       </button>

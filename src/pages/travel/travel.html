@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar color="primary">
     <ion-title>Travel</ion-title>
-    <ion-buttons end (click)="addItem($event)">
+    <ion-buttons end (click)="addItem($event)" *ngIf="UserIsVerified">
       <button ion-button>
         Add Item
       </button>

@@ -18,6 +18,7 @@ export class TravelPage {
   selectedItem: any;
   map;
   user;
+  UserIsVerified;
 
   posterName: string;
   posterEmail: string;
@@ -28,6 +29,12 @@ export class TravelPage {
     var loader = this.loadingCtrl.create({
       content: 'Getting user information'
     });
+
+    firebase.database().ref('users/' + firebase.auth().currentUser.uid)
+      .child('isVerified')
+      .on('value', isVerified => {
+          this.UserIsVerified = isVerified.val()
+      });
     loader.present();
     this.selectedItem = navParams.get('item');
     console.log(this.selectedItem);
