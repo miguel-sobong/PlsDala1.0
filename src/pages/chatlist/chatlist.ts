@@ -28,7 +28,7 @@ export class ChatlistPage {
       changes => {
         return changes.map(c=>({
           key: c.payload.key, ...c.payload.val()
-        }))
+        })).slice().reverse();
       });
   }
 
@@ -45,9 +45,6 @@ export class ChatlistPage {
     this.navCtrl.push(ContinuechatPage, {
       item: item
     });
-  	// this.navCtrl.push(ChatPage,{
-   //    item: item.user1
-   //  });
   }
     // this.user = this.navParams.get('item');
     // var users = {

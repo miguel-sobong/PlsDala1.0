@@ -10,6 +10,7 @@ import { ProfilePage } from '../pages/profile/profile';
 import { ChatlistPage } from '../pages/chatlist/chatlist';
 import { MytravelsPage } from '../pages/mytravels/mytravels';
 import { AngularFireAuth } from 'angularfire2/auth';
+import { TransactionsPage } from '../pages/transactions/transactions';
 
 import { AuthenticationProvider } from '../providers/authentication/authentication';
 
@@ -62,7 +63,8 @@ export class MyApp {
     this.pages = [
       { title: 'Travel Board', component: HomePage },
       { title: 'My Travels', component: MytravelsPage },
-      { title: 'Messages', component: ChatlistPage }
+      { title: 'Messages', component: ChatlistPage },
+      { title: 'Transactions', component: TransactionsPage}
     ];
   }
 

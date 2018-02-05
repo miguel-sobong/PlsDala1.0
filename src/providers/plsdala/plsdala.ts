@@ -37,15 +37,15 @@ export class PlsdalaProvider {
       fromX: from.x,
       fromY: from.y,
       fromAddress: from.address,
-      fromDate: fromParse,
+      fromDate: fromDate,
       toX: to.x,
       toY: to.y,
       toAddress: to.address,
-      toDate: toParse,
+      toDate: toDate,
       firstname: this.user.val().firstname,
       lastname: this.user.val().lastname,
       email: this.user.val().email,
-      userId: this.user.key
+      userId: firebase.auth().currentUser.uid
     })
     .then(
     newTravel => {
@@ -67,7 +67,7 @@ export class PlsdalaProvider {
   }
 
   checkUsers(users){
-      console.log('run');
+      console.log(users);
       return new Promise((resolve, reject)=>{
       var clUserCount = Object.keys(users).length;
       var dbUserCount = 0;
@@ -90,6 +90,7 @@ export class PlsdalaProvider {
                 finalCheck++;
                 console.log(finalCheck);
                 if(finalCheck == clUserCount){
+                  console.log('yay');
                   threadId = snap.key;
                   resolve(threadId);
                   return true;
@@ -140,7 +141,7 @@ export class PlsdalaProvider {
           content: details.content,
           senderFirstname: this.user.val().firstname,
           senderLastname: this.user.val().lastname,
-          senderId: this.user.key,
+          senderId: firebase.auth().currentUser.uid,
           timestamp: firebase.database.ServerValue.TIMESTAMP
         });
 
@@ -162,7 +163,7 @@ export class PlsdalaProvider {
   }
 
   getChatList(){
-    return this.afd.list('threads/' + this.user.key);
+    return this.afd.list('threads/' + firebase.auth().currentUser.uid);
   }
 
   getUserInChatList(threadId){
@@ -183,14 +184,14 @@ export class PlsdalaProvider {
   }
 
   uploadProfilePhoto(imageData){
-    const photoRef = firebase.storage().ref('users').child(this.user.uid);
+    const photoRef = firebase.storage().ref('users').child(firebase.auth().currentUser.uid);
     photoRef.putString(imageData, 'base64', { contentType: 'image/png'})
     .then(savedPhoto=>{
       this.toastCtrl.create({
          message: 'Photo uploaded!',
          duration: 3000
        }).present();
-      firebase.database().ref('users').child(this.user.uid).update({
+      firebase.database().ref('users').child(firebase.auth().currentUser.uid).update({
         profileimage: savedPhoto.downloadURL
       });
     });
@@ -213,13 +214,15 @@ export class PlsdalaProvider {
            senderFirstname: this.user.val().firstname,
            senderLastname: this.user.val().lastname,
            itemName: data.name,
-           senderId: this.user.key,
+           senderId: firebase.auth().currentUser.uid,
            receiverName: data.receiverName,
            receiverId: data.receiverId,
            courierId: users.user2,
            isAccepted: false,
            isDeclined: false,
-           timestamp: firebase.database.ServerValue.TIMESTAMP
+           timestamp: firebase.database.ServerValue.TIMESTAMP,
+           receiverAccepted: false,
+           travelKey: item.key
           }).then(_=>{
             if(data.description){
               firebase.database().ref('messages/' + dbkey).child(newItem.key).update({
@@ -271,6 +274,7 @@ export class PlsdalaProvider {
   }
 
   getUsersInThree(users, key){
+    console.log(users);
     var url = "https://plsdala-8609a.firebaseio.com/users/";
       this.http.get(url + users.user1 + '.json').map(res => res.json()).subscribe(user1data => {
         this.http.get(url + users.user2 + '.json').map(res => res.json()).subscribe(user2data => {
@@ -309,6 +313,7 @@ export class PlsdalaProvider {
     });
   }
 
+
   photoId(){
     var d = new Date().getTime();
     var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx'.replace(/[xy]/g, function (c) {
@@ -322,6 +327,40 @@ export class PlsdalaProvider {
   getItemsAtTravel(travelKey){
     console.log(travelKey);
     return this.afd.list('travel_items/' + travelKey);
+  }
+
+  addTransaction(item){
+    firebase.database().ref('travels').child(item.travelKey).once("value", snapshot=>{
+      const newTransaction = this.afd.list('transactions').push({});
+      newTransaction.set({
+        senderId: item.senderId,
+        courierId: item.courierId,
+        receiverId: item.receiverId,
+        itemName: item.itemName,
+        images: item.images,
+        senderName: item.senderFirstname + ' ' + item.senderLastname,
+        receiverName: item.receiverName,
+        courierName: snapshot.val().firstname + ' ' + snapshot.val().lastname,
+        fromX: snapshot.val().fromX,
+        fromY: snapshot.val().fromY,
+        fromAddress: snapshot.val().fromAddress,
+        toX: snapshot.val().toX,
+        toY: snapshot.val().toY,
+        toAddress: snapshot.val().toAddress
+      });
+      if(item.itemDescription){
+        newTransaction.update({
+          itemDescription: item.itemDescription
+        });
+      }
+
+      firebase.database().ref('user_transactions').child(item.senderId)
+      .child('sender').push({}).set({[newTransaction.key]: true});
+      firebase.database().ref('user_transactions').child(item.courierId)
+      .child('courier').push({}).set({[newTransaction.key]: true});
+      firebase.database().ref('user_transactions').child(item.receiverId)
+      .child('receiver').push({}).set({[newTransaction.key]: true});
+    });
   }
  
 }

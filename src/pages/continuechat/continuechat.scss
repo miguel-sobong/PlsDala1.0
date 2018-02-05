@@ -1,9 +1,11 @@
 page-continuechat {
+
     .chatTimestamp{
         display: flex;
         font-size: 1.3rem;
-    }
 
+    }
+    
 	.bubble{
 	    background-color: #F2F2F2;
 	    border-radius: 5px;
@@ -31,4 +33,27 @@ page-continuechat {
   	      	color: #7F848E
 	    }
 	}
+	
+	.wait{
+		padding: 20px;
+		background-color: black;
+		color: white;
+		text-align: center;
+	}
+
+	.accept{
+		padding: 20px;
+		background-color: #488aff;
+		color: white;
+		text-align: center;
+	}
+
+	.decline{
+		padding: 20px;
+		background-color: #f53d3d;
+		color: white;
+		text-align: center;
+	}
+
+
 }

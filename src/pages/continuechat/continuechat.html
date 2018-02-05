@@ -3,6 +3,7 @@
     <ion-title>{{chatName}}</ion-title>
   </ion-navbar>
 </ion-header>
+
 <ion-content #content>
   <ion-item no-lines *ngFor="let item of items | async">
     <div item-right *ngIf="item.senderId === loggedInUser">
@@ -12,27 +13,58 @@
         <br>
         <div class="chatTimestamp">{{item.timestamp | date:'mediumDate'}} {{item.timestamp | date:'shortTime'}}</div>
       </div>
-      <div class="me bubble" *ngIf="item.isItem">
-        {{item.item}}
-        <br>{{item.itemDescription}}
-        <br>{{item.senderFirstname}} {{item.senderLastname}}
-        <div class="chatTimestamp">{{item.timestamp | date:'mediumDate'}} {{item.timestamp | date:'shortTime'}}</div>
-      </div>
     </div>
     <div item-left *ngIf="item.senderId != loggedInUser">
-      {{item.senderFirstname}} {{item.senderLastname}}:
       <div class="you bubble" *ngIf="!item.isItem">
+      {{item.senderFirstname}} {{item.senderLastname}}:
         {{item.content}}
         <br>
         <br>
         <div class="chatTimestamp">{{item.timestamp | date:'mediumDate'}} {{item.timestamp | date:'shortTime'}}</div>
       </div>
-      <div class="you bubble" *ngIf="item.isItem">
-        {{item.item}}
-        <br>{{item.itemDescription}}
-        <br>{{item.senderFirstname}} {{item.senderLastname}}
-        <div class="chatTimestamp">{{item.timestamp | date:'mediumDate'}} {{item.timestamp | date:'shortTime'}}</div>
-      </div>
+    </div>
+        <div *ngIf="item.isItem">
+      <ion-card>
+        <ion-card-header text-center>
+          {{item.itemName}}
+        </ion-card-header>
+        <ion-card-content>
+            <p text-center>{{item.itemDescription}}</p>
+            <hr>
+          <div>
+            <p (click)="viewProfile(item.senderId)">Sent by: {{item.senderFirstname}} {{item.senderLastname}}</p>
+            <br>
+            <p (click)="viewProfile(item.receiverId)">Send to: {{item.receiverName}}</p>
+          </div>
+          <ion-grid>
+            <ion-row>
+              <ion-col col-4 *ngFor="let img of item.images">
+                <img src="{{img}}" (click)="openModal(img)">
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+            <div *ngIf="item.isAccepted == false && item.isDeclined == false && item.senderId != loggedInUser">
+              <button col-6 ion-button (click)="Accept(item)">Accept</button>
+              <button col-6 ion-button color="light" (click)="Decline(item)">Decline</button>
+            </div>
+            <div *ngIf="item.isAccepted == false && item.isDeclined == false && item.senderId == loggedInUser">
+              <p col-12 class="wait">Waiting for decision</p>
+            </div>
+            <div *ngIf="item.isAccepted == true">
+              <p col-12 class="accept" background-color="primary">Courier Accepted!</p>
+              <p col-12 class="accept" *ngIf="item.receiverAccepted == true">Receiver Accepted!</p>            
+                <div *ngIf="item.receiverAccepted == false && item.receiverId == loggedInUser">
+                  <button col-6 ion-button (click)="AcceptReceiver(item)">Accept</button>
+                  <button col-6 ion-button color="light" (click)="DeclineReceiver(item)">Decline</button>
+                </div>
+              <p col-12 class="wait" *ngIf="item.receiverAccepted == false && item.receiverId != loggedInUser">Waiting for receiver to accept</p>
+            </div>
+            <div *ngIf="item.isDeclined == true && item.isAccepted == false">
+              <p col-12 class="decline">Courier Declined!</p>
+            </div>
+        </ion-card-content>
+        <div class="chatTimestamp item" style="display: block; text-align: center">{{item.timestamp | date:'mediumDate'}} {{item.timestamp | date:'shortTime'}}</div>
+      </ion-card>
     </div>
   </ion-item>
 </ion-content>

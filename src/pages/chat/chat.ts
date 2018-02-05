@@ -76,18 +76,18 @@ export class ChatPage {
         receiverLastname: this.user.lastname
       }
       var users = {
-        senderId: this.loggedInUser.key,
+        senderId: firebase.auth().currentUser.uid,
         receiverId: this.user.userId,
-      }
+      };
       this.plsdala.addMessage(details, users);
       }
     }
 
-        openModal(imgurl){
-          this.modal.create(ViewphotoPage, {imgurl: imgurl}).present();
-        }
+  openModal(imgurl){
+    this.modal.create(ViewphotoPage, {imgurl: imgurl}).present();
+  }
 
-          viewProfile(key){
+  viewProfile(key){
     if(key == this.user)
       this.navCtrl.push(ProfilePage);
     else
@@ -97,8 +97,8 @@ export class ChatPage {
   Accept(item){
     console.log(this.items);
     var usersWithReceiver = {
-      user1: firebase.auth().currentUser.uid,
-      user2: this.user.userId,
+      user1: item.senderId,
+      user2: item.courierId,
       user3: item.receiverId
       };
     this.plsdala.addReceiverInChat(usersWithReceiver).then(key=>{

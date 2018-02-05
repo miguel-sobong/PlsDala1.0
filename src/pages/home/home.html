@@ -21,10 +21,10 @@
       </ion-card-header>
       <ion-card-content>
         <h5>{{item.fromAddress}}</h5>
-        <p>at {{item.fromDate}}</p>
+        <p>at {{item.fromDate | date:'mediumDate'}}</p>
         <h6>To</h6>
         <h5>{{item.toAddress}}</h5>
-        <p>at {{item.toDate}} </p>
+        <p>at {{item.toDate | date:'mediumDate'}} </p>
       </ion-card-content>
     </ion-card>
   </ion-list>

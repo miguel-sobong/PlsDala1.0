@@ -88,7 +88,7 @@ export class MapPage {
           loader.dismiss();
           this.toastController.create({
             message: results[0].formatted_address,
-            duration: 3000
+            duration: 1000
           }).present();
         } else {
           loader.dismiss();
