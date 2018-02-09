@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import { DatePipe } from '@angular/common'
 import * as firebase from 'firebase';
 
 import { MyApp } from './app.component';
@@ -20,7 +21,9 @@ import { ChoosereceiverPage } from '../pages/choosereceiver/choosereceiver';
 import { MytravelsPage } from '../pages/mytravels/mytravels';
 import { MytravelPage } from '../pages/mytravel/mytravel';
 import { ViewphotoPage } from '../pages/viewphoto/viewphoto';
-import{ TransactionsPage } from '../pages/transactions/transactions';
+import { TransactionsPage } from '../pages/transactions/transactions';
+import { ViewmapPage } from '../pages/viewmap/viewmap';
+import { TransactionhistoryPage } from '../pages/transactionhistory/transactionhistory';
 
 import { HttpModule } from '@angular/http';
 import { AngularFireModule } from 'angularfire2';
@@ -66,7 +69,9 @@ import { Camera } from '@ionic-native/camera';
     MytravelsPage,
     MytravelPage,
     ViewphotoPage,
-    TransactionsPage
+    TransactionsPage,
+    ViewmapPage,
+    TransactionhistoryPage
   ],
   imports: [
     BrowserModule,
@@ -96,7 +101,9 @@ import { Camera } from '@ionic-native/camera';
     MytravelsPage,
     MytravelPage,
     ViewphotoPage,
-    TransactionsPage
+    TransactionsPage,
+    ViewmapPage,
+    TransactionhistoryPage
   ],
   providers: [
     StatusBar,
@@ -105,7 +112,8 @@ import { Camera } from '@ionic-native/camera';
     AuthenticationProvider,
     CommonProvider,
     PlsdalaProvider,
-    Camera
+    Camera,
+    DatePipe
   ]
 })
 export class AppModule {}

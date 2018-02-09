@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { PlsdalaProvider } from '../../providers/plsdala/plsdala';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { Observable } from 'rxjs/Observable';
+import * as firebase from 'firebase';
 
 import { ContinuechatPage } from '../../pages/continuechat/continuechat';
 /**
@@ -45,6 +46,9 @@ export class ChatlistPage {
     this.navCtrl.push(ContinuechatPage, {
       item: item
     });
+
+    firebase.database().ref('threads/').child(firebase.auth().currentUser.uid)
+    .child(item.key).update({seen:true});
   }
     // this.user = this.navParams.get('item');
     // var users = {

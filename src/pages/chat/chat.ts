@@ -27,9 +27,11 @@ export class ChatPage {
   link: any;
   key: any;
   check: boolean;
+  alreadyScrolled: boolean;
     
   constructor(public modal: ModalController, public afd:  AngularFireDatabase, public navCtrl: NavController, 
     public navParams: NavParams, public plsdala: PlsdalaProvider) {
+    this.alreadyScrolled = false;
     this.user = this.navParams.get('item');
     console.log(this.user);
     firebase.database().ref('users/')
@@ -43,22 +45,20 @@ export class ChatPage {
         user1: this.loggedInUser.key, 
         user2: this.user.userId
       };
-
-      this.plsdala.getMessages(users)
-      .then(data=>{
-        this.key = data;
-        this.items = this.afd.list('messages/' + data).snapshotChanges()
-        .map(
-          changes => {
-            console.log('here');
-            this.content.scrollToBottom();
-            this.newmessage = '';
-            return changes.map(c=>({
-              key: c.payload.key, ...c.payload.val()
-            }))
-          })
-      })
-    });
+        this.plsdala.getMessages(users)
+              .then(data=>{
+                this.key = data;
+                this.items = this.afd.list('messages/' + data).snapshotChanges()
+                .map(
+                  changes => {
+                    return changes.map(c=>(
+                    {
+                      key: c.payload.key, ...c.payload.val()
+                    } 
+                    ))
+                  })
+              })
+          });
   }
 
   ionViewDidLoad() {
@@ -80,6 +80,8 @@ export class ChatPage {
         receiverId: this.user.userId,
       };
       this.plsdala.addMessage(details, users);
+      this.content.scrollToBottom();
+      this.newmessage = '';
       }
     }
 

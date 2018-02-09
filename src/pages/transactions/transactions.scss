@@ -1,11 +1,25 @@
 page-transactions {
 	.navcust{
 		border-bottom: 2px solid #d3d3d3;
-		font-size: 14px;
+		font-size: 20px;
 		color: black;
 	}
 
 	.active{
 		border-bottom: 2px solid #488aff;
+		color: #488aff;
+	}
+
+	.navTop{
+		background-color: white;
+	}
+
+	.containera{
+		margin-top: 75px;
+	}
+
+	.itemAt{
+		font-size: 20px;
+		font-weight: bold;
 	}
 }

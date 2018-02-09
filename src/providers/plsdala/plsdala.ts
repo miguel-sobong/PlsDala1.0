@@ -29,8 +29,6 @@ export class PlsdalaProvider {
   }
 
   addTravel(to, from, toDate, fromDate){
-    var fromParse = Date.parse(fromDate)/1000;
-    var toParse = Date.parse(toDate)/1000;
     return new Promise((resolve, reject)=>{
     const newTravel = this.travelList.push({});
     newTravel.set({
@@ -346,20 +344,17 @@ export class PlsdalaProvider {
         fromAddress: snapshot.val().fromAddress,
         toX: snapshot.val().toX,
         toY: snapshot.val().toY,
-        toAddress: snapshot.val().toAddress
+        toAddress: snapshot.val().toAddress,
+        itemAt: item.senderId,
+        senderConfirm: false,
+        courierConfirm: false,
+        receiverConfirm: false
       });
       if(item.itemDescription){
         newTransaction.update({
           itemDescription: item.itemDescription
         });
       }
-
-      firebase.database().ref('user_transactions').child(item.senderId)
-      .child('sender').push({}).set({[newTransaction.key]: true});
-      firebase.database().ref('user_transactions').child(item.courierId)
-      .child('courier').push({}).set({[newTransaction.key]: true});
-      firebase.database().ref('user_transactions').child(item.receiverId)
-      .child('receiver').push({}).set({[newTransaction.key]: true});
     });
   }
  

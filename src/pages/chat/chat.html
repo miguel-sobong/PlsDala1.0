@@ -15,7 +15,7 @@
       </div>
     </div>
     <div item-left *ngIf="item.senderId != userInChat">
-      <div class="you bubble" *ngIf="!isItem">
+      <div class="you bubble" *ngIf="!item.isItem">
       {{item.senderFirstname}} {{item.senderLastname}}:
         {{item.content}}
         <br>
@@ -23,8 +23,7 @@
         <div class="chatTimestamp">{{item.timestamp | date:'mediumDate'}} {{item.timestamp | date:'shortTime'}}</div>
       </div>
     </div>
-
-    <div *ngIf="item.isItem">
+        <div *ngIf="item.isItem">
       <ion-card>
         <ion-card-header text-center>
           {{item.itemName}}
@@ -52,7 +51,13 @@
               <p col-12 class="wait">Waiting for decision</p>
             </div>
             <div *ngIf="item.isAccepted == true">
-              <p col-12 class="accept" background-color="primary">Courier Accepted!<br>Click here to open chat</p>
+              <p col-12 class="accept" background-color="primary">Courier Accepted!</p>
+              <p col-12 class="accept" *ngIf="item.receiverAccepted == true">Receiver Accepted!</p>            
+                <div *ngIf="item.receiverAccepted == false && item.receiverId == userInChat">
+                  <button col-6 ion-button (click)="AcceptReceiver(item)">Accept</button>
+                  <button col-6 ion-button color="light" (click)="DeclineReceiver(item)">Decline</button>
+                </div>
+              <p col-12 class="wait" *ngIf="item.receiverAccepted == false && item.receiverId != userInChat">Waiting for receiver to accept</p>
             </div>
             <div *ngIf="item.isDeclined == true && item.isAccepted == false">
               <p col-12 class="decline">Courier Declined!</p>

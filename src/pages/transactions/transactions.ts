@@ -4,6 +4,9 @@ import { ViewphotoPage } from '../viewphoto/viewphoto';
 import { ViewprofilePage } from '../viewprofile/viewprofile';
 import { ProfilePage } from '../profile/profile';
 import { TravelPage } from '../travel/travel';
+import { ViewmapPage } from '../viewmap/viewmap'
+import { Observable } from 'rxjs/Observable';
+import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import * as firebase from 'firebase';
 @IonicPage()
 @Component({
@@ -14,35 +17,26 @@ export class TransactionsPage {
 	sender: any;
 	courier: any;
 	receiver: any;
-	transactionList: Array<any>;
+	transactionList$: Observable<any>;
+	loggedInUser;
 
-  constructor(public modal: ModalController, public loading: LoadingController, public navCtrl: NavController, public navParams: NavParams) {
-	this.transactionList = [];
-  	this.receiver = true;
+  constructor(public afd: AngularFireDatabase, public modal: ModalController, public loading: LoadingController, 
+  	public navCtrl: NavController, public navParams: NavParams) {
+  	this.courier = true;
+  	this.loggedInUser = firebase.auth().currentUser.uid;
   	var loader = this.loading.create({
   		content: 'Loading transactions',
   	});
   	loader.present();
-	firebase.database().ref('user_transactions').child(firebase.auth().currentUser.uid)
-	.child("receiver").once("value", snapshot=>{
-		loader.dismiss();
-		if(snapshot.val()){
-			snapshot.forEach(snap=>{
-				snap.forEach(transactionkey=>{
-					firebase.database().ref('transactions').child(transactionkey.key)
-					.once("value", data=>{
-						this.transactionList.push(data.val());
-					});
-					console.log(transactionkey.key);
-					return false;
-				})
-				return false;
-			})
-			console.log(this.transactionList);
-		}else{
-			return;
-		}
-	});
+	this.transactionList$ = this.afd.list('transactions/')
+	.snapshotChanges()
+	    .map(
+	      changes => {
+			loader.dismiss();
+	        return changes.map(c=>({
+	          key: c.payload.key, ...c.payload.val()
+	        }));
+	      });
   }
 
   openModal(imgurl){
@@ -60,50 +54,17 @@ export class TransactionsPage {
   		return;
   	}
   	else{
-	  	var loader = this.loading.create({
-	  		content: 'Loading transactions'
-	  	})
-	  	loader.present();
 	  	this.receiver = false;
 	  	this.courier = false;
 	  	this.sender = false;
 	  	if(tab == 'sender'){
 	  		this.sender = true;
-		  	firebase.database().ref('user_transactions').child(firebase.auth().currentUser.uid)
-		  	.child("sender").once("value", snapshot=>{
-		  		loader.dismiss();
-		  		if(snapshot.val()){
-		  			console.log(snapshot.val());
-
-		  		}else{
-		  			return;
-		  		}
-		  	});
 	  	}
 	  	else if(tab == 'courier'){
 	  		this.courier = true;
-		  	firebase.database().ref('user_transactions').child(firebase.auth().currentUser.uid)
-		  	.child("courier").once("value", snapshot=>{
-		  		loader.dismiss();
-		  		if(snapshot.val()){
-		  			console.log(snapshot.val());
-		  		}else{
-		  			return;
-		  		}
-		  	});
 	  	}
 	  	else{
 	  		this.receiver = true;
-		  	firebase.database().ref('user_transactions').child(firebase.auth().currentUser.uid)
-		  	.child("receiver").once("value", snapshot=>{
-		  		loader.dismiss();
-		  		if(snapshot.val()){
-		  			console.log(snapshot.val());
-
-		  		}else{
-		  			return;
-		  		}
-		  	});
 	  	}
   	}
   }
@@ -115,4 +76,68 @@ export class TransactionsPage {
       this.navCtrl.push(ViewprofilePage, {item: key});
   }
 
+  itemTapped(transaction){
+  	this.navCtrl.push(ViewmapPage, {
+  		item: transaction
+  	});
+  }
+
+  senderConfirm(transaction){
+  	firebase.database().ref('transactions').child(transaction.key).once("value", snap=>{
+  		console.log(snap.key, snap.val());
+  		if(snap.val().itemAt == snap.val().senderId && snap.val().courierConfirm == true){
+  			console.log('here');
+  			firebase.database().ref('transactions').child(transaction.key).update({
+  				senderConfirm: false,
+  				itemAt: snap.val().courierId,
+  				courierConfirm: false
+  			})
+  		}
+  		else{
+		  	firebase.database().ref('transactions').child(transaction.key).update({
+		  		senderConfirm: true
+		  	});
+		  }
+  	});
+  }
+
+  courierConfirm(transaction){
+  	firebase.database().ref('transactions').child(transaction.key).once("value", snap=>{
+  		if(snap.val().itemAt == snap.val().senderId && snap.val().senderConfirm == true){
+  			firebase.database().ref('transactions').child(transaction.key).update({
+  				senderConfirm: false,
+  				itemAt: snap.val().courierId,
+  				courierConfirm: false
+  			})
+  		}
+  		else if(snap.val().itemAt == snap.val().courierId && snap.val().receiverConfirm == true){
+  			firebase.database().ref('transactions').child(transaction.key).update({
+  				isDone: true,
+  				courierConfirm: true
+  			})
+  		}
+  		else{
+		  	firebase.database().ref('transactions').child(transaction.key).update({
+		  		courierConfirm: true
+		  	});
+  		}
+  	});
+  }
+
+  receiverConfirm(transaction){
+  	firebase.database().ref('transactions').child(transaction.key).once("value", snap=>{
+  		console.log(snap.key, snap.val());
+  		if(snap.val().courierConfirm == true){
+  			firebase.database().ref('transactions').child(transaction.key).update({
+  				isDone: true
+  			});
+  			
+  		}
+  		else{
+		  	firebase.database().ref('transactions').child(transaction.key).update({
+		  		receiverConfirm: true
+		  	});	
+  		}
+  	});
+  }
 }

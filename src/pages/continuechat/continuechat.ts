@@ -35,7 +35,6 @@ export class ContinuechatPage {
       this.items = this.afd.list('messages/' + this.selectedItem['key']).snapshotChanges()
         .map(
           changes => {
-            this.content.scrollToBottom();
             return changes.map(c=>({
               key: c.payload.key, ...c.payload.val()
             }))
@@ -46,6 +45,13 @@ export class ContinuechatPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad ContinuechatPage');
   }
+    ngOnInit() { 
+        this.content.scrollToBottom();
+    }
+
+    ngAfterViewChecked() {        
+        this.content.scrollToBottom();        
+    } 
 
   addMessage()
   {
@@ -76,8 +82,9 @@ export class ContinuechatPage {
           }
           return false;
         })
-        this.newmessage = '';
       });
+      this.content.scrollToBottom();
+      this.newmessage = '';
 	  }
   }
 

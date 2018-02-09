@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Transaction History</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content>
+    <ion-list *ngFor="let transaction of transactionList$ | async">
+    	<div *ngIf="transaction.isDone == true">
+    		<ion-card *ngIf="transaction.senderId == loggedInUser || transaction.courierId == loggedInUser || transaction.receiverId == loggedInUser ">
+    			<ion-card-header text-center >
+    			    <b>{{transaction.itemName}}</b>
+    			</ion-card-header>
+    		</ion-card>
+    	</div>
+    </ion-list>
+</ion-content>
