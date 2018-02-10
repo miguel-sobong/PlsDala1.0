@@ -14,11 +14,14 @@ import { HomePage } from '../../pages/home/home';
 export class RegisterPage {
 
 	registerForm: FormGroup;
-  
+  minBday = new Date(new Date().setFullYear(new Date().getFullYear()-18));
   constructor(public common: CommonProvider, public toastController: ToastController,
    public loadingController: LoadingController, public navCtrl: NavController,
     public formBuilder: FormBuilder, public authenticationProvider: AuthenticationProvider, public alertController: AlertController) {
-  	    this.registerForm = formBuilder.group({
+        console.log(this.minBday);
+        // this.minBday.setFullYear(this.minBday.getFullYear()-18);
+        // console.log(this.minBday);
+        this.registerForm = formBuilder.group({
         lastname: [''],
         firstname: [''],
         birthdate: [''],

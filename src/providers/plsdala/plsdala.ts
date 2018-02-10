@@ -131,6 +131,7 @@ export class PlsdalaProvider {
 
   addMessage(details, users){
     this.checkUsers(users).then(data=>{
+      console.log(data);
       console.log(this.user.key);
       console.log(users);
       if(data){
@@ -348,7 +349,8 @@ export class PlsdalaProvider {
         itemAt: item.senderId,
         senderConfirm: false,
         courierConfirm: false,
-        receiverConfirm: false
+        receiverConfirm: false,
+        isDone: false
       });
       if(item.itemDescription){
         newTransaction.update({

@@ -14,7 +14,8 @@
 
 <ion-content>
 
-<ion-searchbar ion-fixed (ionInput)="getItems($event)" debounce="250" placeholder="Search for a place" cancelButtonText></ion-searchbar>  
+<ion-searchbar class="search" ion-fixed (ionInput)="getItems($event)" debounce="250" placeholder="Search for a place" cancelButtonText></ion-searchbar> 
+<div class="travellist">
   <ion-list *ngFor="let item of ListOfitems">
       <ion-card-content>
        <ion-card (click)="itemTapped($event, item)" >
@@ -33,4 +34,5 @@
       </ion-card-content>
    
   </ion-list>
+  </div>
 </ion-content>

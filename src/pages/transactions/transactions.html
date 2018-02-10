@@ -47,8 +47,8 @@
               <span *ngIf="transaction.itemAt == transaction.courierId">Item is with {{transaction.courierName}}</span>
             </p>
             <button ion-button block (click)="itemTapped(transaction)">Open map</button>
-            <button ion-button block (click)="senderConfirm(transaction)" *ngIf="transaction.senderConfirm == false && transaction.itemAt == transaction.senderId">Sender Confirm</button>
-            <button ion-button block *ngIf="transaction.senderConfirm == true && transaction.itemAt == transaction.senderId">Sender confirmed</button>
+            <button ion-button block (click)="senderConfirm(transaction)" *ngIf="transaction.senderConfirm == false && transaction.itemAt == transaction.senderId">Confirm</button>
+            <button ion-button block *ngIf="transaction.senderConfirm == true && transaction.itemAt == transaction.senderId">Confirmed</button>
             <button ion-button block *ngIf="transaction.itemAt == transaction.courierId">Track courier</button>
           </ion-card-content>
         </div>

@@ -18,7 +18,7 @@
 
       <ion-item>
         <ion-label floating>Birthdate</ion-label>
-        <ion-datetime #birthdate formControlName="birthdate" type="date" name="birthdate" displayFormat="MMM/D/YYYY"></ion-datetime>
+        <ion-datetime #birthdate formControlName="birthdate" type="date" name="birthdate" max="{{minBday | date:'yyyy-MM-dd'}}" min="1970" displayFormat="MMM/D/YYYY"></ion-datetime>
       </ion-item>
 
       <ion-item>
@@ -48,11 +48,6 @@
             <p>Your password needs more than 6 characters.</p>
       </ion-item>
       <ion-item class="error-mesage" *ngIf="(registerForm.value.password1 != registerForm.value.password2) && registerForm.controls.password1.dirty && registerForm.controls.password1.dirty"><p>Password doesn't match</p></ion-item>
-
-      <ion-footer>
-        <ion-toolbar>
-            <button ion-button color="primary" round block>Register</button>
-        </ion-toolbar>
-      </ion-footer>
+      <button class="btn-submit" ion-button color="primary" round block>Register</button>
   </form>
 </ion-content>

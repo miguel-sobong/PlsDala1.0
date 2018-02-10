@@ -33,12 +33,6 @@ export class AddtravelPage {
   addTravel(){
     var toDate = new Date(this.addTravelForm.value.toDate);
     var fromDate = new Date(this.addTravelForm.value.fromDate);
-    // var options = {month: 'short', day: 'numeric', year: 'numeric'};
-    // console.log(toDate.getTime() == fromDate.getTime());
-    // console.log(toDate.getTime() > fromDate.getTime())
-    // var a = new Date(toDate.toLocaleString("en-US", options));
-    // var b = new Date(fromDate.toLocaleString("en-US", options));
-    // console.log(a.getTime());
     if(this.addTravelForm.value.toLocation == '' || this.addTravelForm.value.toDate == '' 
       || this.addTravelForm.value.fromLocation == '' || this.addTravelForm.value.fromDate == ''){
       this.common.isMissingInput();
