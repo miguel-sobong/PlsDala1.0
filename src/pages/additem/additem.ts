@@ -208,6 +208,7 @@ export class AdditemPage {
           text: "Yes",
           handler: () => {
             this.photos.splice(index, 1);     ///DELETE ELEMENT IN AN ARRAY NING SPLICE // PHOTOS VARIABLE NA DECLARE SA TAAS 
+            this.picdata.splice(index, 1);
             this.maxImage();
           }
         },

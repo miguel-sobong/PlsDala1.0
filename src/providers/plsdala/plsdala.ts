@@ -40,9 +40,6 @@ export class PlsdalaProvider {
       toY: to.y,
       toAddress: to.address,
       toDate: toDate,
-      firstname: this.user.val().firstname,
-      lastname: this.user.val().lastname,
-      email: this.user.val().email,
       userId: firebase.auth().currentUser.uid
     })
     .then(
