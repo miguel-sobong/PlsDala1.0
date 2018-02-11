@@ -37,7 +37,6 @@ export class ReviewPage {
   }
 
   submit(){
-
     var check = true;
     firebase.database().ref('reviews').child(this.selectedItem.uid).once("value",user=>{
       user.forEach(snapshot=>{
@@ -65,6 +64,13 @@ export class ReviewPage {
             totalrate: snap.val().totalrate + 1
           })
         })
+
+        this.toastCtrl.create({
+          message: 'Successfully reviewed user',
+          duration: 3000
+        }).present();
+
+        this.navCtrl.pop();
       }
       else{
         this.toastCtrl.create({
