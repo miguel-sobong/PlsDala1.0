@@ -21,8 +21,14 @@ page-viewprofile {
 		color: black;
 	}
 
-	review > ion-list > .icon, .item-icon{
+	.review > ion-list > .icon, .item-icon, 
+	.review.profile > .icon{
 		color: #F2AF01;
+	}
+
+	.review.profile {
+		margin-top: 0px ;
+		border-top: none;
 	}
 
 }

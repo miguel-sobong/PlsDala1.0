@@ -38,6 +38,7 @@ export class ProfilePage {
     	this.fname = user.val().firstname;
     	this.lname = user.val().lastname;
     	this.description = user.val().description;
+      this.userRating = user.val().rating / user.val().totalrate
     });
 
     this.reviewList$ = this.plsdala.getReviews(firebase.auth().currentUser.uid)
@@ -61,6 +62,10 @@ export class ProfilePage {
       }
       console.log(this.ListOfitems);
     })
+  }
+
+  Round(number){
+    return Math.round(number);
   }
 
   presentActionSheet() {

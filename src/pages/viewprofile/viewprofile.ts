@@ -35,6 +35,7 @@ export class ViewprofilePage {
       this.profileEmail = user.val().email;
       this.profileDescription = user.val().description;
       this.profileImage = user.val().profileimage;
+      this.userRating = user.val().rating / user.val().totalrate
     });
 
     this.reviewList$ = this.plsdala.getReviews(this.selectedItem)
@@ -68,4 +69,7 @@ export class ViewprofilePage {
   this.modal.create(ViewphotoPage, {imgurl: images}).present();
  }
 
+  Round(number){
+    return Math.round(number);
+  }
 }

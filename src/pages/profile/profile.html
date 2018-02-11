@@ -10,6 +10,14 @@
   <img class="pp" src="{{profileimage}}" (click)="presentActionSheet()">
   <h2>{{profileName}}</h2>
   <p>{{profileEmail}}</p>
+  <div class="review profile" text-center *ngIf="userRating">
+    {{userRating}} / 5
+    <ion-icon name="star" *ngIf="Round(userRating) > 0"></ion-icon>
+    <ion-icon name="star" *ngIf="Round(userRating) > 1"></ion-icon>
+    <ion-icon name="star" *ngIf="Round(userRating) > 2"></ion-icon>
+    <ion-icon name="star" *ngIf="Round(userRating) > 3"></ion-icon>
+    <ion-icon name="star" *ngIf="Round(userRating) > 4"></ion-icon>
+  </div>
   <p class="description" *ngIf="profileDescription!=''">{{profileDescription}}</p>
   <button ion-button (click)="EditProfile()">Edit Profile</button>
   <div *ngIf="editProfile" class="editProfile">
@@ -42,7 +50,6 @@
       <ion-icon name="star" *ngIf="item.rating > 2"></ion-icon>
       <ion-icon name="star" *ngIf="item.rating > 3"></ion-icon>
       <ion-icon name="star" *ngIf="item.rating > 4"></ion-icon>
-      <!-- <ion-icon name="star-half" *ngIf="item.rating%1 != 0"></ion-icon> -->
       <br>
       <p>{{item.timestamp | date:'mediumDate'}} {{item.timestamp | date:'shortTime'}}</p>
       <br>
