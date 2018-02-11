@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-navbar color="headerbackground">
+    <ion-title>Review</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content padding>
+  <div text-center>
+    <h1>{{firstname}} {{lastname}}</h1>
+    <h2>{{email}}</h2>
+    <p>{{description}}</p>
+  </div>
+  <div class="rating">
+  	<!-- <ion-icon name="star"></ion-icon> -->
+<!--     <span (click)="rate(5)">☆</span>
+    <span (click)="rate(4)">☆</span>
+    <span (click)="rate(3)">☆</span>
+    <span (click)="rate(2)">☆</span>
+    <span (click)="rate(1)">☆</span> -->
+  </div>
+  <ion-item class="review-description">
+    <ion-label floating>Review Description</ion-label>
+    <ion-textarea [(ngModel)]="inputText"></ion-textarea>
+  </ion-item>
+  <button ion-button block (click)="submit()">Submit Review</button>
+</ion-content>

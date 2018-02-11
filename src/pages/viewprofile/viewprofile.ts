@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { ViewphotoPage } from '../viewphoto/viewphoto'
 import * as firebase from 'firebase';
+import { Observable } from 'rxjs/Observable';
+import { PlsdalaProvider } from '../../providers/plsdala/plsdala';
 
 @IonicPage()
 @Component({
@@ -16,8 +18,11 @@ export class ViewprofilePage {
 	profileDescription: any;
 	profileImage: any;
   user: any;
+  reviewList$: Observable<any>;
+  ListOfitems: Array<any>;
 
-  constructor(public modal: ModalController, public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public plsdala: PlsdalaProvider, public modal: ModalController, 
+    public navCtrl: NavController, public navParams: NavParams) {
     this.selectedItem = navParams.get('item');
     this.user = this.selectedItem;
     console.log(this.selectedItem);
@@ -31,6 +36,28 @@ export class ViewprofilePage {
       this.profileDescription = user.val().description;
       this.profileImage = user.val().profileimage;
     });
+
+    this.reviewList$ = this.plsdala.getReviews(this.selectedItem)
+    .snapshotChanges()
+    .map(
+      changes => {
+        return changes.map(c=>({
+          key: c.payload.key, ...c.payload.val()
+        })).slice().reverse();
+      });
+
+      this.reviewList$.subscribe(res => {
+      this.ListOfitems = [];
+      for(let i=0;i<res.length;i++){
+        console.log(res[i].reviewer);
+        firebase.database().ref('users').child(res[i].reviewer).once("value", snapshot=>{
+          console.log(snapshot.val());
+          this.ListOfitems.push({firstname:snapshot.val().firstname, lastname: snapshot.val().firstname, 
+            email:snapshot.val().email, review: res[i].description, rating: res[i].rating, timestamp: res[i].timestamp});
+          });
+      }
+      console.log(this.ListOfitems);
+    })
   }
 
   ionViewDidLoad() {

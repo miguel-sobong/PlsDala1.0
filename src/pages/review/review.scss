@@ -1,0 +1,51 @@
+page-review {
+  .rating {
+    display: flex;
+    justify-content: center;
+    
+  }
+
+  .star{
+    // after: '\f2fc<br>\f2fc \f2fc \f2fc \f2fc';
+  }
+
+  .rating>span:hover:before {
+    content: "\2605";
+    position: absolute;
+  }
+
+  .rating {
+    unicode-bidi: bidi-override;
+    direction: rtl;
+  }
+  .rating>span:hover:before,
+  .rating>span:hover~span:before {
+    content: "\2605";
+    position: absolute;
+  }
+
+  .rating {
+    unicode-bidi: bidi-override;
+    direction: rtl;
+  }
+  .rating>span {
+    display: inline-block;
+    position: relative;
+    width: 1.1em;
+    font-size: 40px;
+    color: #F2AF01;
+  }
+  .rating>span:hover:before,
+  .rating>span:hover~span:before {
+    content: "\2605";
+    position: absolute;
+  }
+
+  p{
+    font-size: 20px;
+  }
+
+  .review-description{
+    margin-bottom: 50px;
+  }
+}

@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-navbar color="primary">
+  <ion-navbar color="headerbackground">
     <ion-title>{{chatName}}</ion-title>
   </ion-navbar>
 </ion-header>
@@ -15,8 +15,8 @@
       </div>
     </div>
     <div item-left *ngIf="item.senderId != loggedInUser">
+      <p class="name" *ngIf="!item.isItem">{{item.senderFirstname}} {{item.senderLastname}}:</p>
       <div class="you bubble" *ngIf="!item.isItem">
-      {{item.senderFirstname}} {{item.senderLastname}}:
         {{item.content}}
         <br>
         <br>

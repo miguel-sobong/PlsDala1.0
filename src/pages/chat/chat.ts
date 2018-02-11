@@ -48,7 +48,7 @@ export class ChatPage {
         this.plsdala.getMessages(users)
               .then(data=>{
                 this.key = data;
-                this.items = this.afd.list('messages/' + data).snapshotChanges()
+                this.items = this.afd.list('messages/' + data, ref=> ref.orderByChild("timestamp")).snapshotChanges()
                 .map(
                   changes => {
                     return changes.map(c=>(

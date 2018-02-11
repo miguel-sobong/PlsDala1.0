@@ -1,10 +1,10 @@
 <ion-header>
-  <ion-navbar color="primary">
+  <ion-navbar color="headerbackground">
     <ion-title>Register</ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content>
+<ion-content padding>
   <form [formGroup]="registerForm" (submit)="registerUser()" novalidate> 
       <ion-item>
         <ion-label floating>Last Name</ion-label>
@@ -48,6 +48,6 @@
             <p>Your password needs more than 6 characters.</p>
       </ion-item>
       <ion-item class="error-mesage" *ngIf="(registerForm.value.password1 != registerForm.value.password2) && registerForm.controls.password1.dirty && registerForm.controls.password1.dirty"><p>Password doesn't match</p></ion-item>
-      <button class="btn-submit" ion-button color="primary" round block>Register</button>
+      <button class="btn-submit" ion-button color="compliment" round block>Register</button>
   </form>
 </ion-content>

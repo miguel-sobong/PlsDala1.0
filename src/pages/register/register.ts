@@ -54,6 +54,8 @@ export class RegisterPage {
              message: 'Account registered!',
              duration: 3000,
           }).present();
+          localStorage.setItem("notVerified", "false"); // for home popup
+          localStorage.setItem("verified", "false");
           this.navCtrl.setRoot(HomePage);
         }, fail=>
         {

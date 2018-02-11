@@ -1,12 +1,15 @@
 <ion-content padding>
+  <video autoplay muted loop> 
+    <source src="assets/video/background.mp4" type='video/mp4' >  
+    <source src="assets/video/background.mp4" type='video/mp4; codecs="h.264"' > 
+  </video>
   <div class="container" text-center>
-      Logo goes here
-      <div>
+      <div class="brand">
+        <img src="assets/imgs/logo.png" width="200" height="200" text-center>
         <h1>PlsDala:</h1>
         <h4>A Sharing Economy Mobile Application</h4>
       </div>
     <form [formGroup]="loginForm" (submit)="loginUser()" novalidate>
-        <ion-list>
           <ion-item>
             <ion-label floating>Email Address</ion-label>
             <ion-input #email type="email" formControlName="email" [class.invalid]="!loginForm.controls.email.valid &&
@@ -25,12 +28,11 @@
             <p>Your password needs more than 6 characters.</p>
           </ion-item>
           <div padding>
-            <button ion-button color="primary" round block>Log me in!</button>
+            <button ion-button color="primary" round block color="compliment">Log me in!</button>
           </div>
-        </ion-list>
       </form>
     <div>
-      <p >No account yet? <a (click)="goToRegister()">Register here!</a></p>
+      <p class="brand">No account yet? <a (click)="goToRegister()" class="brand">Register here!</a></p>
     </div>
   </div>
 </ion-content>

@@ -34,14 +34,17 @@ $app-direction: ltr;
 // The "primary" color is the only required color in the map.
 
 $colors: (
-  primary:    #488aff, 
+  primary: #F2AF01, 
   // added to chat.scss 
   // used in tabs
   secondary:  #32db64,
   danger:     #f53d3d,
   light:      #f4f4f4,
-  dark:       #222
+  dark:       #222,
+  headertext: #D9D8D5,
+  headerbackground: #686766
 );
+
 
 
 // App iOS Variables

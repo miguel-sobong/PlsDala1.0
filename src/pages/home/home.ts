@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ToastController } from 'ionic-angular';
+import { NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
 import { AddtravelPage } from '../addtravel/addtravel';
 import { PlsdalaProvider } from '../../providers/plsdala/plsdala';
 import { TravelPage } from '../../pages/travel/travel';
@@ -23,37 +23,56 @@ export class HomePage
   ListOfitems2nd: Array<any>;
   
  
-  constructor(public navCtrl: NavController, public navParams: NavParams, 
+  constructor(public alert: AlertController, public navCtrl: NavController, public navParams: NavParams, 
     public plsdala: PlsdalaProvider, public toastCtrl: ToastController, private datepipe:DatePipe) {
-    console.log("called again 1st");
     this.ListOfitems = [];
     this.ListOfitems2nd = [];
+    var checked = false;
     this.currentUserId = firebase.auth().currentUser.uid;
     this.initializeItems();
-    firebase.database().ref('users/' + firebase.auth().currentUser.uid)
-    .child('isVerified')
-    .on('value', isVerified => {
-        this.UserIsVerified = isVerified.val();
-        console.log(isVerified.val());
+    firebase.database().ref('users/' + firebase.auth().currentUser.uid).child('isVerified')
+    .once('value', isVerified => {
+      this.UserIsVerified = isVerified.val();
+    });      
 
-    });
- }
+    firebase.database().ref('users/' + firebase.auth().currentUser.uid)
+    .on('child_changed', changes => {
+      if(changes.key == "isVerified"){
+        this.UserIsVerified = changes.val();
+        if(changes.val() == true && localStorage.getItem("verified") == "false"){
+              this.alert.create({
+                title: "Congratulations! You are now verified :)",
+                message: "You can now add a travel plan and send items for other users to deliver!",
+                inputs: [{
+                  type: 'checkbox',
+                  label: 'Don\'t show this again',
+                  handler: data=>{
+                    localStorage.setItem("verified", ""+data.checked+"");
+                  }
+                }], 
+                buttons: [{
+                  text: "Ok",
+                  role: 'cancel',
+                }]
+              }).present();
+        }
+      }
+    });      
+  }
 
   addTravel(event){
     this.navCtrl.push(AddtravelPage);
   }
 
   itemTapped(event, item) {
-    console.log(item);
-    console.log(this.UserIsVerified);
+    // console.log(item);
+    // console.log(this.UserIsVerified);
     this.navCtrl.push(TravelPage, {
       item: item
     });
   }
 
-    initializeItems(){
-      console.log("called again");
-      
+    initializeItems(){      
       this.travelList$ = this.plsdala.getTravelList()
       .snapshotChanges()
       .map(
@@ -65,9 +84,7 @@ export class HomePage
         this.travelList$.subscribe(res => {
            this.ListOfitems = [];
        this.ListOfitems2nd=[];
-        for(let i=0;i<res.length;i++){
-           console.log("1sst",res[i]);
-      
+        for(let i=0;i<res.length;i++){      
                this.ListOfitems.push({firstname:res[i].firstname, lastname: res[i].lastname, email:res[i].email, fromAddress:res[i].fromAddress,
                 fromDate:res[i].fromDate, toAddress:res[i].toAddress, toDate:res[i].toDate, fromX:res[i].fromX,
                  fromY:res[i].fromY, key:res[i].key, toX:res[i].toX, toY:res[i].toY, userId:res[i].userId});

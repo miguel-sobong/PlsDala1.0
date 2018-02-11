@@ -64,6 +64,10 @@ export class PlsdalaProvider {
     return this.afd.list('users');
   }
 
+  getReviews(uid){
+    return this.afd.list('reviews/' + uid,  ref=>ref.orderByChild("timestamp"));
+  }
+
   checkUsers(users){
       console.log(users);
       return new Promise((resolve, reject)=>{
@@ -162,7 +166,7 @@ export class PlsdalaProvider {
   }
 
   getChatList(){
-    return this.afd.list('threads/' + firebase.auth().currentUser.uid);
+    return this.afd.list('threads/' + firebase.auth().currentUser.uid, ref=> ref.orderByChild("timestamp"));
   }
 
   getUserInChatList(threadId){

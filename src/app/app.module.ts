@@ -24,6 +24,7 @@ import { ViewphotoPage } from '../pages/viewphoto/viewphoto';
 import { TransactionsPage } from '../pages/transactions/transactions';
 import { ViewmapPage } from '../pages/viewmap/viewmap';
 import { TransactionhistoryPage } from '../pages/transactionhistory/transactionhistory';
+import { ReviewPage } from '../pages/review/review';
 
 import { HttpModule } from '@angular/http';
 import { AngularFireModule } from 'angularfire2';
@@ -71,7 +72,8 @@ import { Camera } from '@ionic-native/camera';
     ViewphotoPage,
     TransactionsPage,
     ViewmapPage,
-    TransactionhistoryPage
+    TransactionhistoryPage,
+    ReviewPage
   ],
   imports: [
     BrowserModule,
@@ -103,7 +105,8 @@ import { Camera } from '@ionic-native/camera';
     ViewphotoPage,
     TransactionsPage,
     ViewmapPage,
-    TransactionhistoryPage
+    TransactionhistoryPage,
+    ReviewPage
   ],
   providers: [
     StatusBar,

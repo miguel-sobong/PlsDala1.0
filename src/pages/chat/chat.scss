@@ -1,5 +1,10 @@
 page-chat {
-
+	
+	.name{
+		color: black;
+		font-size: 16px;
+	}
+	
     .chatTimestamp{
         display: flex;
         font-size: 1.3rem;
@@ -16,7 +21,7 @@ page-chat {
 	.me {
 	    text-align: right;
 	    color: #fff;
-	    background-color: #4080ff;
+	    background-color:  #F2AF01;
 	    .chatTimestamp{
   	      	justify-content: flex-end;
         	color: #EEE
@@ -43,7 +48,7 @@ page-chat {
 
 	.accept{
 		padding: 20px;
-		background-color: #488aff;
+		background-color:  #F2AF01;
 		color: white;
 		text-align: center;
 	}
