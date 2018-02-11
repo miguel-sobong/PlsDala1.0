@@ -6,43 +6,42 @@
     <ion-title>Transaction History</ion-title>
   </ion-navbar>
 </ion-header>
-
-
 <ion-content>
-    <ion-list *ngFor="let transaction of transactionList$ | async">
-    	<div *ngIf="transaction.isDone == true">
-        <ion-card>   
-          <ion-card-header text-center>
-            <b>{{transaction.itemName}}</b>
-          </ion-card-header>
-          <ion-card-content>
-            <p text-center>{{transaction.itemDescription}}</p>
-            <p (click)="viewProfile(transaction.senderId)">sent by: {{transaction.senderName}}</p>
-            <p (click)="viewProfile(transaction.courierId)">via {{transaction.courierName}}</p>
-            <p (click)="viewProfile(transaction.receiverId)">sent to: {{transaction.receiverName}}</p>
-            <p>from: {{transaction.fromAddress}}</p>
-            <p>to: {{transaction.toAddress}}</p>
-            <ion-grid>
-              <ion-row>
-                <ion-col col-4 *ngFor="let img of transaction.images">
-                  <img src="{{img}}" (click)="openModal(img)">
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-            <div *ngIf="loggedInUser == transaction.senderId">
-              <button ion-button block (click)="review(transaction.courierId, transaction.key)">Review Courier?</button>
-              <button ion-button block (click)="review(transaction.receiverId, transaction.key)">Review Receiver?</button>
-            </div>
-            <div *ngIf="loggedInUser == transaction.courierId">
-              <button ion-button block (click)="review(transaction.senderId, transaction.key)">Review Sender?</button>
-              <button ion-button block (click)="review(transaction.receiverId, transaction.key)">Review Receiver?</button>
-            </div>
-            <div *ngIf="loggedInUser == transaction.receiverId">
-              <button ion-button block (click)="review(transaction.senderId, transaction.key)">Review Sender?</button>
-              <button ion-button block (click)="review(transaction.courierId, transaction.key)">Review Courier?</button>
-            </div>
-          </ion-card-content>    
+  <ion-list *ngFor="let transaction of transactionList$ | async">
+    <div *ngIf="transaction.isDone == true">
+      <div *ngIf="loggedInUser == transaction.senderId || loggedInUser == transaction.courierId || loggedInUser == transaction.receiverId"> <ion-card>
+        <ion-card-header text-center>
+          <b>{{transaction.itemName}}</b>
+        </ion-card-header>
+        <ion-card-content>
+          <p text-center>{{transaction.itemDescription}}</p>
+          <p (click)="viewProfile(transaction.senderId)">sent by: {{transaction.senderName}}</p>
+          <p (click)="viewProfile(transaction.courierId)">via {{transaction.courierName}}</p>
+          <p (click)="viewProfile(transaction.receiverId)">sent to: {{transaction.receiverName}}</p>
+          <p>from: {{transaction.fromAddress}}</p>
+          <p>to: {{transaction.toAddress}}</p>
+          <ion-grid>
+            <ion-row>
+              <ion-col col-4 *ngFor="let img of transaction.images">
+                <img src="{{img}}" (click)="openModal(img)">
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          <div *ngIf="loggedInUser == transaction.senderId">
+            <button ion-button block (click)="review(transaction.courierId, transaction.key)">Review Courier</button>
+            <button ion-button block (click)="review(transaction.receiverId, transaction.key)">Review Receiver</button>
+          </div>
+          <div *ngIf="loggedInUser == transaction.courierId">
+            <button ion-button block (click)="review(transaction.senderId, transaction.key)">Review Sender</button>
+            <button ion-button block (click)="review(transaction.receiverId, transaction.key)">Review Receiver</button>
+          </div>
+          <div *ngIf="loggedInUser == transaction.receiverId">
+            <button ion-button block (click)="review(transaction.senderId, transaction.key)">Review Sender</button>
+            <button ion-button block (click)="review(transaction.courierId, transaction.key)">Review Courier</button>
+          </div>
+        </ion-card-content>
         </ion-card>
-        </div>
-    </ion-list>
+      </div>
+    </div>
+  </ion-list>
 </ion-content>
