@@ -37,6 +37,7 @@ export class ReviewPage {
   }
 
   submit(){
+
     var check = true;
     firebase.database().ref('reviews').child(this.selectedItem.uid).once("value",user=>{
       user.forEach(snapshot=>{
@@ -51,27 +52,21 @@ export class ReviewPage {
         });
         return false;
       })
-      // if(user.val().transaction == this.selectedItem.dbkey && user.val().reviewer == this.selectedItem.uid){
-      //   this.modalCtrl.create({
-      //     message: 'Already reviewed',
-      //     duration: 3000
-      //   }).present();
-      // }
-      // else{
-
-      // }
     }).then(_=>{
       if(check == true){
         firebase.database().ref('reviews').child(this.selectedItem.uid).push({})
         .set({rating: this.rating, transaction: this.selectedItem.dbkey, 
           reviewer: firebase.auth().currentUser.uid, description: this.inputText,
           timestamp: firebase.database.ServerValue.TIMESTAMP});
+        
+        firebase.database().ref('users').child(this.selectedItem.uid).once("value", snap=>{
+          firebase.database().ref('users').child(this.selectedItem.uid).update({
+            rating: snap.val().rating + this.rating,
+            totalrate: snap.val().totalrate + 1
+          })
+        })
       }
       else{
-        firebase.database().ref('reviews').child(this.selectedItem.uid).push({})
-        .set({rating: this.rating, transaction: this.selectedItem.dbkey, 
-          reviewer: firebase.auth().currentUser.uid, description: this.inputText,
-          timestamp: firebase.database.ServerValue.TIMESTAMP});
         this.toastCtrl.create({
           message: 'You have already reviewed this user.',
           duration: 3000

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, ActionSheetController } from 'ionic-angular';
 import { PlsdalaProvider } from '../../providers/plsdala/plsdala';
 import { Camera, CameraOptions } from '@ionic-native/camera';
+import { Observable } from 'rxjs/Observable';
 import * as firebase from 'firebase';
 
 @IonicPage()
@@ -19,6 +20,8 @@ export class ProfilePage {
 	fname: string;
 	lname: string;
 	description: string;
+  reviewList$: Observable<any>;
+  ListOfitems: Array<any>;
 
   constructor(public actionSheetCtrl: ActionSheetController, public camera: Camera, 
   	public toastCtrl: ToastController , public plsdala: PlsdalaProvider, 
@@ -36,6 +39,28 @@ export class ProfilePage {
     	this.lname = user.val().lastname;
     	this.description = user.val().description;
     });
+
+    this.reviewList$ = this.plsdala.getReviews(firebase.auth().currentUser.uid)
+    .snapshotChanges()
+    .map(
+      changes => {
+        return changes.map(c=>({
+          key: c.payload.key, ...c.payload.val()
+        })).slice().reverse();
+      });
+
+      this.reviewList$.subscribe(res => {
+      this.ListOfitems = [];
+      for(let i=0;i<res.length;i++){
+        console.log(res[i].reviewer);
+        firebase.database().ref('users').child(res[i].reviewer).once("value", snapshot=>{
+          console.log(snapshot.val());
+          this.ListOfitems.push({firstname:snapshot.val().firstname, lastname: snapshot.val().firstname, 
+            email:snapshot.val().email, review: res[i].description, rating: res[i].rating, timestamp: res[i].timestamp});
+          });
+      }
+      console.log(this.ListOfitems);
+    })
   }
 
   presentActionSheet() {

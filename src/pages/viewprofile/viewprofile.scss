@@ -6,6 +6,12 @@ page-viewprofile {
 		height: 200px;
 	}
 
+	.description{
+		margin: 2vh 10vw 1vh 10vw;
+		padding: 3vh;
+		border: 1px solid grey;
+	}
+
 	.review{
 		margin-top: 10px;
 		border-top: 2px solid grey;
@@ -13,6 +19,10 @@ page-viewprofile {
 
 	.reviewText{
 		color: black;
+	}
+
+	review > ion-list > .icon, .item-icon{
+		color: #F2AF01;
 	}
 
 }

@@ -64,6 +64,10 @@ export class HomePage
     this.navCtrl.push(AddtravelPage);
   }
 
+  Round(number){
+    return Math.round(number);
+  }
+
   itemTapped(event, item) {
     // console.log(item);
     // console.log(this.UserIsVerified);
@@ -84,12 +88,18 @@ export class HomePage
         this.travelList$.subscribe(res => {
            this.ListOfitems = [];
        this.ListOfitems2nd=[];
-        for(let i=0;i<res.length;i++){      
-               this.ListOfitems.push({firstname:res[i].firstname, lastname: res[i].lastname, email:res[i].email, fromAddress:res[i].fromAddress,
-                fromDate:res[i].fromDate, toAddress:res[i].toAddress, toDate:res[i].toDate, fromX:res[i].fromX,
-                 fromY:res[i].fromY, key:res[i].key, toX:res[i].toX, toY:res[i].toY, userId:res[i].userId});
-               this.ListOfitems2nd = this.ListOfitems;
-                
+        for(let i=0;i<res.length;i++){
+          firebase.database().ref('users').child(res[i].userId).once("value", snapshot=>{
+            if(snapshot.val().totalrate > 0){
+              var rating = snapshot.val().rating / snapshot.val().totalrate;
+            }
+            this.ListOfitems.push({firstname:snapshot.val().firstname, lastname: snapshot.val().lastname, email:snapshot.val().email, 
+              romAddress:res[i].fromAddress, fromDate:res[i].fromDate, toAddress:res[i].toAddress, toDate:res[i].toDate, 
+              fromX:res[i].fromX, fromY:res[i].fromY, key:res[i].key, toX:res[i].toX, toY:res[i].toY, userId:res[i].userId, 
+              rating: rating});
+            this.ListOfitems2nd = this.ListOfitems;
+            console.log(this.ListOfitems2nd);
+          });                
         }
       })
     }

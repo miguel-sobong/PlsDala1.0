@@ -14,4 +14,17 @@ page-profile {
 		padding: 3vh;
 		border: 1px solid grey;
 	}
+
+	.review{
+		margin-top: 10px;
+		border-top: 2px solid grey;
+	}
+
+	.reviewText{
+		color: black;
+	}
+
+	review > ion-list > .icon, .item-icon{
+		color: #F2AF01;
+	}
 }

@@ -21,6 +21,8 @@ export class AuthenticationProvider {
           isVerified: false,
           isTerminated: false,
           isDeclined: false,
+          rating: 0,
+          totalrate: 0,
           timestamp: firebase.database.ServerValue.TIMESTAMP
         });
     });

@@ -21,6 +21,14 @@
        <ion-card (click)="itemTapped($event, item)" >
       <ion-card-header>
         <h4><b>{{item.firstname}} {{item.lastname}} ({{item.email}})</b></h4>
+        <span *ngIf="item.rating" class="review">     
+          {{item.rating}} / 5
+          <ion-icon name="star" *ngIf="Round(item.rating) > 0"></ion-icon>
+          <ion-icon name="star" *ngIf="Round(item.rating) > 1"></ion-icon>
+          <ion-icon name="star" *ngIf="Round(item.rating) > 2"></ion-icon>
+          <ion-icon name="star" *ngIf="Round(item.rating) > 3"></ion-icon>
+          <ion-icon name="star" *ngIf="Round(item.rating) > 4"></ion-icon>
+        </span>
       </ion-card-header>
       <ion-card-content>
         <h5>{{item.fromAddress}}</h5>
