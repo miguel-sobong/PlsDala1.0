@@ -42,7 +42,7 @@ export class MyApp {
         this.setPages();
         this.getUserInfo(user.uid).then(data=>{
           if(data){
-            this.rootPage = TransactionhistoryPage; //HomePage
+            this.rootPage = HomePage; //HomePage
             loader.dismiss();
             this.presentModalForVerification(this.isVerified);
           }

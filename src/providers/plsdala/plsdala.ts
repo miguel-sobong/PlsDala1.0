@@ -132,9 +132,6 @@ export class PlsdalaProvider {
 
   addMessage(details, users){
     this.checkUsers(users).then(data=>{
-      console.log(data);
-      console.log(this.user.key);
-      console.log(users);
       if(data){
         const newMessage = this.afd.list('messages/' + data).push({});
         newMessage.set({
@@ -229,11 +226,14 @@ export class PlsdalaProvider {
                 itemDescription: data.description,
               });
             }
-            firebase.database().ref().child('threads/' + this.user.key + '/' + dbkey).update({
-              title: data.receiverName,
-              lastMessage: this.user.val().firstname + ' ' + this.user.val().lastname + ' sent an item!',
-              seen: true,
-              timestamp: firebase.database.ServerValue.TIMESTAMP
+
+            firebase.database().ref('users').child(users.user2).once("value", snapshot=>{
+              firebase.database().ref().child('threads/' + this.user.key + '/' + dbkey).update({
+                title: snapshot.val().firstname + " " + snapshot.val().lastname,
+                lastMessage: this.user.val().firstname + ' ' + this.user.val().lastname + ' sent an item!',
+                seen: true,
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+              });
             });
 
             firebase.database().ref().child('threads/' + users.user2 + '/' + dbkey).update({
@@ -331,33 +331,35 @@ export class PlsdalaProvider {
 
   addTransaction(item){
     firebase.database().ref('travels').child(item.travelKey).once("value", snapshot=>{
-      const newTransaction = this.afd.list('transactions').push({});
-      newTransaction.set({
-        senderId: item.senderId,
-        courierId: item.courierId,
-        receiverId: item.receiverId,
-        itemName: item.itemName,
-        images: item.images,
-        senderName: item.senderFirstname + ' ' + item.senderLastname,
-        receiverName: item.receiverName,
-        courierName: snapshot.val().firstname + ' ' + snapshot.val().lastname,
-        fromX: snapshot.val().fromX,
-        fromY: snapshot.val().fromY,
-        fromAddress: snapshot.val().fromAddress,
-        toX: snapshot.val().toX,
-        toY: snapshot.val().toY,
-        toAddress: snapshot.val().toAddress,
-        itemAt: item.senderId,
-        senderConfirm: false,
-        courierConfirm: false,
-        receiverConfirm: false,
-        isDone: false
-      });
-      if(item.itemDescription){
-        newTransaction.update({
-          itemDescription: item.itemDescription
+      firebase.database().ref('users').child(item.courierId).once("value", courier=>{
+        const newTransaction = this.afd.list('transactions').push({});
+        newTransaction.set({
+          senderId: item.senderId,
+          courierId: item.courierId,
+          receiverId: item.receiverId,
+          itemName: item.itemName,
+          images: item.images,
+          senderName: item.senderFirstname + ' ' + item.senderLastname,
+          receiverName: item.receiverName,
+          courierName: courier.val().firstname + " " + courier.val().lastname,
+          fromX: snapshot.val().fromX,
+          fromY: snapshot.val().fromY,
+          fromAddress: snapshot.val().fromAddress,
+          toX: snapshot.val().toX,
+          toY: snapshot.val().toY,
+          toAddress: snapshot.val().toAddress,
+          itemAt: item.senderId,
+          senderConfirm: false,
+          courierConfirm: false,
+          receiverConfirm: false,
+          isDone: false
         });
-      }
+        if(item.itemDescription){
+          newTransaction.update({
+            itemDescription: item.itemDescription
+          });
+        }
+      });
     });
   }
  
