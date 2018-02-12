@@ -20,6 +20,7 @@ export class ViewprofilePage {
   user: any;
   reviewList$: Observable<any>;
   ListOfitems: Array<any>;
+  userRating: any;
 
   constructor(public plsdala: PlsdalaProvider, public modal: ModalController, 
     public navCtrl: NavController, public navParams: NavParams) {

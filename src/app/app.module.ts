@@ -39,7 +39,8 @@ import { CommonProvider } from '../providers/common/common';
 import { PlsdalaProvider } from '../providers/plsdala/plsdala';
 
 import { Camera } from '@ionic-native/camera';
-
+import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse} from '@ionic-native/background-geolocation';
+import { Geolocation } from '@ionic-native/geolocation';
   // Initialize Firebase
   var firebaseConfig = {
     apiKey: "AIzaSyATmp3oSFtqK4gHK2ZQs9-NBrBYcXjvakc",
@@ -116,7 +117,9 @@ import { Camera } from '@ionic-native/camera';
     CommonProvider,
     PlsdalaProvider,
     Camera,
-    DatePipe
+    DatePipe,
+    BackgroundGeolocation,
+    Geolocation
   ]
 })
 export class AppModule {}

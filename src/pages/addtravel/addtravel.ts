@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController, ToastController, LoadingController, AlertController } from 'ionic-angular';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { PlsdalaProvider } from '../../providers/plsdala/plsdala';
 import { MapPage } from '../map/map';
 import { CommonProvider } from '../../providers/common/common';

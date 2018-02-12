@@ -22,6 +22,7 @@ export class ProfilePage {
 	description: string;
   reviewList$: Observable<any>;
   ListOfitems: Array<any>;
+  userRating: any;
 
   constructor(public actionSheetCtrl: ActionSheetController, public camera: Camera, 
   	public toastCtrl: ToastController , public plsdala: PlsdalaProvider, 

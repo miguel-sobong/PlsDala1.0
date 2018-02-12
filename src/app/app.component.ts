@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform, Events, AlertController, ToastController, LoadingController } from 'ionic-angular';
+import { Nav, Platform, Events,  ToastController, LoadingController, AlertController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import firebase from 'firebase';
@@ -28,8 +28,8 @@ export class MyApp {
   pages: Array<{title: string, component: any}>;
   isVerified: any;
 
-  constructor(public loadingCtrl: LoadingController, public afAuth: AngularFireAuth, public toastController: ToastController, public alert: AlertController, 
-    public authenticationProvider: AuthenticationProvider, public events: Events, public platform: Platform,
+  constructor(public loadingCtrl: LoadingController, public afAuth: AngularFireAuth, public toastController: ToastController, 
+    public alert: AlertController, public authenticationProvider: AuthenticationProvider, public events: Events, public platform: Platform,
    public statusBar: StatusBar, public splashScreen: SplashScreen) {
     this.initializeApp();
     var loader = this.loadingCtrl.create({
@@ -95,7 +95,7 @@ export class MyApp {
 
   logoutUser() 
   {
-    let alert = this.alert.create({
+    this.alert.create({
       title: 'Logout',
       message: 'Do you really want to logout?',
       buttons: 

@@ -7,6 +7,7 @@ import { LoginPage } from '../../pages/login/login'
 import { Observable } from 'rxjs/Observable';
 import * as firebase from 'firebase';
 import { DatePipe } from '@angular/common';
+import { Geolocation } from '@ionic-native/geolocation';
 
 
 @Component({
@@ -23,7 +24,7 @@ export class HomePage
   ListOfitems2nd: Array<any>;
   
  
-  constructor(public alert: AlertController, public navCtrl: NavController, public navParams: NavParams, 
+  constructor(public geo: Geolocation, public alert: AlertController, public navCtrl: NavController, public navParams: NavParams, 
     public plsdala: PlsdalaProvider, public toastCtrl: ToastController, private datepipe:DatePipe) {
     this.ListOfitems = [];
     this.ListOfitems2nd = [];
@@ -128,5 +129,12 @@ export class HomePage
        })
       }
  
+  }
+
+  ionViewDidLoad(){
+    this.geo.getCurrentPosition().then(pos=>{
+      alert(pos.coords.latitude);
+      alert(pos.coords.longitude);
+    }).catch(err=>alert("error: " + err));
   }
 }

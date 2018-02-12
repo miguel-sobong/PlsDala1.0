@@ -1,8 +1,7 @@
 import { Component,ViewChild, ElementRef } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, ModalController } from 'ionic-angular';
 import { PlsdalaProvider } from '../../providers/plsdala/plsdala';
-import { ViewphotoPage } from '../viewphoto/viewphoto'
-import * as firebase from 'firebase';
+import { ViewphotoPage } from '../viewphoto/viewphoto';
 import { Observable } from 'rxjs/Observable';
 declare var google;
 
