@@ -8,6 +8,8 @@ import { Observable } from 'rxjs/Observable';
 import * as firebase from 'firebase';
 import { DatePipe } from '@angular/common';
 import { Geolocation } from '@ionic-native/geolocation';
+import { HelpPage } from '../../pages/help/help';
+import { AuthenticationProvider } from '../../providers/authentication/authentication';
 
 
 @Component({
@@ -21,23 +23,25 @@ export class HomePage
   UserIsVerified: any;
   searchTravel = '';
   ListOfitems: Array<any>;
-  ListOfitems2nd: Array<any>;
-  
+  ListOfitems2nd: Array<any>;  
  
-  constructor(public geo: Geolocation, public alert: AlertController, public navCtrl: NavController, public navParams: NavParams, 
+  constructor(public geo: Geolocation, public authenticationProvider: AuthenticationProvider, public alert: AlertController,
+   public navCtrl: NavController, public navParams: NavParams, 
     public plsdala: PlsdalaProvider, public toastCtrl: ToastController, private datepipe:DatePipe) {
     this.ListOfitems = [];
     this.ListOfitems2nd = [];
     var checked = false;
     this.currentUserId = firebase.auth().currentUser.uid;
     this.initializeItems();
+
     firebase.database().ref('users/' + firebase.auth().currentUser.uid).child('isVerified')
     .once('value', isVerified => {
       this.UserIsVerified = isVerified.val();
-    });      
+    });
 
-    firebase.database().ref('users/' + firebase.auth().currentUser.uid)
-    .on('child_changed', changes => {
+
+    firebase.database().ref('users').child(firebase.auth().currentUser.uid)
+    .on("child_changed", changes =>{
       if(changes.key == "isVerified"){
         this.UserIsVerified = changes.val();
         if(changes.val() == true && localStorage.getItem("verified") == "false"){
@@ -58,7 +62,8 @@ export class HomePage
               }).present();
         }
       }
-    });      
+    });
+
   }
 
   addTravel(event){
@@ -111,10 +116,6 @@ export class HomePage
 
 
      getItems(ev: any) {
-       //console.log("awdaw");
-      // console.log("awdaw",this.ListOfitems);
-      // console.log("otin");
-     //  console.log((this.datepipe.transform(this.ListOfitems[1].fromDate *1000,'mediumDate')));
         this.ListofItems();  
       let val = ev.target.value;
       console.log(val);
@@ -128,13 +129,20 @@ export class HomePage
          
        })
       }
- 
   }
 
   ionViewDidLoad(){
-    this.geo.getCurrentPosition().then(pos=>{
-      alert(pos.coords.latitude);
-      alert(pos.coords.longitude);
-    }).catch(err=>alert("error: " + err));
+    var options = {
+      enableHighAccuracy: true,
+      maximumAge: 600000,
+      timeout: 5000
+    };
+    this.geo.getCurrentPosition(options).then(pos=>{
+      // alert(pos.coords.latitude + ", " + pos.coords.longitude);
+    }).catch(err=>console.log("error: " + err));
+  }
+
+  openHelp(curr){
+    this.navCtrl.push(HelpPage, {item: curr});
   }
 }

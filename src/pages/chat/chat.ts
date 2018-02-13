@@ -26,12 +26,9 @@ export class ChatPage {
   items: Observable<any>;
   link: any;
   key: any;
-  check: boolean;
-  alreadyScrolled: boolean;
     
   constructor(public modal: ModalController, public afd:  AngularFireDatabase, public navCtrl: NavController, 
     public navParams: NavParams, public plsdala: PlsdalaProvider) {
-    this.alreadyScrolled = false;
     this.user = this.navParams.get('item');
     console.log(this.user);
     firebase.database().ref('users/')
@@ -59,6 +56,7 @@ export class ChatPage {
                   })
               })
           });
+
   }
 
   ionViewDidLoad() {

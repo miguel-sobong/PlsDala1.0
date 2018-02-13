@@ -1,3 +1,4 @@
+
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController, ViewController } from 'ionic-angular';
 import { PlsdalaProvider } from '../../providers/plsdala/plsdala';
@@ -11,20 +12,29 @@ import * as firebase from 'firebase';
 })
 export class ChoosereceiverPage {
 
-	userlist: Observable<any>;
-	selectedUser;
+  userlist: Observable<any>;
+  selectedUser;
   selectedItem;
-	user;
-
+  user;
+  listOfUsersforFilter:Array<any>;
+  listOfUsersforFilter2nd:Array<any>;
   constructor(public viewCtrl: ViewController, public loadingCtrl: LoadingController, public plsdala: PlsdalaProvider, 
     public navCtrl: NavController, public navParams: NavParams) {
     this.selectedItem = navParams.get('data').courierId;
-    console.log(this.selectedItem);
-  	var loader = this.loadingCtrl.create({
-  		content: 'Getting user list'
-  	});
-  	this.user = firebase.auth().currentUser.uid;
-  	loader.present();
+    this.listOfUsersforFilter = [];
+    this.listOfUsersforFilter2nd = [];
+    var loader = this.loadingCtrl.create({  
+      content: 'Getting user list'
+    });
+    
+    this.user = firebase.auth().currentUser.uid;
+    this.initialize(loader);
+   
+  }//end of constructor
+
+initialize(loader){
+  loader.present();
+    console.log("awdwadwawadwadwdwadwad")
     this.userlist = this.plsdala.getUserList()
     .snapshotChanges()
     .map(
@@ -33,8 +43,27 @@ export class ChoosereceiverPage {
           key: c.payload.key, ...c.payload.val()
         }));
       })
+   this.userlist.subscribe(res =>{
+      this.listOfUsersforFilter = [];
+      this.listOfUsersforFilter2nd = [];
+         for(let i=0;i<res.length;i++){
+            if(this.user != res[i].key && this.user != this.selectedItem){
+               this.listOfUsersforFilter.push({firstname:res[i].firstname,lastname:res[i].lastname,id:res[i].id,
+                 email:res[i].email,fnln:res[i].lastname+" "+res[i].firstname,fnln2:res[i].firstname+" "+res[i].lastname});
+             
+              this.listOfUsersforFilter2nd=this.listOfUsersforFilter;
+
+            }}
+    })  
+  
+    
     loader.dismiss();
-  }
+}
+
+
+   ListofReceiver(){
+     this.listOfUsersforFilter=this.listOfUsersforFilter2nd;
+   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ChoosereceiverPage');
@@ -43,6 +72,7 @@ export class ChoosereceiverPage {
   viewProfile(key){
       this.navCtrl.push(ViewprofilePage, {item: key});
   }
+
 
   AddReceiver(item){
     this.viewCtrl.dismiss({
@@ -53,6 +83,22 @@ export class ChoosereceiverPage {
 
   Cancel(){
     this.navCtrl.pop();
+  }
+
+     getItems(ev: any) {
+  console.log("filtered",this.listOfUsersforFilter);
+        this.ListofReceiver();  
+      let val = ev.target.value;
+      console.log(val);
+     if (val && val.trim() !='') {
+       console.log("see this shit", this.listOfUsersforFilter);
+       this.listOfUsersforFilter = this.listOfUsersforFilter.filter((ListOfitem) => {
+          return ( ListOfitem.fnln2.toLowerCase().indexOf(val.toLowerCase()) >-1 ||
+            ListOfitem.fnln.toLowerCase().indexOf(val.toLowerCase()) >-1 ||
+            ListOfitem.email.toLowerCase().indexOf(val.toLowerCase()) >-1);
+       })
+      }
+ 
   }
 
 }

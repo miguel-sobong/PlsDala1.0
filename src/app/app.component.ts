@@ -27,33 +27,65 @@ export class MyApp {
   public profileImage: string;
   pages: Array<{title: string, component: any}>;
   isVerified: any;
+  UserIsVerified: any;
+  isTerminated: any;
 
   constructor(public loadingCtrl: LoadingController, public afAuth: AngularFireAuth, public toastController: ToastController, 
     public alert: AlertController, public authenticationProvider: AuthenticationProvider, public events: Events, public platform: Platform,
    public statusBar: StatusBar, public splashScreen: SplashScreen) {
     this.initializeApp();
-    var loader = this.loadingCtrl.create({
-      content: 'Getting user data. Please wait'
-    });
-    loader.present();
     const authObserver = afAuth.authState.subscribe( user => {
-    console.log("entry");
       if (user) {
-        this.setPages();
+        var loader = this.loadingCtrl.create({
+          content: 'Getting user data. Please wait'
+        });
+        loader.present();
         this.getUserInfo(user.uid).then(data=>{
-          if(data){
-            this.rootPage = HomePage; //HomePage
-            loader.dismiss();
-            this.presentModalForVerification(this.isVerified);
+          if(data)
+          {
+            loader.dismiss();  
+            if(this.isTerminated == true)
+            {
+             this.terminateUserAlert();
+            }
+            else
+            {
+              this.setPages();
+              this.rootPage = HomePage; //HomePage
+              this.presentModalForVerification(this.isVerified);
+              this.createWatchers();
+            }     
           }
         })
         // authObserver.unsubscribe();
       } else {
         this.rootPage = LoginPage;
-        loader.dismiss();
         // authObserver.unsubscribe();
       }
     });
+  }
+
+  createWatchers(){
+    firebase.database().ref('users/' + firebase.auth().currentUser.uid)
+    .on('child_changed', changes => {
+      console.log(changes.key, changes.val());
+       if(changes.key == "isTerminated" && changes.val() == true){
+         this.terminateUserAlert();
+      }
+    });
+  }
+
+  terminateUserAlert(){
+    this.alert.create({
+      title: "Your account has been terminated",
+      message: "Termination of account may be due to low average rating.",
+      buttons: [{
+        text: "Ok",
+        role: 'cancel',
+      }]
+    }).present();
+    this.authenticationProvider.logoutUser();
+    this.rootPage = LoginPage;
   }
 
   getUserInfo(uid){
@@ -62,7 +94,8 @@ export class MyApp {
         this.profileName = user.val().firstname + ' ' + user.val().lastname;
         this.profileEmail = user.val().email;
         this.profileImage = user.val().profileimage;
-        this.isVerified = user.val().isVerified
+        this.isVerified = user.val().isVerified;
+        this.isTerminated = user.val().isTerminated;
         resolve(true);
       });
     })

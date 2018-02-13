@@ -32,17 +32,10 @@ export class LoginPage {
     }
     else
     {
-      var loader = this.loadingController.create({
-        content: 'Please wait...'
-      });
-      loader.present();
       if(this.loginForm.valid)
       {
         this.authenticationProvider.loginUser(this.loginForm.value).then(success=>{
-          loader.dismiss();
-          this.navCtrl.setRoot(HomePage);
         }, fail => {
-          loader.dismiss();
           this.toastController.create({
              message: fail.message,
              duration: 3000
@@ -51,7 +44,6 @@ export class LoginPage {
       }
       else
       {
-        loader.dismiss();
         this.common.emailNotValid();
       }
     }

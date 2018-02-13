@@ -42,17 +42,6 @@ export class ContinuechatPage {
     });
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad ContinuechatPage');
-  }
-    ngOnInit() { 
-        this.content.scrollToBottom();
-    }
-
-    ngAfterViewChecked() {        
-        this.content.scrollToBottom();        
-    } 
-
   addMessage()
   {
 	  if(this.newmessage)

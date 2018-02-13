@@ -4,6 +4,11 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>Travel Board</ion-title>
+    <ion-buttons end (click)="openHelp('home')">
+      <button ion-button icon-only>
+        <ion-icon name="help"></ion-icon>
+      </button>
+    </ion-buttons>
     <ion-buttons end (click)="addTravel($event)" *ngIf="UserIsVerified">
       <button ion-button icon-only>
         <ion-icon name="add"></ion-icon>
@@ -11,17 +16,15 @@
     </ion-buttons>
   </ion-navbar>
 </ion-header>
-
 <ion-content>
-
-<ion-searchbar class="search" ion-fixed (ionInput)="getItems($event)" debounce="250" placeholder="Search for a place" cancelButtonText></ion-searchbar> 
-<div class="travellist">
-  <ion-list *ngFor="let item of ListOfitems">
+  <ion-searchbar class="search" ion-fixed (ionInput)="getItems($event)" debounce="250" placeholder="Search for a place" cancelButtonText></ion-searchbar>
+  <div class="travellist">
+    <ion-list *ngFor="let item of ListOfitems">
       <ion-card-content>
-       <ion-card (click)="itemTapped($event, item)" >
-      <ion-card-header>
-        <h4><b>{{item.firstname}} {{item.lastname}} ({{item.email}})</b></h4>
-        <span *ngIf="item.rating" class="review">     
+        <ion-card (click)="itemTapped($event, item)">
+          <ion-card-header>
+            <h4><b>{{item.firstname}} {{item.lastname}} ({{item.email}})</b></h4>
+            <span *ngIf="item.rating" class="review">     
           {{item.rating}} / 5
           <ion-icon name="star" *ngIf="Round(item.rating) > 0"></ion-icon>
           <ion-icon name="star" *ngIf="Round(item.rating) > 1"></ion-icon>
@@ -29,18 +32,16 @@
           <ion-icon name="star" *ngIf="Round(item.rating) > 3"></ion-icon>
           <ion-icon name="star" *ngIf="Round(item.rating) > 4"></ion-icon>
         </span>
-      </ion-card-header>
-      <ion-card-content>
-        <h5>{{item.fromAddress}}</h5>
-        <p>at {{item.fromDate  | date:'mediumDate'}}</p>
-        <h6>To</h6>
-        <h5>{{item.toAddress}}</h5>
-        <p>at {{item.toDate  | date:'mediumDate'}} </p>
+          </ion-card-header>
+          <ion-card-content>
+            <h5>{{item.fromAddress}}</h5>
+            <p>at {{item.fromDate | date:'mediumDate'}}</p>
+            <h6>To</h6>
+            <h5>{{item.toAddress}}</h5>
+            <p>at {{item.toDate | date:'mediumDate'}} </p>
+          </ion-card-content>
+        </ion-card>
       </ion-card-content>
-    </ion-card>
-   
-      </ion-card-content>
-   
-  </ion-list>
+    </ion-list>
   </div>
 </ion-content>
