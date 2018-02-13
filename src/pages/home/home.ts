@@ -102,7 +102,7 @@ export class HomePage
             this.ListOfitems.push({firstname:snapshot.val().firstname, lastname: snapshot.val().lastname, email:snapshot.val().email, 
               fromAddress:res[i].fromAddress, fromDate:res[i].fromDate, toAddress:res[i].toAddress, toDate:res[i].toDate, 
               fromX:res[i].fromX, fromY:res[i].fromY, key:res[i].key, toX:res[i].toX, toY:res[i].toY, userId:res[i].userId, 
-              rating: rating});
+              rating: rating, isTerminated: snapshot.val().isTerminated});
             this.ListOfitems2nd = this.ListOfitems;
             console.log(this.ListOfitems2nd);
           });                

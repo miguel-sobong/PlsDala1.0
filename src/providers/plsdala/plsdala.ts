@@ -250,6 +250,57 @@ export class PlsdalaProvider {
             return resolve(returnData);
           })
         }
+        else{
+          const newThread = this.afd.list('thread_users').push({});
+          newThread.set({
+            [users.user1]: true,
+            [users.user2]: true
+          });
+          const newItem = this.afd.list('messages/' + newThread.key).push({});
+          newItem.set({
+           isItem: true,
+           senderFirstname: this.user.val().firstname,
+           senderLastname: this.user.val().lastname,
+           itemName: data.name,
+           senderId: firebase.auth().currentUser.uid,
+           receiverName: data.receiverName,
+           receiverId: data.receiverId,
+           courierId: users.user2,
+           isAccepted: false,
+           isDeclined: false,
+           timestamp: firebase.database.ServerValue.TIMESTAMP,
+           receiverAccepted: false,
+           travelKey: item.key
+          }).then(_=>{
+            if(data.description){
+              firebase.database().ref('messages/' + newThread.key).child(newItem.key).update({
+                itemDescription: data.description,
+              });
+            }
+
+            firebase.database().ref('users').child(users.user2).once("value", snapshot=>{
+              firebase.database().ref().child('threads/' + this.user.key + '/' + newThread.key).update({
+                title: snapshot.val().firstname + " " + snapshot.val().lastname,
+                lastMessage: this.user.val().firstname + ' ' + this.user.val().lastname + ' sent an item!',
+                seen: true,
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+              });
+            });
+
+            firebase.database().ref().child('threads/' + users.user2 + '/' + newThread.key).update({
+              title: this.user.val().firstname + ' ' + this.user.val().lastname,
+              lastMessage: this.user.val().firstname + ' ' + this.user.val().lastname + ' sent an item!',
+              seen: false,
+              timestamp: firebase.database.ServerValue.TIMESTAMP
+            });
+          }).then(_=>{
+            var returnData = {
+              threadkey: newThread.key,
+              msgkey: newItem.key
+            }
+            return resolve(returnData);
+          })
+        }
       });
    });
   }
@@ -263,7 +314,7 @@ export class PlsdalaProvider {
             [users.user1]: true,
             [users.user2]: true,
             [users.user3]: true,
-          });
+          })
           resolve(threadUsers.key);
          }
          else{

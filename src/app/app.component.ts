@@ -29,6 +29,8 @@ export class MyApp {
   isVerified: any;
   UserIsVerified: any;
   isTerminated: any;
+  terminateNode;
+  userNode;
 
   constructor(public loadingCtrl: LoadingController, public afAuth: AngularFireAuth, public toastController: ToastController, 
     public alert: AlertController, public authenticationProvider: AuthenticationProvider, public events: Events, public platform: Platform,
@@ -59,6 +61,11 @@ export class MyApp {
         })
         // authObserver.unsubscribe();
       } else {
+        console.log(this.terminateNode, this.userNode);
+        if(this.terminateNode)
+          this.terminateNode.off();
+        if(this.userNode)
+          this.userNode.off();
         this.rootPage = LoginPage;
         // authObserver.unsubscribe();
       }
@@ -66,8 +73,8 @@ export class MyApp {
   }
 
   createWatchers(){
-    firebase.database().ref('users/' + firebase.auth().currentUser.uid)
-    .on('child_changed', changes => {
+    this.terminateNode = firebase.database().ref('users/' + firebase.auth().currentUser.uid);
+    this.terminateNode.on('child_changed', changes => {
       console.log(changes.key, changes.val());
        if(changes.key == "isTerminated" && changes.val() == true){
          this.terminateUserAlert();
@@ -90,7 +97,8 @@ export class MyApp {
 
   getUserInfo(uid){
     return new Promise(resolve=>{
-      firebase.database().ref('users/').child(uid).on('value', user => {
+      this.userNode = firebase.database().ref('users/').child(uid);
+      this.userNode.on('value', user => {
         this.profileName = user.val().firstname + ' ' + user.val().lastname;
         this.profileEmail = user.val().email;
         this.profileImage = user.val().profileimage;
