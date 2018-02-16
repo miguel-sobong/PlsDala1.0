@@ -1,6 +1,11 @@
 <ion-header>
   <ion-navbar color="headerbackground">
     <ion-title>Travel</ion-title>
+    <ion-buttons end [navPush]="help">
+      <button ion-button icon-only>
+        <ion-icon name="help"></ion-icon>
+      </button>
+    </ion-buttons>
     <ion-buttons end (click)="addItem($event)" *ngIf="UserIsVerified && user != selectedItem.userId">
       <button ion-button>
         Add Item
@@ -13,7 +18,7 @@
 <ion-content margin-top>
   <div text-center>
     <div (click)="viewProfile()">
-      <img src="{{posterImage}}" style="height: 150px; width: 150px;">
+      <img src="{{posterImage}}" style="height: 150px; width: 150px; border-radius: 15%;">
       <p text><b>{{posterName}} ({{posterEmail}})</b></p>
     </div>
     <p>From: {{selectedItem.fromAddress}} on {{selectedItem.fromDate}}</p>
@@ -22,7 +27,7 @@
   <div #map id="map"></div>
 
 </ion-content>
-<ion-footer *ngIf="user != selectedItem.userId" ion-fixed>
+<ion-footer *ngIf="user != selectedItem.userId">
   <button ion-button color="primary" block (click)="messageUser($event)">
     Message {{selectedItem.firstname}} {{selectedItem.lastname}}
   </button>

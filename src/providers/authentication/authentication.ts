@@ -23,6 +23,7 @@ export class AuthenticationProvider {
           isDeclined: false,
           rating: 0,
           totalrate: 0,
+          isTrackable: false,
           timestamp: firebase.database.ServerValue.TIMESTAMP
         });
     });

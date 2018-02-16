@@ -1,11 +1,40 @@
 // http://ionicframework.com/docs/theming/
+.backgroundhead{
+	
+	background: -webkit-linear-gradient(left top, map-get($colors, headerbackground),map-get($colors, headerbackgrounds));
+	background: -0-linear-gradient(bottom right,map-get($colors, headerbackground), map-get($colors, headerbackgrounds));
+     background: -moz-linear-gradient(bottom right, map-get($colors, headerbackground),map-get($colors, headerbackgrounds));
+	background: linear-gradient(to bottom right, map-get($colors, headerbackground), map-get($colors, headerbackgrounds));
+}
+#styleforProfile{
+	border-radius: 15%;
+	border: 2px solid #F2AF01 ;
+}
+#logo{
+	margin-left:70px;
+}
 
+button{
+	color:#F2AF01;
+	margin-bottom: -10px;
+}
 .profileContainer{
 	// padding-bottom: 1rem;
 	// margin: 0 auto;
 	padding-left: 0;
 }
+#whiteHead{
+	color:white;
+}
 
+.border.item-md.item-block .item-inner {
+  border-bottom: 0;
+  border-style: none;
+ }
+.activeHighlight{
+	background-color: #F2AF01;
+
+}
 // .toolbar-title.toolbar-title-md, 
 // .toolbar-title.toolbar-title-ios, 
 // .toolbar-title.toolbar-title-wp, 

@@ -4,14 +4,9 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>Travel Board</ion-title>
-    <ion-buttons end (click)="openHelp('home')">
+    <ion-buttons end [navPush]="helpPage">
       <button ion-button icon-only>
         <ion-icon name="help"></ion-icon>
-      </button>
-    </ion-buttons>
-    <ion-buttons end (click)="addTravel($event)" *ngIf="UserIsVerified">
-      <button ion-button icon-only>
-        <ion-icon name="add"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
@@ -44,4 +39,9 @@
         </ion-card-content>
     </ion-list>
   </div>
+
+  <ion-fab right bottom margin (click)="addTravel($event)" *ngIf="UserIsVerified">
+    <button ion-fab class="fabBtn" color="primary"><ion-icon name="add"></ion-icon></button>
+  </ion-fab>
+
 </ion-content>

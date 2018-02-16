@@ -25,12 +25,13 @@ export class MyApp {
   public profileName: string;
   public profileEmail: string;
   public profileImage: string;
-  pages: Array<{title: string, component: any}>;
+  pages: Array<{title: string, component: any, icon: string}>;
   isVerified: any;
   UserIsVerified: any;
   isTerminated: any;
   terminateNode;
   userNode;
+  activePage: any;
 
   constructor(public loadingCtrl: LoadingController, public afAuth: AngularFireAuth, public toastController: ToastController, 
     public alert: AlertController, public authenticationProvider: AuthenticationProvider, public events: Events, public platform: Platform,
@@ -111,12 +112,13 @@ export class MyApp {
 
   setPages(){
     this.pages = [
-      { title: 'Travel Board', component: HomePage },
+      { title: 'Travel Board',component: HomePage, icon:"ios-paper-outline"},
       // { title: 'My Travels', component: MytravelsPage },
-      { title: 'Messages', component: ChatlistPage },
-      { title: 'Transactions', component: TransactionsPage},
-      { title: 'Transaction History', component: TransactionhistoryPage}
+      { title: 'Messages', component: ChatlistPage,icon:"ios-chatbubbles-outline" },
+      { title: 'Transactions', component: TransactionsPage, icon:"ios-clipboard-outline"},
+      { title: 'Transaction History', component: TransactionhistoryPage, icon:"ios-archive-outline"}
     ];
+    this.activePage = this.pages[0];
   }
 
   initializeApp() {
@@ -126,8 +128,13 @@ export class MyApp {
     });
   }
 
+  checkActive(page){
+    return page == this.activePage;
+  }
+
   openPage(page) {
     this.nav.setRoot(page.component);
+    this.activePage=page;
   }
 
   openProfile(){

@@ -7,6 +7,7 @@ import { TravelPage } from '../travel/travel';
 import { ViewmapPage } from '../viewmap/viewmap'
 import { Observable } from 'rxjs/Observable';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
+import { HelpfortransactionPage } from '../helpfortransaction/helpfortransaction';
 import * as firebase from 'firebase';
 @IonicPage()
 @Component({
@@ -19,9 +20,11 @@ export class TransactionsPage {
 	receiver: any;
 	transactionList$: Observable<any>;
 	loggedInUser;
+  help: any;
 
   constructor(public afd: AngularFireDatabase, public modal: ModalController, public loading: LoadingController, 
   	public navCtrl: NavController, public navParams: NavParams) {
+    this.help = HelpfortransactionPage;
   	this.courier = true;
   	this.loggedInUser = firebase.auth().currentUser.uid;
   	var loader = this.loading.create({
@@ -86,12 +89,15 @@ export class TransactionsPage {
   	firebase.database().ref('transactions').child(transaction.key).once("value", snap=>{
   		console.log(snap.key, snap.val());
   		if(snap.val().itemAt == snap.val().senderId && snap.val().courierConfirm == true){
-  			console.log('here');
   			firebase.database().ref('transactions').child(transaction.key).update({
   				senderConfirm: false,
   				itemAt: snap.val().courierId,
   				courierConfirm: false
-  			})
+  			});
+
+        firebase.database().ref('users').child(snap.val().courierId).update({
+          isTrackable: true
+        });
   		}
   		else{
 		  	firebase.database().ref('transactions').child(transaction.key).update({
@@ -109,12 +115,20 @@ export class TransactionsPage {
   				itemAt: snap.val().courierId,
   				courierConfirm: false
   			})
+
+        firebase.database().ref('users').child(snap.val().courierId).update({
+          isTrackable: true
+        });
   		}
   		else if(snap.val().itemAt == snap.val().courierId && snap.val().receiverConfirm == true){
   			firebase.database().ref('transactions').child(transaction.key).update({
   				isDone: true,
   				courierConfirm: true
   			})
+
+        firebase.database().ref('users').child(snap.val().courierId).update({
+          isTrackable: false
+        });
   		}
   		else{
 		  	firebase.database().ref('transactions').child(transaction.key).update({
@@ -131,6 +145,11 @@ export class TransactionsPage {
   			firebase.database().ref('transactions').child(transaction.key).update({
   				isDone: true
   			});
+
+
+        firebase.database().ref('users').child(snap.val().courierId).update({
+          isTrackable: false
+        });
   			
   		}
   		else{

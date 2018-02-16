@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 /**
- * Generated class for the HelpPage page.
+ * Generated class for the HelpfortransactionPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
@@ -10,33 +10,31 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 @IonicPage()
 @Component({
-  selector: 'page-help',
-  templateUrl: 'help.html',
+  selector: 'page-helpfortransaction',
+  templateUrl: 'helpfortransaction.html',
 })
-export class HelpPage {
+export class HelpfortransactionPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
-
+  
   slider = [
+    
     {
-      image:"assets/imgs/a.png"
+      image:"assets/imgs/l.png"
     },
     {
-      image:"assets/imgs/c.png"
+      image:"assets/imgs/n.png"
     },
     {
-      image:"assets/imgs/d.1.png"
-    },
-    {
-      image:"assets/imgs/e.png"
+      image:"assets/imgs/o.png"
     }
     
 
   ];
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad HelpPage');
+    console.log('ionViewDidLoad HelpfortransactionPage');
   }
 
 }

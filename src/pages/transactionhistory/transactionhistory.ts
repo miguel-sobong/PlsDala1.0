@@ -7,18 +7,23 @@ import { ReviewPage } from '../review/review';
 import { ViewprofilePage } from '../viewprofile/viewprofile';
 import { ProfilePage } from '../profile/profile';
 import { ViewphotoPage } from '../viewphoto/viewphoto';
+import { HelpfortransactionhistoryPage } from '../helpfortransactionhistory/helpfortransactionhistory';
 
 @IonicPage()
 @Component({
   selector: 'page-transactionhistory',
   templateUrl: 'transactionhistory.html',
 })
+
+
 export class TransactionhistoryPage {
 
+  helpForTransactionHistory: any;
 	loggedInUser: any;
 	transactionList$: Observable<any>;
   constructor(public modal: ModalController, public afd: AngularFireDatabase, public loading: LoadingController, public navCtrl: NavController, public navParams: NavParams) {
-  	this.loggedInUser = firebase.auth().currentUser.uid;
+  	this.helpForTransactionHistory = HelpfortransactionhistoryPage;
+    this.loggedInUser = firebase.auth().currentUser.uid;
   	var loader = this.loading.create({
   		content: 'Loading transactions',
   	});

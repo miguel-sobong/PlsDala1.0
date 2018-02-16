@@ -34,7 +34,6 @@ export class ChoosereceiverPage {
 
 initialize(loader){
   loader.present();
-    console.log("awdwadwawadwadwdwadwad")
     this.userlist = this.plsdala.getUserList()
     .snapshotChanges()
     .map(

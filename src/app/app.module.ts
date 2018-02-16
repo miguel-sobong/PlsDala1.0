@@ -26,6 +26,9 @@ import { ViewmapPage } from '../pages/viewmap/viewmap';
 import { TransactionhistoryPage } from '../pages/transactionhistory/transactionhistory';
 import { ReviewPage } from '../pages/review/review';
 import { HelpPage } from '../pages/help/help';
+import { HelpfortransactionPage} from '../pages/helpfortransaction/helpfortransaction';
+import { HelpfortransactionhistoryPage } from '../pages/helpfortransactionhistory/helpfortransactionhistory';
+import { HelpfortravelPage } from '../pages/helpfortravel/helpfortravel';
 
 import { HttpModule } from '@angular/http';
 import { AngularFireModule } from 'angularfire2';
@@ -76,7 +79,10 @@ import { Geolocation } from '@ionic-native/geolocation';
     ViewmapPage,
     TransactionhistoryPage,
     ReviewPage,
-    HelpPage
+    HelpPage,
+    HelpfortransactionPage,
+    HelpfortransactionhistoryPage,
+    HelpfortravelPage
   ],
   imports: [
     BrowserModule,
@@ -110,7 +116,10 @@ import { Geolocation } from '@ionic-native/geolocation';
     ViewmapPage,
     TransactionhistoryPage,
     ReviewPage,
-    HelpPage
+    HelpPage,
+    HelpfortransactionPage,
+    HelpfortransactionhistoryPage,
+    HelpfortravelPage
   ],
   providers: [
     StatusBar,

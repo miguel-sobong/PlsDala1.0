@@ -8,9 +8,8 @@ import { Observable } from 'rxjs/Observable';
 import * as firebase from 'firebase';
 import { DatePipe } from '@angular/common';
 import { Geolocation } from '@ionic-native/geolocation';
-import { HelpPage } from '../../pages/help/help';
 import { AuthenticationProvider } from '../../providers/authentication/authentication';
-
+import { HelpPage } from '../help/help';
 
 @Component({
   selector: 'page-home',
@@ -24,10 +23,12 @@ export class HomePage
   searchTravel = '';
   ListOfitems: Array<any>;
   ListOfitems2nd: Array<any>;  
+  helpPage;
  
   constructor(public geo: Geolocation, public authenticationProvider: AuthenticationProvider, public alert: AlertController,
    public navCtrl: NavController, public navParams: NavParams, 
     public plsdala: PlsdalaProvider, public toastCtrl: ToastController, private datepipe:DatePipe) {
+    this.helpPage = HelpPage;
     this.ListOfitems = [];
     this.ListOfitems2nd = [];
     var checked = false;
@@ -39,9 +40,8 @@ export class HomePage
       this.UserIsVerified = isVerified.val();
     });
 
-
-    firebase.database().ref('users').child(firebase.auth().currentUser.uid)
-    .on("child_changed", changes =>{
+    var verificationNode = firebase.database().ref('users').child(firebase.auth().currentUser.uid);
+    verificationNode.on("child_changed", changes =>{
       if(changes.key == "isVerified"){
         this.UserIsVerified = changes.val();
         if(changes.val() == true && localStorage.getItem("verified") == "false"){
@@ -61,6 +61,7 @@ export class HomePage
                 }]
               }).present();
         }
+        verificationNode.off();
       }
     });
 
@@ -75,8 +76,6 @@ export class HomePage
   }
 
   itemTapped(event, item) {
-    // console.log(item);
-    // console.log(this.UserIsVerified);
     this.navCtrl.push(TravelPage, {
       item: item
     });
@@ -144,7 +143,7 @@ export class HomePage
       timeout: 5000
     };
     this.geo.getCurrentPosition(options).then(pos=>{
-      // alert(pos.coords.latitude + ", " + pos.coords.longitude);
+      console.log(pos.coords.latitude + ", " + pos.coords.longitude);
     }).catch(err=>console.log("error: " + err));
   }
 

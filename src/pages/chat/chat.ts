@@ -85,6 +85,7 @@ export class ChatPage {
 
   openModal(imgurl){
     this.modal.create(ViewphotoPage, {imgurl: imgurl}).present();
+  
   }
 
   viewProfile(key){
