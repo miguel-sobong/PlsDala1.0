@@ -32,10 +32,20 @@ export class MyApp {
   terminateNode;
   userNode;
   activePage: any;
+  isDeclined;
 
   constructor(public loadingCtrl: LoadingController, public afAuth: AngularFireAuth, public toastController: ToastController, 
     public alert: AlertController, public authenticationProvider: AuthenticationProvider, public events: Events, public platform: Platform,
    public statusBar: StatusBar, public splashScreen: SplashScreen) {
+    if(!localStorage.getItem("verified")){
+      localStorage.setItem("verified", "false");
+    }
+    if(!localStorage.getItem("decline")){
+      localStorage.setItem("decline", "false");
+    }
+    if(!localStorage.getItem("notVerified")){
+      localStorage.setItem("notVerified", "false");
+    }
     this.initializeApp();
     const authObserver = afAuth.authState.subscribe( user => {
       if (user) {
@@ -55,7 +65,7 @@ export class MyApp {
             {
               this.setPages();
               this.rootPage = HomePage; //HomePage
-              this.presentModalForVerification(this.isVerified);
+              this.presentModalForVerification(this.isVerified, this.isDeclined);
               this.createWatchers();
             }     
           }
@@ -105,6 +115,7 @@ export class MyApp {
         this.profileImage = user.val().profileimage;
         this.isVerified = user.val().isVerified;
         this.isTerminated = user.val().isTerminated;
+        this.isDeclined = user.val().isDeclined;
         resolve(true);
       });
     })
@@ -169,34 +180,35 @@ export class MyApp {
     }).present();
   }
 
-  presentModalForVerification(isVerified){
+  presentModalForVerification(isVerified, isDeclined){
     var checked;
     if(isVerified == false && localStorage.getItem("notVerified") == "false"){
-      this.alert.create({
-        title: "You are not verified",
-        message: "Unverified users can't add a travel or send an item but you can still receive items.",
-        inputs: [{
-          type: 'checkbox',
-          label: 'Don\'t show this again',
-          handler: data=>{
-            localStorage.setItem("notVerified", ""+data.checked+"");
-         }
-          }], 
-          buttons: [{
-            text: "Ok",
-            role: 'cancel',
-        }]
-      }).present();
-    }
-    else if(isVerified == true && localStorage.getItem("verified") == "false"){
+      if(isDeclined == false){
+        this.alert.create({
+          title: "You are not verified",
+          message: "Unverified users can't add a travel or send an item but you can still receive items.",
+          inputs: [{
+            type: 'checkbox',
+            label: 'Don\'t show this again',
+            handler: data=>{
+              localStorage.setItem("notVerified", ""+data.checked+"");
+           }
+            }], 
+            buttons: [{
+              text: "Ok",
+              role: 'cancel',
+          }]
+        }).present();
+      }
+      else{
+        if(isDeclined == true && localStorage.getItem("decline") == "false"){
           this.alert.create({
-            title: "Congratulations! You are now verified :)",
-            message: "You can now add a travel plan and send items for other users to deliver!",
+            title: "Sorry, your verification is declined",
             inputs: [{
               type: 'checkbox',
               label: 'Don\'t show this again',
               handler: data=>{
-                localStorage.setItem("verified", ""+data.checked+"");
+                localStorage.setItem("decline", ""+data.checked+"");
               }
             }], 
             buttons: [{
@@ -204,6 +216,26 @@ export class MyApp {
               role: 'cancel',
             }]
           }).present();
+        }
+      }
+    }
+    else if(isVerified == true && localStorage.getItem("verified") == "false"){
+      this.alert.create({
+        title: "Congratulations! You are now verified",
+        message: "You can now add a travel plan and send items for other users to deliver!",
+        inputs: [{
+          type: 'checkbox',
+          label: 'Don\'t show this again',
+          handler: data=>{
+            localStorage.setItem("verified", ""+data.checked+"");
+          }
+        }], 
+        buttons: [{
+          text: "Ok",
+          role: 'cancel',
+        }]
+      }).present();
     }
   }
+
 }

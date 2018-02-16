@@ -57,7 +57,7 @@ export class ProfilePage {
         console.log(res[i].reviewer);
         firebase.database().ref('users').child(res[i].reviewer).once("value", snapshot=>{
           console.log(snapshot.val());
-          this.ListOfitems.push({firstname:snapshot.val().firstname, lastname: snapshot.val().firstname, 
+          this.ListOfitems.push({firstname:snapshot.val().firstname, lastname: snapshot.val().lastname, 
             email:snapshot.val().email, review: res[i].description, rating: res[i].rating, timestamp: res[i].timestamp});
           });
       }

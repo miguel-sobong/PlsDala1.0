@@ -56,6 +56,7 @@ export class RegisterPage {
           }).present();
           localStorage.setItem("notVerified", "false"); // for home popup
           localStorage.setItem("verified", "false");
+          localStorage.setItem("decline", "false");
           this.navCtrl.setRoot(HomePage);
         }, fail=>
         {

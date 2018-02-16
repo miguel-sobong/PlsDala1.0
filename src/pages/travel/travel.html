@@ -6,15 +6,8 @@
         <ion-icon name="help"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-buttons end (click)="addItem($event)" *ngIf="UserIsVerified && user != selectedItem.userId">
-      <button ion-button>
-        Add Item
-      </button>
-    </ion-buttons>  
   </ion-navbar>
 </ion-header>
-
-
 <ion-content margin-top>
   <div text-center>
     <div (click)="viewProfile()">
@@ -25,9 +18,11 @@
     <p>To: {{selectedItem.toAddress}} and will arrive at {{selectedItem.toDate}}</p>
   </div>
   <div #map id="map"></div>
-
 </ion-content>
 <ion-footer *ngIf="user != selectedItem.userId">
+  <button ion-button color="primary" block (click)="addItem($event)">
+    Request Delivery
+  </button>
   <button ion-button color="primary" block (click)="messageUser($event)">
     Message {{selectedItem.firstname}} {{selectedItem.lastname}}
   </button>
