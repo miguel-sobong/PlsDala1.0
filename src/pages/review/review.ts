@@ -10,6 +10,8 @@ import * as firebase from 'firebase';
 export class ReviewPage {
 
   rating: number = 0;
+  public isHover: boolean =  false;
+
   selectedItem;
   firstname: any;
   lastname: any;
@@ -31,12 +33,16 @@ export class ReviewPage {
     });
   }
 
-  rate(index){
-    this.rating = index;
-    console.log(this.rating);
-  }
+
+rate = (r) => (this.rating = r);
+
+  // rate(index){
+  //   this.rating = index;
+  //   console.log(this.rating);
+  // }
 
   submit(){
+    console.log("otin",this.rating);
     var check = true;
     firebase.database().ref('reviews').child(this.selectedItem.uid).once("value",user=>{
       user.forEach(snapshot=>{
@@ -53,24 +59,26 @@ export class ReviewPage {
       })
     }).then(_=>{
       if(check == true){
-        firebase.database().ref('reviews').child(this.selectedItem.uid).push({})
-        .set({rating: this.rating, transaction: this.selectedItem.dbkey, 
-          reviewer: firebase.auth().currentUser.uid, description: this.inputText,
-          timestamp: firebase.database.ServerValue.TIMESTAMP});
-        
-        firebase.database().ref('users').child(this.selectedItem.uid).once("value", snap=>{
-          firebase.database().ref('users').child(this.selectedItem.uid).update({
-            rating: snap.val().rating + this.rating,
-            totalrate: snap.val().totalrate + 1
+        if(this.rating && this.inputText){
+          firebase.database().ref('reviews').child(this.selectedItem.uid).push({})
+          .set({rating: this.rating, transaction: this.selectedItem.dbkey, 
+            reviewer: firebase.auth().currentUser.uid, description: this.inputText,
+            timestamp: firebase.database.ServerValue.TIMESTAMP});
+          
+          firebase.database().ref('users').child(this.selectedItem.uid).once("value", snap=>{
+            firebase.database().ref('users').child(this.selectedItem.uid).update({
+              rating: snap.val().rating + this.rating,
+              totalrate: snap.val().totalrate + 1
+            })
           })
-        })
 
-        this.toastCtrl.create({
-          message: 'Successfully reviewed user',
-          duration: 3000
-        }).present();
+          this.toastCtrl.create({
+            message: 'Successfully reviewed user',
+            duration: 3000
+          }).present();
 
-        this.navCtrl.pop();
+          this.navCtrl.pop();
+        }
       }
       else{
         this.toastCtrl.create({
@@ -82,3 +90,4 @@ export class ReviewPage {
 
   }
 }
+

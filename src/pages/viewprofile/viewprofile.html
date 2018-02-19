@@ -17,7 +17,7 @@
     <ion-icon name="star" *ngIf="Round(userRating) > 3"></ion-icon>
     <ion-icon name="star" *ngIf="Round(userRating) > 4"></ion-icon>
   </div>
-  <p class="description">{{profileDescription}}</p>
+  <p class="description" *ngIf="profileDescription">{{profileDescription}}</p>
   <div class="review">
 	  <ion-list ion-item *ngFor="let item of ListOfitems">
 	  	{{item.firstname}} {{item.lastname}}<br>
@@ -26,7 +26,6 @@
 		<ion-icon name="star" *ngIf="item.rating > 2"></ion-icon>
 		<ion-icon name="star" *ngIf="item.rating > 3"></ion-icon>
 		<ion-icon name="star" *ngIf="item.rating > 4"></ion-icon>
-		<!-- <ion-icon name="star-half" *ngIf="item.rating%1 != 0"></ion-icon> -->
 		<br>
 	  	<p>{{item.timestamp | date:'mediumDate'}} {{item.timestamp | date:'shortTime'}}</p>
 	  	<br>

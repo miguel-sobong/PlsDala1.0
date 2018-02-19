@@ -29,8 +29,8 @@ export class ProfilePage {
   	public navCtrl: NavController, public navParams: NavParams) {
   	this.currentUser = firebase.auth().currentUser.uid;
     firebase.database().ref('users/')
-    .child(this.currentUser)
-    .on('value', user => {
+    .child(firebase.auth().currentUser.uid)
+    .once('value', user => {
     	console.log(user.val());
     	this.profileName = user.val().firstname + ' ' + user.val().lastname;
     	this.profileEmail = user.val().email;
@@ -129,20 +129,31 @@ export class ProfilePage {
 
   EditProfile(){
   	this.editProfile = !this.editProfile;
+    console.log(this.profileDescription);
   }
 
   submitEdit(){
-  	var editData = {
-  		firstname: this.fname,
-  		lastname: this.lname,
-  		description: this.description
-  	}
-  	this.plsdala.editProfile(this.currentUser, editData).then(success=>{
-  		this.editProfile = !this.editProfile;
-  		this.toastCtrl.create({
-  			message: 'Successfully edited your profile',
-  			duration: 3000
-  		}).present();
-  	})
+    console.log(this.description);
+    if(this.description){
+    	var editData = {
+    		// firstname: this.fname,
+    		// lastname: this.lname,
+    		description: this.description
+    	}
+    }
+    else{
+      var editData = {
+        description: ""
+      }
+    }
+    this.plsdala.editProfile(this.currentUser, editData).then(success=>{
+    	this.editProfile = !this.editProfile;
+    	this.toastCtrl.create({
+    		message: 'Successfully edited your profile',
+    		duration: 3000
+    	}).present();
+    });
+
+    this.profileDescription = this.description;
   }
 }

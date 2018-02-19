@@ -1,36 +1,36 @@
 <ion-content padding>
-  <video autoplay muted loop> 
-    <source src="assets/video/background.mp4" type='video/mp4' >  
-    <source src="assets/video/background.mp4" type='video/mp4; codecs="h.264"' > 
+  <video autoplay loop poster="assets/video/default.png" webkit-playsinline playsinline>
+    <source src="assets/video/background.mp4" type='video/mp4; codecs="h.264"'>
+    <source src="assets/video/background.mp4">
   </video>
   <div class="container" text-center>
-      <div class="brand">
-        <img src="assets/imgs/plsdala.png" width="200" height="200" text-center>
-        <h1>PlsDala:</h1>
-        <h4>A Delivery Sharing Economy<br>Mobile Application</h4>
-      </div>
+    <div class="brand">
+      <img src="assets/imgs/plsdala.png" width="200" height="200" text-center>
+      <h1>PlsDala:</h1>
+      <h4>A Delivery Sharing Economy<br>Mobile Application</h4>
+    </div>
     <form [formGroup]="loginForm" (submit)="loginUser()" novalidate>
-          <ion-item>
-            <ion-label floating>Email Address</ion-label>
-            <ion-input #email type="email" formControlName="email" [class.invalid]="!loginForm.controls.email.valid &&
+      <ion-item>
+        <ion-label floating>Email Address</ion-label>
+        <ion-input #email type="email" formControlName="email" [class.invalid]="!loginForm.controls.email.valid &&
           loginForm.controls.email.dirty"></ion-input>
-          </ion-item>
-          <ion-item class="error-message" *ngIf="!loginForm.controls.email.valid  && loginForm.controls.email.dirty">
-            <p>Please enter a valid email.</p>
-          </ion-item>
-          <ion-item>
-            <ion-label floating>Password</ion-label>
-            <ion-input #password type="password" formControlName="password" [class.invalid]="!loginForm.controls.password.valid &&
+      </ion-item>
+      <ion-item class="error-message" *ngIf="!loginForm.controls.email.valid  && loginForm.controls.email.dirty">
+        <p>Please enter a valid email.</p>
+      </ion-item>
+      <ion-item>
+        <ion-label floating>Password</ion-label>
+        <ion-input #password type="password" formControlName="password" [class.invalid]="!loginForm.controls.password.valid &&
           loginForm.controls.password.dirty"></ion-input>
-          </ion-item>
-          <ion-item class="error-message" *ngIf="!loginForm.controls.password.valid  &&
+      </ion-item>
+      <ion-item class="error-message" *ngIf="!loginForm.controls.password.valid  &&
             loginForm.controls.password.dirty">
-            <p>Your password needs more than 6 characters.</p>
-          </ion-item>
-          <div padding>
-            <button ion-button color="primary" round block color="compliment">Log me in!</button>
-          </div>
-      </form>
+        <p>Your password needs more than 6 characters.</p>
+      </ion-item>
+      <div padding>
+        <button ion-button color="primary" round block color="compliment">Log me in!</button>
+      </div>
+    </form>
     <div>
       <p class="brand">No account yet? <a (click)="goToRegister()" class="brand">Register here!</a></p>
     </div>
