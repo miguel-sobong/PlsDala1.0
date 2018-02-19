@@ -7,7 +7,6 @@ import { LoginPage } from '../../pages/login/login'
 import { Observable } from 'rxjs/Observable';
 import * as firebase from 'firebase';
 import { DatePipe } from '@angular/common';
-import { Geolocation } from '@ionic-native/geolocation';
 import { AuthenticationProvider } from '../../providers/authentication/authentication';
 import { HelpPage } from '../help/help';
 
@@ -24,8 +23,8 @@ export class HomePage
   ListOfitems: Array<any>;
   ListOfitems2nd: Array<any>;  
   helpPage;
- 
-  constructor(public geo: Geolocation, public authenticationProvider: AuthenticationProvider, public alert: AlertController,
+
+  constructor(public authenticationProvider: AuthenticationProvider, public alert: AlertController,
    public navCtrl: NavController, public navParams: NavParams, 
     public plsdala: PlsdalaProvider, public toastCtrl: ToastController, private datepipe:DatePipe) {
     this.helpPage = HelpPage;
@@ -157,17 +156,6 @@ export class HomePage
          
        })
       }
-  }
-
-  ionViewDidLoad(){
-    var options = {
-      enableHighAccuracy: true,
-      maximumAge: 600000,
-      timeout: 5000
-    };
-    this.geo.getCurrentPosition(options).then(pos=>{
-      console.log(pos.coords.latitude + ", " + pos.coords.longitude);
-    }).catch(err=>console.log("error: " + err));
   }
 
   openHelp(curr){

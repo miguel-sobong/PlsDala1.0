@@ -5,6 +5,7 @@ import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 // import { Observable } from 'rxjs/Observable';
 import { Http } from '@angular/http';
 import firebase from 'firebase';
+import { Geolocation } from '@ionic-native/geolocation';
 @Injectable()
 export class PlsdalaProvider {
 
@@ -17,14 +18,46 @@ export class PlsdalaProvider {
   threadId;
   newThreadKey;
   users: any;
-  user: any;
+  user: any;  
+  watch;
 
-  constructor(public toastCtrl: ToastController, public afd: AngularFireDatabase, public http: Http) {
+
+  constructor(private geo: Geolocation, public toastCtrl: ToastController, public afd: AngularFireDatabase, public http: Http) {
     this.travelList = this.afd.list('travels');
     firebase.database().ref('users/')
     .child(firebase.auth().currentUser.uid)
     .once('value', user => {
       this.user = user;
+    });
+
+ 	this.watchUserLocation();
+  }
+
+  watchUserLocation(){
+    var watchOptions = {
+    	enableHighAccurary: true,
+    	maximumAge:300000,
+    	timeout: 5000
+    }
+
+    firebase.database().ref('users').child(firebase.auth().currentUser.uid).on("child_changed", snap=>{
+    	if(snap.key == "isTrackable")
+    	{
+    		if(snap.val() == true){ 
+			    this.watch = this.geo.watchPosition(watchOptions).subscribe(pos => {
+			    	if(pos.coords != undefined){
+			    		firebase.database().ref("user_location").child(firebase.auth().currentUser.uid).update({
+			    			lat: pos.coords.latitude,
+			    			long: pos.coords.longitude
+			    		});
+			    	}
+			    });
+	    	}
+	    	else{
+	    		//turn off subscribe
+	    		this.watch.unsubscribe();
+	    	}
+	    }
     });
   }
 
