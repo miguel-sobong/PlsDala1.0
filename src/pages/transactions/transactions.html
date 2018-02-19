@@ -118,6 +118,7 @@
               <button ion-button block (click)="itemTapped(transaction)">Open map</button>
               <button ion-button block (click)="receiverConfirm(transaction)" *ngIf="transaction.itemAt == transaction.courierId && transaction.receiverConfirm == false">Confirm</button>
               <button ion-button block *ngIf="transaction.receiverConfirm == true">Receiver confirmed</button>
+              <button ion-button block *ngIf="transaction.itemAt == transaction.courierId">Track courier</button>
             </ion-card-content>
           </div>
         </div>

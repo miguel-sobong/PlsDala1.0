@@ -31,14 +31,14 @@ export class TransactionsPage {
   		content: 'Loading transactions',
   	});
   	loader.present();
-	this.transactionList$ = this.afd.list('transactions/')
+	this.transactionList$ = this.afd.list('transactions/', ref=>ref.orderByChild("timestamp"))
 	.snapshotChanges()
 	    .map(
 	      changes => {
 			loader.dismiss();
 	        return changes.map(c=>({
 	          key: c.payload.key, ...c.payload.val()
-	        }));
+	        })).slice().reverse();
 	      });
   }
 
@@ -94,7 +94,6 @@ export class TransactionsPage {
   				itemAt: snap.val().courierId,
   				courierConfirm: false
   			});
-
         firebase.database().ref('users').child(snap.val().courierId).update({
           isTrackable: true
         });
@@ -115,7 +114,6 @@ export class TransactionsPage {
   				itemAt: snap.val().courierId,
   				courierConfirm: false
   			})
-
         firebase.database().ref('users').child(snap.val().courierId).update({
           isTrackable: true
         });
@@ -123,9 +121,9 @@ export class TransactionsPage {
   		else if(snap.val().itemAt == snap.val().courierId && snap.val().receiverConfirm == true){
   			firebase.database().ref('transactions').child(transaction.key).update({
   				isDone: true,
-  				courierConfirm: true
+  				courierConfirm: true,
+          timestampDone: firebase.database.ServerValue.TIMESTAMP
   			})
-
         firebase.database().ref('users').child(snap.val().courierId).update({
           isTrackable: false
         });
@@ -143,14 +141,12 @@ export class TransactionsPage {
   		console.log(snap.key, snap.val());
   		if(snap.val().courierConfirm == true){
   			firebase.database().ref('transactions').child(transaction.key).update({
-  				isDone: true
+  				isDone: true,
+          timestampDone: firebase.database.ServerValue.TIMESTAMP
   			});
-
-
         firebase.database().ref('users').child(snap.val().courierId).update({
           isTrackable: false
         });
-  			
   		}
   		else{
 		  	firebase.database().ref('transactions').child(transaction.key).update({

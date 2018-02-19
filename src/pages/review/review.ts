@@ -18,7 +18,9 @@ export class ReviewPage {
   email: any;
   inputText: string;
   description: any;
+  temp;
   constructor(public toastCtrl: ToastController, public navCtrl: NavController, public navParams: NavParams) {
+    var timestamp;
     this.selectedItem = navParams.get('item');
     console.log(this.selectedItem.dbkey, this.selectedItem.uid);
     this.getUser(this.selectedItem.uid);
@@ -42,7 +44,7 @@ rate = (r) => (this.rating = r);
   // }
 
   submit(){
-    console.log("otin",this.rating);
+    this.temp = firebase.database().ref("temp").child(firebase.auth().currentUser.uid).push({timestamp: firebase.database.ServerValue.TIMESTAMP});
     var check = true;
     firebase.database().ref('reviews').child(this.selectedItem.uid).once("value",user=>{
       user.forEach(snapshot=>{
@@ -58,36 +60,60 @@ rate = (r) => (this.rating = r);
         return false;
       })
     }).then(_=>{
-      if(check == true){
-        if(this.rating && this.inputText){
-          firebase.database().ref('reviews').child(this.selectedItem.uid).push({})
-          .set({rating: this.rating, transaction: this.selectedItem.dbkey, 
-            reviewer: firebase.auth().currentUser.uid, description: this.inputText,
-            timestamp: firebase.database.ServerValue.TIMESTAMP});
-          
-          firebase.database().ref('users').child(this.selectedItem.uid).once("value", snap=>{
-            firebase.database().ref('users').child(this.selectedItem.uid).update({
-              rating: snap.val().rating + this.rating,
-              totalrate: snap.val().totalrate + 1
-            })
-          })
+      new Promise(resolve=>{
+        firebase.database().ref('transactions').child(this.selectedItem.dbkey).child("timestampDone").once("value", snap=>{
+          firebase.database().ref("temp").child(this.temp.key).once("value", time =>{
+            if(snap.val() + 604800000 > time.val()){
+              resolve(true);
+            }
+            else{
+              this.toastCtrl.create({
+                message: 'Cannot review user anymore. One week has already passed',
+                duration: 3000
+              }).present();
+              resolve(false)
+            }
+          });
+        })
+      }).then(data=>{
+        firebase.database().ref("temp").child(firebase.auth().currentUser.uid).remove();
+        if(data){
+          if(check == true){
+            if(this.rating && this.inputText){
+              firebase.database().ref('reviews').child(this.selectedItem.uid).push({})
+              .set({rating: this.rating, transaction: this.selectedItem.dbkey, 
+                reviewer: firebase.auth().currentUser.uid, description: this.inputText,
+                timestamp: firebase.database.ServerValue.TIMESTAMP});
+              
+              firebase.database().ref('users').child(this.selectedItem.uid).once("value", snap=>{
+                firebase.database().ref('users').child(this.selectedItem.uid).update({
+                  rating: snap.val().rating + this.rating,
+                  totalrate: snap.val().totalrate + 1
+                })
+              })
 
-          this.toastCtrl.create({
-            message: 'Successfully reviewed user',
-            duration: 3000
-          }).present();
+              this.toastCtrl.create({
+                message: 'Successfully reviewed user',
+                duration: 3000
+              }).present();
 
-          this.navCtrl.pop();
+              this.navCtrl.pop();
+            }
+            else{
+              this.toastCtrl.create({
+                message: 'Please have input in all fields',
+                duration: 3000
+              }).present();
+            }
+          }
+          else{
+            this.toastCtrl.create({
+              message: 'You have already reviewed this user for this transaction.',
+              duration: 3000
+            }).present();
+          }
         }
-      }
-      else{
-        this.toastCtrl.create({
-          message: 'You have already reviewed this user.',
-          duration: 3000
-        }).present();
-      }
+      });
     })
-
   }
 }
-

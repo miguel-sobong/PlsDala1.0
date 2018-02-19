@@ -28,14 +28,14 @@ export class TransactionhistoryPage {
   		content: 'Loading transactions',
   	});
   	loader.present();
-	this.transactionList$ = this.afd.list('transactions/')
+	this.transactionList$ = this.afd.list('transactions/', ref=>ref.orderByChild("timestampDone"))
 	.snapshotChanges()
 	    .map(
 	      changes => {
 			loader.dismiss();
 	        return changes.map(c=>({
 	          key: c.payload.key, ...c.payload.val()
-	        }));
+	        })).slice().reverse();
 	      });
   }
 

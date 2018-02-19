@@ -436,7 +436,9 @@ export class PlsdalaProvider {
           senderConfirm: false,
           courierConfirm: false,
           receiverConfirm: false,
-          isDone: false
+          isDone: false,
+          timestamp: firebase.database.ServerValue.TIMESTAMP,
+          timestampDone: 0
         });
         if(item.itemDescription){
           newTransaction.update({

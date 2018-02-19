@@ -29,6 +29,7 @@ import { HelpPage } from '../pages/help/help';
 import { HelpfortransactionPage} from '../pages/helpfortransaction/helpfortransaction';
 import { HelpfortransactionhistoryPage } from '../pages/helpfortransactionhistory/helpfortransactionhistory';
 import { HelpfortravelPage } from '../pages/helpfortravel/helpfortravel';
+import { TrackPage } from '../pages/track/track';
 
 import { HttpModule } from '@angular/http';
 import { AngularFireModule } from 'angularfire2';
@@ -82,7 +83,8 @@ import { Geolocation } from '@ionic-native/geolocation';
     HelpPage,
     HelpfortransactionPage,
     HelpfortransactionhistoryPage,
-    HelpfortravelPage
+    HelpfortravelPage,
+    TrackPage
   ],
   imports: [
     BrowserModule,
@@ -119,7 +121,8 @@ import { Geolocation } from '@ionic-native/geolocation';
     HelpPage,
     HelpfortransactionPage,
     HelpfortransactionhistoryPage,
-    HelpfortravelPage
+    HelpfortravelPage,
+    TrackPage
   ],
   providers: [
     StatusBar,
