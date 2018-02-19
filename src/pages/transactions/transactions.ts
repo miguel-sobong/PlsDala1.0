@@ -8,6 +8,7 @@ import { ViewmapPage } from '../viewmap/viewmap'
 import { Observable } from 'rxjs/Observable';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { HelpfortransactionPage } from '../helpfortransaction/helpfortransaction';
+import { TrackPage } from '../track/track';
 import * as firebase from 'firebase';
 @IonicPage()
 @Component({
@@ -154,5 +155,9 @@ export class TransactionsPage {
 		  	});	
   		}
   	});
+  }
+
+  track(courierId){
+    this.navCtrl.push(TrackPage, { item: courierId });
   }
 }
