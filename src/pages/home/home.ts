@@ -23,6 +23,7 @@ export class HomePage
   ListOfitems: Array<any>;
   ListOfitems2nd: Array<any>;  
   helpPage;
+  verifyViewer;
 
   constructor(public authenticationProvider: AuthenticationProvider, public alert: AlertController,
    public navCtrl: NavController, public navParams: NavParams, 
@@ -46,55 +47,18 @@ export class HomePage
 
   checkVerification(){
    var userRef = firebase.database().ref('users').child(firebase.auth().currentUser.uid);
-
    userRef.child('isVerified')
     .once('value', isVerified => {
       this.UserIsVerified = isVerified.val();
     });
 
-   var verificationNode = firebase.database().ref('users').child(firebase.auth().currentUser.uid);
-   verificationNode.on("child_changed", changes =>{
-   	console.log(changes.key);
-     if(changes.key == "isVerified"){
-       this.UserIsVerified = changes.val();
-       if(changes.val() == true && localStorage.getItem("verified") == "false"){
-             this.alert.create({
-               title: "Congratulations! You are now verified",
-               message: "You can now add a travel plan and send items for other users to deliver!",
-               inputs: [{
-                 type: 'checkbox',
-                 label: 'Don\'t show this again',
-                 handler: data=>{
-                   localStorage.setItem("verified", ""+data.checked+"");
-                 }
-               }], 
-               buttons: [{
-                 text: "Ok",
-                 role: 'cancel',
-               }]
-             }).present();
-       }
-     }
-     else if(changes.key == "isDeclined"){
-       if(changes.val() == true && localStorage.getItem("decline") == "false"){
-             this.alert.create({
-               title: "Sorry, your verification is declined",
-               inputs: [{
-                 type: 'checkbox',
-                 label: 'Don\'t show this again',
-                 handler: data=>{
-                   localStorage.setItem("decline", ""+data.checked+"");
-                 }
-               }], 
-               buttons: [{
-                 text: "Ok",
-                 role: 'cancel',
-               }]
-             }).present();
-       }
-     }
-    verificationNode.off();
-   });
+    var verifyViewer = firebase.database().ref('users').child(firebase.auth().currentUser.uid);
+    verifyViewer.on('child_changed', changes=>{
+      console.log(changes.key, changes.val());
+      if(changes.val() == true){
+        this.UserIsVerified = changes.val();
+      }
+    });
   }
 
   itemTapped(event, item) {

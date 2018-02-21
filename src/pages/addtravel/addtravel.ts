@@ -5,7 +5,6 @@ import { PlsdalaProvider } from '../../providers/plsdala/plsdala';
 import { MapPage } from '../map/map';
 import { CommonProvider } from '../../providers/common/common';
 import { HomePage } from '../home/home';
-import { MytravelsPage } from '../mytravels/mytravels';
 
 @IonicPage()
 @Component({
@@ -40,14 +39,11 @@ export class AddtravelPage {
     else if(toDate.getTime() < fromDate.getTime()){
       this.alertCtrl.create({
         message: "Arrival date is earlier than departure date",
-        buttons: [
-                {
-                  text: "Ok",
-                  role: 'cancel'
-                }
-              ]
-            }).present();
-
+        buttons: [{
+          text: "Ok",
+          role: 'cancel'
+        }]
+      }).present();
     }
     else{
       var loader = this.loadingCtrl.create({
@@ -87,6 +83,12 @@ export class AddtravelPage {
       this.addTravelForm.value.toLocation = data.address;
       console.log(this.addTravelForm.value.toLocation);
       }
+      else{
+        this.toastCtrl.create({
+          message: 'Error getting information from marker',
+          duration: 3000
+        }).present();
+      }
     });
     modal.present();
   }
@@ -114,10 +116,6 @@ export class AddtravelPage {
       }
     });
     modal.present();
-  }
-
-  ionViewDidLoad() {
-    console.log('ionViewiDydLoad AddtravelPage');
   }
 
   Cancel(){

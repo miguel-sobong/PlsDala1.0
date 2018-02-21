@@ -18,8 +18,6 @@ import { ContinuechatPage } from '../pages/continuechat/continuechat';
 import { ProfilePage } from '../pages/profile/profile';
 import { ViewprofilePage } from '../pages/viewprofile/viewprofile';
 import { ChoosereceiverPage } from '../pages/choosereceiver/choosereceiver';
-import { MytravelsPage } from '../pages/mytravels/mytravels';
-import { MytravelPage } from '../pages/mytravel/mytravel';
 import { ViewphotoPage } from '../pages/viewphoto/viewphoto';
 import { TransactionsPage } from '../pages/transactions/transactions';
 import { ViewmapPage } from '../pages/viewmap/viewmap';
@@ -73,8 +71,6 @@ import { Geolocation } from '@ionic-native/geolocation';
     ProfilePage,
     ViewprofilePage,
     ChoosereceiverPage,
-    MytravelsPage,
-    MytravelPage,
     ViewphotoPage,
     TransactionsPage,
     ViewmapPage,
@@ -111,8 +107,6 @@ import { Geolocation } from '@ionic-native/geolocation';
     ProfilePage,
     ViewprofilePage,
     ChoosereceiverPage,
-    MytravelsPage,
-    MytravelPage,
     ViewphotoPage,
     TransactionsPage,
     ViewmapPage,

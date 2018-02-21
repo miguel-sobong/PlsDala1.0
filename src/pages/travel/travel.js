@@ -13,6 +13,7 @@ import { AdditemPage } from '../additem/additem';
 import { ChatPage } from '../chat/chat';
 import { ViewprofilePage } from '../viewprofile/viewprofile';
 import { ProfilePage } from '../profile/profile';
+import { HelpfortravelPage } from '../helpfortravel/helpfortravel';
 import * as firebase from 'firebase';
 var TravelPage = /** @class */ (function () {
     function TravelPage(loadingCtrl, navCtrl, navParams, toastCtrl) {
@@ -23,6 +24,12 @@ var TravelPage = /** @class */ (function () {
         this.toastCtrl = toastCtrl;
         var loader = this.loadingCtrl.create({
             content: 'Getting user information'
+        });
+        this.help = HelpfortravelPage;
+        firebase.database().ref('users/' + firebase.auth().currentUser.uid)
+            .child('isVerified')
+            .on('value', function (isVerified) {
+            _this.UserIsVerified = isVerified.val();
         });
         loader.present();
         this.selectedItem = navParams.get('item');

@@ -11,12 +11,8 @@
     </div>
     <form [formGroup]="loginForm" (submit)="loginUser()" novalidate>
       <ion-item>
-        <ion-label floating>Email Address</ion-label>
-        <ion-input #email type="email" formControlName="email" [class.invalid]="!loginForm.controls.email.valid &&
-          loginForm.controls.email.dirty"></ion-input>
-      </ion-item>
-      <ion-item class="error-message" *ngIf="!loginForm.controls.email.valid  && loginForm.controls.email.dirty">
-        <p>Please enter a valid email.</p>
+        <ion-label floating>Username</ion-label>
+        <ion-input #username type="text" formControlName="username"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label floating>Password</ion-label>
@@ -33,6 +29,20 @@
     </form>
     <div>
       <p class="brand">No account yet? <a (click)="goToRegister()" class="brand">Register here!</a></p>
+      <p class="brand">Forgot password? <a (click)="forgotPassword()" class="brand">Recover my account!</a></p>
+    </div>
+    <div *ngIf="forgotBool" class="forgotPassword">
+      <form>
+        <ion-list>
+          <ion-item>
+            <ion-label floating>Email Address</ion-label>
+            <ion-input type="email" name="email" [(ngModel)]="recoveryEmail"></ion-input>
+          </ion-item>
+          <div padding>
+            <button ion-button color="primary" round block (click)="submitRecover()">Recover</button>
+          </div>
+        </ion-list>
+      </form>
     </div>
   </div>
 </ion-content>

@@ -7,15 +7,21 @@ export class AuthenticationProvider {
 
   constructor() {}
 
+  toTitleCase(str)
+  {
+      return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+  }
+
   registerUser(userData){
       return firebase.auth().createUserWithEmailAndPassword(userData.email, userData.password1).then(user=>{
-        console.log(user);
+        userData.lastname = this.toTitleCase(userData.lastname);
+        userData.firstname = this.toTitleCase(userData.firstname);
         firebase.database().ref().child('users').child(user.uid).set({
           lastname: userData.lastname, 
           firstname: userData.firstname, 
           birthdate: userData.birthdate, 
+          username: userData.username,
           email: user.email,
-          password: userData.password1,
           id: user.uid,
           profileimage: "https://firebasestorage.googleapis.com/v0/b/plsdala-8609a.appspot.com/o/users%2Fdefault.jpg?alt=media&token=fce4cb44-fc6e-4b05-a1c3-29a18833b515",
           isVerified: false,
@@ -30,9 +36,8 @@ export class AuthenticationProvider {
 }
 
   //login users
-  loginUser(userData){
-     return firebase.auth().signInWithEmailAndPassword(userData.email, userData.password);
-          //query users table here using success.uid then check for if the users is verified
+  loginUser(email, password){
+     return firebase.auth().signInWithEmailAndPassword(email, password);
   }
 
   logoutUser(){
@@ -43,5 +48,48 @@ export class AuthenticationProvider {
         return reject(error);
       })
     })
+  }
+
+  checkUsernameAndEmail(username, email){
+    return new Promise(resolve=>{
+      firebase.database().ref('users').once("value", snapshot=>{
+        if(snapshot.val())
+        {
+          snapshot.forEach(user=>{
+            if(email == user.val().email){
+              resolve("email-fail");
+              return true;
+            }
+            else if(username == user.val().username){
+              resolve("username-fail");
+              return true;
+            }
+            resolve(true)
+            return false;
+          })
+        }
+        else
+        {
+          resolve(true);
+        }
+      });
+    })
+  }
+
+  checkLoginUsername(data){
+    return new Promise((resolve, reject)=>{
+      firebase.database().ref('users').once("value", snapshot=>{
+        if(snapshot.val()){
+          snapshot.forEach(user=>{
+            if(user.val().username == data){
+              resolve(user.val().email);
+              return true;
+            }
+            return false;
+          })
+          reject();
+        }
+      });
+    });
   }
 }

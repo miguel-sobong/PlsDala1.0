@@ -8,7 +8,6 @@ import { HomePage } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
 import { ProfilePage } from '../pages/profile/profile';
 import { ChatlistPage } from '../pages/chatlist/chatlist';
-import { MytravelsPage } from '../pages/mytravels/mytravels';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { TransactionsPage } from '../pages/transactions/transactions';
 import { TransactionhistoryPage } from '../pages/transactionhistory/transactionhistory';
@@ -27,12 +26,13 @@ export class MyApp {
   public profileImage: string;
   pages: Array<{title: string, component: any, icon: string}>;
   isVerified: any;
-  UserIsVerified: any;
   isTerminated: any;
   terminateNode;
   userNode;
   activePage: any;
   isDeclined;
+  username;
+  verificationNode;
 
   constructor(public loadingCtrl: LoadingController, public afAuth: AngularFireAuth, public toastController: ToastController, 
     public alert: AlertController, public authenticationProvider: AuthenticationProvider, public events: Events, public platform: Platform,
@@ -49,35 +49,51 @@ export class MyApp {
     this.initializeApp();
     const authObserver = afAuth.authState.subscribe( user => {
       if (user) {
-        var loader = this.loadingCtrl.create({
-          content: 'Getting user data. Please wait'
-        });
-        loader.present();
-        this.getUserInfo(user.uid).then(data=>{
-          if(data)
-          {
-            loader.dismiss();  
-            if(this.isTerminated == true)
+        if(!user.emailVerified){ 
+          user.sendEmailVerification().then(()=>{
+            this.alert.create({
+              message: 'An email confirmation has been sent to ' + user.email,
+              buttons: [{
+                text: 'Ok',
+                role: 'cancel'
+              }]
+            }).present();
+          }); 
+          this.authenticationProvider.logoutUser(); 
+        }
+        else
+        {
+          var loader = this.loadingCtrl.create({
+            content: 'Getting user data. Please wait'
+          });
+          loader.present();
+          this.getUserInfo(user.uid).then(data=>{
+            if(data)
             {
-             this.terminateUserAlert();
+              loader.dismiss();  
+              if(this.isTerminated == true)
+              {
+               this.terminateUserAlert();
+              }
+              else
+              {
+                this.setPages();
+                this.createWatchers();
+                this.rootPage = HomePage; //HomePage
+                this.presentModalForVerification(this.isVerified, this.isDeclined);
+              }     
             }
-            else
-            {
-              this.setPages();
-              this.rootPage = HomePage; //HomePage
-              this.presentModalForVerification(this.isVerified, this.isDeclined);
-              this.createWatchers();
-            }     
-          }
-        })
+          })
+        }
         // authObserver.unsubscribe();
       } else {
-        console.log(this.terminateNode, this.userNode);
+        this.rootPage = LoginPage; //HomePage
         if(this.terminateNode)
           this.terminateNode.off();
         if(this.userNode)
           this.userNode.off();
-        this.rootPage = LoginPage;
+        if(this.verificationNode)
+          this.verificationNode.off();
         // authObserver.unsubscribe();
       }
     });
@@ -86,17 +102,60 @@ export class MyApp {
   createWatchers(){
     this.terminateNode = firebase.database().ref('users/' + firebase.auth().currentUser.uid);
     this.terminateNode.on('child_changed', changes => {
-      console.log(changes.key, changes.val());
        if(changes.key == "isTerminated" && changes.val() == true){
          this.terminateUserAlert();
       }
     });
+
+   this.verificationNode = firebase.database().ref('users').child(firebase.auth().currentUser.uid);
+   this.verificationNode.on("child_changed", changes =>{
+     console.log('verificationNode');
+     if(changes.key == "isVerified"){
+       if(changes.val() == true && localStorage.getItem("verified") == "false"){
+             this.alert.create({
+               title: "Congratulations! You are now verified",
+               message: "You can now add a travel plan and send items for other users to deliver!",
+               inputs: [{
+                 type: 'checkbox',
+                 label: 'Don\'t show this again',
+                 handler: data=>{
+                   localStorage.setItem("verified", ""+data.checked+"");
+                 }
+               }], 
+               buttons: [{
+                 text: "Ok",
+                 role: 'cancel',
+               }]
+             }).present();
+       }
+     }
+     else if(changes.key == "isDeclined"){
+       console.log('isDeclined');
+       if(changes.val() == true && localStorage.getItem("decline") == "false"){
+             this.alert.create({
+               title: "Sorry, your verification is declined",
+               inputs: [{
+                 type: 'checkbox',
+                 label: 'Don\'t show this again',
+                 handler: data=>{
+                   localStorage.setItem("decline", ""+data.checked+"");
+                 }
+               }], 
+               buttons: [{
+                 text: "Ok",
+                 role: 'cancel',
+               }]
+             }).present();
+       }
+     }
+    //this.verificationNode.off();
+   });
   }
 
   terminateUserAlert(){
     this.alert.create({
       title: "Your account has been terminated",
-      message: "Termination of account may be due to low average rating.",
+      message: "Termination of account is due to low average rating.",
       buttons: [{
         text: "Ok",
         role: 'cancel',
@@ -116,6 +175,7 @@ export class MyApp {
         this.isVerified = user.val().isVerified;
         this.isTerminated = user.val().isTerminated;
         this.isDeclined = user.val().isDeclined;
+        this.username = user.val().username;
         resolve(true);
       });
     })
@@ -124,7 +184,6 @@ export class MyApp {
   setPages(){
     this.pages = [
       { title: 'Travel Board',component: HomePage, icon:"ios-paper-outline"},
-      // { title: 'My Travels', component: MytravelsPage },
       { title: 'Messages', component: ChatlistPage,icon:"ios-chatbubbles-outline" },
       { title: 'Transactions', component: TransactionsPage, icon:"ios-clipboard-outline"},
       { title: 'Transaction History', component: TransactionhistoryPage, icon:"ios-archive-outline"}
@@ -163,7 +222,7 @@ export class MyApp {
           text: 'Yes',
           handler: () => {
             this.authenticationProvider.logoutUser().then(success=>{
-              this.rootPage = LoginPage;
+              // this.rootPage = LoginPage;
             }, fail => {
               this.toastController.create({
                  message: fail.message,

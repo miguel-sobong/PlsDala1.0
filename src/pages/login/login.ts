@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, Events, NavController, LoadingController, ToastController } from 'ionic-angular';
+import { IonicPage, Events, NavController, LoadingController, ToastController, AlertController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RegisterPage } from '../register/register';
 import { AuthenticationProvider } from '../../providers/authentication/authentication';
@@ -16,40 +16,99 @@ import * as firebase from 'firebase';
 export class LoginPage {
 
 	loginForm: FormGroup;
+  forgotBool: any = false;
+  recoveryEmail;
 
 	constructor(public events: Events, public common: CommonProvider, public navCtrl: NavController,
-    public formBuilder: FormBuilder, public authenticationProvider: AuthenticationProvider, public loadingController: LoadingController, public toastController: ToastController) {
+    public formBuilder: FormBuilder, public authenticationProvider: AuthenticationProvider, public loadingController: LoadingController,
+     public toastController: ToastController, public alert: AlertController) {
     //validate if input is email
     this.loginForm = formBuilder.group({ 
-      email: ['', Validators.compose([Validators.required, EmailValidator.isValid])], 
+      username: [''], 
       password: ['']
     });
   }
 
   loginUser(){
-    if((this.loginForm.value.email) == '' || this.loginForm.value.password == ''){
+    if((this.loginForm.value.username) == '' || this.loginForm.value.password == ''){
       this.common.isMissingInput();
     }
     else
     {
       if(this.loginForm.valid)
       {
-        this.authenticationProvider.loginUser(this.loginForm.value).then(success=>{
-        }, fail => {
-          this.toastController.create({
-             message: fail.message,
-             duration: 3000
+        var loader = this.loadingController.create({
+          content: 'Checking user database...'
+        });
+        loader.present();
+        this.authenticationProvider.checkLoginUsername(this.loginForm.value.username).then(email=>{
+          this.authenticationProvider.loginUser(email, this.loginForm.value.password).then(success=>{
+            loader.dismiss();
+          }, 
+            fail => {
+               loader.dismiss();
+              if(fail.code == "auth/wrong-password")
+              {
+                this.alert.create({
+                  title: "Wrong Password",
+                  message: 'Entered password is incorrect',
+                  buttons: [{
+                    text: "Ok",
+                    role: 'cancel',
+                  }]
+                }).present();
+              }
+              else
+              {
+                this.alert.create({
+                  message: fail.message,
+                  buttons: [{
+                    text: "Ok",
+                    role: 'cancel',
+                  }]
+                }).present();
+              }
+          });
+        }, fail=>{
+          loader.dismiss();
+          this.alert.create({
+            title: this.loginForm.value.username + " is not yet registered",
+            message: 'To register please click <i>"Register here!"</i> at bottom.',
+            buttons: [{
+              text: "Ok",
+              role: 'cancel'
+            }]
           }).present();
         });
-      }
-      else
-      {
-        this.common.emailNotValid();
       }
     }
   }
 
   goToRegister(){
     this.navCtrl.push(RegisterPage);
+  }
+
+
+  forgotPassword(){
+    this.forgotBool = !this.forgotBool;
+  }
+
+  submitRecover(){
+    firebase.auth().sendPasswordResetEmail(this.recoveryEmail).then(success=>{
+      this.toastController.create({
+        message: 'Check your email for the recovery link',
+        duration: 3000
+      }).present();
+      this.recoveryEmail = '';
+      this.forgotBool = false;
+    }).catch(error=>{
+      this.alert.create({
+        message: error.message,
+        buttons: [{
+          text: "Ok",
+          role: 'cancel',
+        }]
+      }).present();
+    })
   }
 }
