@@ -18,7 +18,7 @@
         <ion-card-content *ngIf="item.isTerminated == false">
           <ion-card (click)="itemTapped($event, item)">
             <ion-card-header>
-              <h4><b>{{item.firstname}} {{item.lastname}} ({{item.email}})</b></h4>
+              <h4><b>{{item.firstname}} {{item.lastname}} ({{item.username}})</b></h4>
               <span *ngIf="item.rating" class="review">     
           {{item.rating}} / 5
           <ion-icon name="star" *ngIf="Round(item.rating) > 0"></ion-icon>

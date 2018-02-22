@@ -77,28 +77,28 @@ export class HomePage
           })).slice().reverse();//to reverse order
         })
 
-        this.travelList$.subscribe(res => {
-          this.ListOfitems = [];
-          this.ListOfitems2nd=[];
-          var date = new Date();
-          var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-          var today = new Date(today);
-          for(let i=0;i<res.length;i++){
-            var checkDate = new Date(res[i].fromDate);
-            if(checkDate < today) { continue };
-              firebase.database().ref('users').child(res[i].userId).once("value", snapshot=>{
-                if(snapshot.val().totalrate > 0){
-                  var rating = snapshot.val().rating / snapshot.val().totalrate;
-                }
-                this.ListOfitems.push({firstname:snapshot.val().firstname, lastname: snapshot.val().lastname, email:snapshot.val().email, 
-                  fromAddress:res[i].fromAddress, fromDate:res[i].fromDate, toAddress:res[i].toAddress, toDate:res[i].toDate, 
-                  fromX:res[i].fromX, fromY:res[i].fromY, key:res[i].key, toX:res[i].toX, toY:res[i].toY, userId:res[i].userId, 
-                  rating: rating, isTerminated: snapshot.val().isTerminated});
-                this.ListOfitems2nd = this.ListOfitems;
-                console.log(this.ListOfitems2nd);
-            });       
-          }
-        })
+      this.travelList$.subscribe(res => {
+        this.ListOfitems = [];
+        this.ListOfitems2nd=[];
+        var date = new Date();
+        var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        var today = new Date(today);
+        for(let i=0;i<res.length;i++){
+          var checkDate = new Date(res[i].fromDate);
+          if(checkDate < today) { continue };
+            firebase.database().ref('users').child(res[i].userId).once("value", snapshot=>{
+              if(snapshot.val().totalrate > 0){
+                var rating = snapshot.val().rating / snapshot.val().totalrate;
+              }
+              this.ListOfitems.push({firstname:snapshot.val().firstname, lastname: snapshot.val().lastname, username:snapshot.val().username, 
+                fromAddress:res[i].fromAddress, fromDate:res[i].fromDate, toAddress:res[i].toAddress, toDate:res[i].toDate, 
+                fromX:res[i].fromX, fromY:res[i].fromY, key:res[i].key, toX:res[i].toX, toY:res[i].toY, userId:res[i].userId, 
+                rating: rating, isTerminated: snapshot.val().isTerminated});
+              this.ListOfitems2nd = this.ListOfitems;
+              console.log(this.ListOfitems2nd);
+          });       
+        }
+      })
     }
 
    ListofItems(){
