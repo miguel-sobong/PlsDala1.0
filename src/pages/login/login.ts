@@ -41,6 +41,7 @@ export class LoginPage {
           content: 'Checking user database...'
         });
         loader.present();
+        this.loginForm.value.username = this.loginForm.value.username.toLowerCase();
         this.authenticationProvider.checkLoginUsername(this.loginForm.value.username).then(email=>{
           this.authenticationProvider.loginUser(email, this.loginForm.value.password).then(success=>{
             loader.dismiss();

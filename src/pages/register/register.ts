@@ -51,6 +51,7 @@ export class RegisterPage {
         loader.present();
         if(this.registerForm.valid && this.registerForm.value.password1 == this.registerForm.value.password2)
         {
+          this.registerForm.value.username = this.registerForm.value.username.toLowerCase();
           this.authenticationProvider.checkUsernameAndEmail(this.registerForm.value.username, this.registerForm.value.email).then(fail=>{
             loader.dismiss();
             if(fail == "email-fail"){

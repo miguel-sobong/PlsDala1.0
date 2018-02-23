@@ -48,18 +48,17 @@
                 </ion-row>
               </ion-grid>
               <p text-center class="itemAt">
-                <span *ngIf="transaction.itemAt == transaction.senderId">Item is still with the sender, {{transaction.senderName}}</span>
+                <span *ngIf="transaction.itemAt == transaction.senderId">Item is with you, {{transaction.senderName}}</span>
                 <span *ngIf="transaction.itemAt == transaction.courierId">Item is with {{transaction.courierName}}</span>
               </p>
               <img src="assets/imgs/p2.png" *ngIf="transaction.itemAt == transaction.senderId">
               <img src="assets/imgs/p3.png" *ngIf="transaction.itemAt == transaction.courierId">
-              <img src="assets/imgs/p4.png" *ngIf="transaction.itemAt == transaction.receiverId">
-              <button ion-button block (click)="itemTapped(transaction)">Open map</button>
-              <button ion-button block (click)="senderConfirm(transaction)" *ngIf="transaction.senderConfirm == false && transaction.itemAt == transaction.senderId">Confirm</button>
-              <button ion-button block *ngIf="transaction.senderConfirm == true && transaction.itemAt == transaction.senderId">Confirmed</button>
               <button ion-button block *ngIf="transaction.itemAt == transaction.courierId"  (click)="track(transaction)">Track courier</button>
             </ion-card-content>
-          </div>
+          </div> 
+          <!-- end sender -->
+
+
           <div *ngIf="courier == true && transaction.courierId == loggedInUser">
             <ion-card-header text-center>
               <b>{{transaction.itemName}}</b>
@@ -80,14 +79,12 @@
               </ion-grid>
               <p text-center class="itemAt">
                 <span *ngIf="transaction.itemAt == transaction.senderId">Item is still with the sender, {{transaction.senderName}}</span>
-                <span *ngIf="transaction.itemAt == transaction.courierId">Item is with {{transaction.courierName}}</span>
+                <span *ngIf="transaction.itemAt == transaction.courierId">Item is with you, {{transaction.courierName}}</span>
               </p>
               <img src="assets/imgs/p2.png" *ngIf="transaction.itemAt == transaction.senderId">
               <img src="assets/imgs/p3.png" *ngIf="transaction.itemAt == transaction.courierId">
-              <img src="assets/imgs/p4.png" *ngIf="transaction.itemAt == transaction.receiverId">
-              <button ion-button block (click)="itemTapped(transaction)">Open map</button>
-              <button ion-button block (click)="courierConfirm(transaction)" *ngIf="transaction.courierConfirm == false && (transaction.itemAt == transaction.courierId || transaction.itemAt == transaction.senderId)">Confirm</button>
-              <button ion-button block *ngIf="transaction.courierConfirm == true">Courier confirmed</button>
+              <button ion-button block (click)="courierConfirm(transaction)" *ngIf="transaction.courierConfirm == false && (transaction.itemAt == transaction.courierId || transaction.itemAt == transaction.senderId)">Click me if item is with you</button>
+              <button ion-button block *ngIf="transaction.courierConfirm == true">Confirmed</button>
             </ion-card-content>
           </div>
           <div *ngIf="receiver == true && transaction.receiverId == loggedInUser">

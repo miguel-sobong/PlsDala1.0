@@ -169,8 +169,7 @@ export class PlsdalaProvider {
         const newMessage = this.afd.list('messages/' + data).push({});
         newMessage.set({
           content: details.content,
-          senderFirstname: this.user.val().firstname,
-          senderLastname: this.user.val().lastname,
+          senderName: details.senderName,
           senderId: firebase.auth().currentUser.uid,
           timestamp: firebase.database.ServerValue.TIMESTAMP
         });
@@ -241,8 +240,7 @@ export class PlsdalaProvider {
           const newItem = this.afd.list('messages/' + dbkey).push({});
           newItem.set({
            isItem: true,
-           senderFirstname: this.user.val().firstname,
-           senderLastname: this.user.val().lastname,
+           senderName: this.user.val().firstname + ' ' + this.user.val().lastname + ' (' + this.user.val().username + ')',
            itemName: data.name,
            senderId: firebase.auth().currentUser.uid,
            receiverName: data.receiverName,
@@ -424,9 +422,9 @@ export class PlsdalaProvider {
           receiverId: item.receiverId,
           itemName: item.itemName,
           images: item.images,
-          senderName: item.senderFirstname + ' ' + item.senderLastname,
+          senderName: item.senderName,
           receiverName: item.receiverName,
-          courierName: courier.val().firstname + " " + courier.val().lastname,
+          courierName: courier.val().firstname + " " + courier.val().lastname + " (" + courier.val().username + ")",
           fromX: snapshot.val().fromX,
           fromY: snapshot.val().fromY,
           fromAddress: snapshot.val().fromAddress,

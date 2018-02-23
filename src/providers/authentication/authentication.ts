@@ -21,7 +21,7 @@ export class AuthenticationProvider {
           firstname: userData.firstname, 
           birthdate: userData.birthdate, 
           username: userData.username,
-          email: user.email,
+          email: user.email.toLowerCase(),
           id: user.uid,
           profileimage: "https://firebasestorage.googleapis.com/v0/b/plsdala-8609a.appspot.com/o/users%2Fdefault.jpg?alt=media&token=fce4cb44-fc6e-4b05-a1c3-29a18833b515",
           isVerified: false,

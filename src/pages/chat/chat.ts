@@ -26,50 +26,44 @@ export class ChatPage {
   items: Observable<any>;
   link: any;
   key: any;
+  chatName: any;
     
   constructor(public modal: ModalController, public afd:  AngularFireDatabase, public navCtrl: NavController, 
     public navParams: NavParams, public plsdala: PlsdalaProvider) {
     this.user = this.navParams.get('item');
+    this.chatName = this.user.firstname + ' ' + this.user.lastname;
     console.log(this.user);
     firebase.database().ref('users/')
     .child(firebase.auth().currentUser.uid)
     .once('value', user => {
-      console.log(user.val());
       this.loggedInUser = user;
-      console.log(user.key);
       this.userInChat = user.key;
       var users = {
         user1: this.loggedInUser.key, 
         user2: this.user.userId
       };
         this.plsdala.getMessages(users)
-              .then(data=>{
-                this.key = data;
-                this.items = this.afd.list('messages/' + data, ref=> ref.orderByChild("timestamp")).snapshotChanges()
-                .map(
-                  changes => {
-                    return changes.map(c=>(
-                    {
-                      key: c.payload.key, ...c.payload.val()
-                    } 
-                    ))
-                  })
-              })
-          });
-
-  }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad ChatPage');
-  }
+        .then(data=>{
+          this.key = data;
+          this.items = this.afd.list('messages/' + data, ref=> ref.orderByChild("timestamp")).snapshotChanges()
+          .map(
+            changes => {
+              return changes.map(c=>(
+              {
+                key: c.payload.key, ...c.payload.val()
+              } 
+              ))
+            })
+        })
+      });
+    }
 
   addMessage(){
     console.log(this.items);
     if(this.newmessage){
       var details = {
         content: this.newmessage,
-        senderFirstname: this.loggedInUser.val().firtname,
-        senderLastname: this.loggedInUser.val().lastname,
+        senderName: this.loggedInUser.val().firstname + ' ' + this.loggedInUser.val().lastname,
         receiverFirstname: this.user.firstname,
         receiverLastname: this.user.lastname
       }
@@ -80,12 +74,11 @@ export class ChatPage {
       this.plsdala.addMessage(details, users);
       this.content.scrollToBottom();
       this.newmessage = '';
-      }
     }
+  }
 
   openModal(imgurl){
     this.modal.create(ViewphotoPage, {imgurl: imgurl}).present();
-  
   }
 
   viewProfile(key){

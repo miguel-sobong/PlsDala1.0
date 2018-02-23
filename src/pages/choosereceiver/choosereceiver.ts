@@ -48,7 +48,7 @@ initialize(loader){
          for(let i=0;i<res.length;i++){
             if(this.user != res[i].key && this.user != this.selectedItem){
                this.listOfUsersforFilter.push({firstname:res[i].firstname,lastname:res[i].lastname,id:res[i].id,
-                 email:res[i].email,fnln:res[i].lastname+" "+res[i].firstname,fnln2:res[i].firstname+" "+res[i].lastname});
+                 username:res[i].username,fnln:res[i].lastname+" "+res[i].firstname,fnln2:res[i].firstname+" "+res[i].lastname});
              
               this.listOfUsersforFilter2nd=this.listOfUsersforFilter;
 
@@ -75,7 +75,7 @@ initialize(loader){
 
   AddReceiver(item){
     this.viewCtrl.dismiss({
-      name: `${item.firstname} ${item.lastname}(${item.email})`,
+      name: `${item.firstname} ${item.lastname} (${item.username})`,
       uid: item.id
     });
   }
@@ -90,11 +90,10 @@ initialize(loader){
       let val = ev.target.value;
       console.log(val);
      if (val && val.trim() !='') {
-       console.log("see this shit", this.listOfUsersforFilter);
        this.listOfUsersforFilter = this.listOfUsersforFilter.filter((ListOfitem) => {
           return ( ListOfitem.fnln2.toLowerCase().indexOf(val.toLowerCase()) >-1 ||
             ListOfitem.fnln.toLowerCase().indexOf(val.toLowerCase()) >-1 ||
-            ListOfitem.email.toLowerCase().indexOf(val.toLowerCase()) >-1);
+            ListOfitem.username.toLowerCase().indexOf(val.toLowerCase()) >-1);
        })
       }
  

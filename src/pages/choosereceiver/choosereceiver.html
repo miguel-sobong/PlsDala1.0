@@ -10,7 +10,7 @@
       <div *ngIf="selectedItem != item.id">
         <ion-item>
           <ion-label (click)="viewProfile(item.id)">
-            <h4><b>{{item.firstname}} {{item.lastname}} ({{item.email}})</b></h4>
+            <h4><b>{{item.firstname}} {{item.lastname}} ({{item.username}})</b></h4>
           </ion-label>
           <button ion-button item-right (click)="AddReceiver(item)">Choose user</button>
         </ion-item>

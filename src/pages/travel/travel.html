@@ -12,7 +12,7 @@
   <div text-center>
     <div (click)="viewProfile()">
       <img src="{{posterImage}}" style="height: 150px; width: 150px; border-radius: 15%;">
-      <p text><b>{{posterName}} ({{posterEmail}})</b></p>
+      <p text><b>{{posterName}}</b></p>
     </div>
     <p>From: {{selectedItem.fromAddress}} on {{selectedItem.fromDate}}</p>
     <p>To: {{selectedItem.toAddress}} and will arrive at {{selectedItem.toDate}}</p>
@@ -20,10 +20,12 @@
   <div #map id="map"></div>
 </ion-content>
 <ion-footer *ngIf="user != selectedItem.userId">
-  <button ion-button color="primary" block (click)="addItem($event)">
-    Request Delivery
-  </button>
-  <button ion-button color="primary" block (click)="messageUser($event)">
-    Message {{selectedItem.firstname}} {{selectedItem.lastname}}
-  </button>
+  <div *ngIf="UserIsVerified">
+    <button ion-button color="primary" block (click)="addItem($event)">
+      Request Delivery
+    </button>
+    <button ion-button color="primary" block (click)="messageUser($event)">
+      Message {{selectedItem.firstname}} {{selectedItem.lastname}}
+    </button>
+  </div>
 </ion-footer>

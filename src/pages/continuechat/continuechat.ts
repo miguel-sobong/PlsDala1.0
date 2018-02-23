@@ -19,7 +19,7 @@ export class ContinuechatPage {
 	newmessage: string;
 	selectedItem: string;
   	items: Observable<any>;
-  	loggedInUser: any;
+  	userInChat: any;
     user: any;
 
   constructor(public modal: ModalController, public plsdala: PlsdalaProvider, public afd: AngularFireDatabase, public navCtrl: NavController, public navParams: NavParams) {
@@ -27,12 +27,10 @@ export class ContinuechatPage {
     .child(firebase.auth().currentUser.uid)
     .once('value', user => {
       this.user = user;
-      this.loggedInUser = user.key;
+      this.userInChat = user.key;
       this.selectedItem = navParams.get('item');
-      console.log(this.selectedItem);
-      console.log(this.selectedItem);
       this.chatName = this.selectedItem['title'];
-      this.items = this.afd.list('messages/' + this.selectedItem['key']).snapshotChanges()
+      this.items = this.afd.list('messages/' + this.selectedItem['key'], ref=> ref.orderByChild("timestamp")).snapshotChanges()
         .map(
           changes => {
             return changes.map(c=>({
@@ -49,8 +47,7 @@ export class ContinuechatPage {
 	  	const newMessage = this.afd.list('messages/' + this.selectedItem['key']).push({});
 	  	newMessage.set({
 	  		content: this.newmessage,
-	  		senderFirstname: this.user.val().firstname,
-	  		senderLastname: this.user.val().lastname,
+	  		senderName: this.user.val().firstname + ' ' + this.user.val().lastname,
 	  		senderId: this.user.key,
 	  		timestamp: firebase.database.ServerValue.TIMESTAMP
 	  	});
@@ -63,7 +60,7 @@ export class ContinuechatPage {
               seen: false,
               timestamp: firebase.database.ServerValue.TIMESTAMP
             }).then(_=>{
-              firebase.database().ref('threads/').child(this.loggedInUser).child(this.selectedItem['key']).update({
+              firebase.database().ref('threads/').child(this.userInChat).child(this.selectedItem['key']).update({
                 seen: true
               });
               return true;
@@ -112,9 +109,8 @@ export class ContinuechatPage {
         key: item.key,
         receiverId: item.receiverId,
         receiverName: item.receiverName,
-        senderFirstname: item.senderFirstname,
+        senderName: item.senderName,
         senderId: item.senderId,
-        senderLastname: item.senderLastname,
         timestamp: item.timestamp,
         threadId: this.selectedItem['key'],
         msgId: item.key,
@@ -122,39 +118,12 @@ export class ContinuechatPage {
         travelKey: item.travelKey
       });
     });
-  }
-
-  openChat(key){
-   firebase.database().ref('threads').child(firebase.auth().currentUser.uid).child(key).once("value", snapshot=>{
-     console.log(snapshot.val());
-      this.navCtrl.push(ContinuechatPage, {
-       item: {
-         title: snapshot.val().title,
-         key: snapshot.key
-       }
-     });
-   });
+    this.plsdala.addTransaction(item);
   }
 
   Decline(item){
     firebase.database().ref('messages/' + this.selectedItem['key']).child(item.key).update({
       isDeclined: true
      });  
-  }
-
-  AcceptReceiver(item){
-    firebase.database().ref('messages/').once("value", snapshot=>{
-      snapshot.forEach(snap=>{
-        if(snap.hasChild(item.key)){
-          firebase.database().ref('messages').child(snap.key).child(item.key).update({
-            receiverAccepted: true
-          })
-        }
-        return false;
-      });
-
-      this.plsdala.addTransaction(item);
-    });
-    console.log(item);
   }
 }

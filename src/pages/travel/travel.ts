@@ -21,10 +21,7 @@ export class TravelPage {
   user;
   UserIsVerified;
   help: any;
-
   posterName: string;
-  posterEmail: string;
-  posterDescription: string;
   posterImage: string;
 
   constructor(public loadingCtrl: LoadingController, public navCtrl: NavController, public navParams: NavParams, public toastCtrl: ToastController) {
@@ -33,10 +30,10 @@ export class TravelPage {
     });
     this.help = HelpfortravelPage;
     firebase.database().ref('users/' + firebase.auth().currentUser.uid)
-      .child('isVerified')
-      .on('value', isVerified => {
-          this.UserIsVerified = isVerified.val()
-      });
+    .child('isVerified')
+    .on('value', isVerified => {
+        this.UserIsVerified = isVerified.val()
+    });
     loader.present();
     this.selectedItem = navParams.get('item');
     console.log(this.selectedItem);
@@ -44,10 +41,7 @@ export class TravelPage {
     firebase.database().ref('users/')
     .child(this.selectedItem['userId'])
     .once('value', user => {
-      console.log(user.val());
-      this.posterName = user.val().firstname + ' ' + user.val().lastname;
-      this.posterEmail = user.val().email;
-      this.posterDescription = user.val().description;
+      this.posterName = user.val().firstname + ' ' + user.val().lastname + ' (' + user.val().username + ')';
       this.posterImage = user.val().profileimage;
       loader.dismiss();
     });

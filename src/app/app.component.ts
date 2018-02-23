@@ -49,19 +49,19 @@ export class MyApp {
     this.initializeApp();
     const authObserver = afAuth.authState.subscribe( user => {
       if (user) {
-        if(!user.emailVerified){ 
-          user.sendEmailVerification().then(()=>{
-            this.alert.create({
-              message: 'An email confirmation has been sent to ' + user.email,
-              buttons: [{
-                text: 'Ok',
-                role: 'cancel'
-              }]
-            }).present();
-          }); 
-          this.authenticationProvider.logoutUser(); 
-        }
-        else
+        // if(!user.emailVerified){ 
+          // user.sendEmailVerification().then(()=>{
+          //   this.alert.create({
+          //     message: 'An email confirmation has been sent to ' + user.email,
+          //     buttons: [{
+          //       text: 'Ok',
+          //       role: 'cancel'
+          //     }]
+          //   }).present();
+          // }); 
+          // this.authenticationProvider.logoutUser(); 
+        // }
+        if(true) //change to else later
         {
           var loader = this.loadingCtrl.create({
             content: 'Getting user data. Please wait'
