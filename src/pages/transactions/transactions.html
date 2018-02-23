@@ -28,7 +28,7 @@
   <div class="containera">
     <ion-list *ngFor="let transaction of transactionList$ | async">
       <ion-card *ngIf="loggedInUser == transaction.senderId || loggedInUser == transaction.courierId || loggedInUser == transaction.receiverId">
-        <div *ngIf="transaction.isDone == false">
+        <!-- <div *ngIf="transaction.isDone == false"> -->
           <div *ngIf="sender == true && transaction.senderId == loggedInUser">
             <ion-card-header text-center>
               <b>{{transaction.itemName}}</b>
@@ -48,12 +48,13 @@
                 </ion-row>
               </ion-grid>
               <p text-center class="itemAt">
-                <span *ngIf="transaction.itemAt == transaction.senderId">Item is with you, {{transaction.senderName}}</span>
-                <span *ngIf="transaction.itemAt == transaction.courierId">Item is with {{transaction.courierName}}</span>
+                <span *ngIf="transaction.itemAt == transaction.senderId">Item is with you:<br>{{transaction.senderName}}</span>
+                <span *ngIf="transaction.itemAt == transaction.courierId">Item is with:<br>{{transaction.courierName}}</span>
               </p>
+              <p text-center class="itemAt" *ngIf="transaction.travelstarted">Travel has started</p>
               <img src="assets/imgs/p2.png" *ngIf="transaction.itemAt == transaction.senderId">
               <img src="assets/imgs/p3.png" *ngIf="transaction.itemAt == transaction.courierId">
-              <button ion-button block *ngIf="transaction.itemAt == transaction.courierId"  (click)="track(transaction)">Track courier</button>
+              <button ion-button block *ngIf="transaction.itemAt == transaction.courierId && transaction.travelstarted"  (click)="track(transaction)">Track courier</button>
             </ion-card-content>
           </div> 
           <!-- end sender -->
@@ -72,21 +73,26 @@
               <p>to: {{transaction.toAddress}}</p>
               <ion-grid>
                 <ion-row>
-                  <ion-col col-4 *ngFor="let img of transaction.images">
+                  <ion-col col-4 *ngFor="let img of transaction.images" class="imagecontainer">
                     <img src="{{img}}" (click)="openModal(img)">
                   </ion-col>
                 </ion-row>
               </ion-grid>
               <p text-center class="itemAt">
-                <span *ngIf="transaction.itemAt == transaction.senderId">Item is still with the sender, {{transaction.senderName}}</span>
-                <span *ngIf="transaction.itemAt == transaction.courierId">Item is with you, {{transaction.courierName}}</span>
+                <span *ngIf="transaction.itemAt == transaction.senderId">Item is with:<br>{{transaction.senderName}}</span>
+                <span *ngIf="transaction.itemAt == transaction.courierId">Item is with you:<br>{{transaction.courierName}}</span>
               </p>
+              <p text-center class="itemAt" *ngIf="transaction.travelstarted">Travel has started</p>
               <img src="assets/imgs/p2.png" *ngIf="transaction.itemAt == transaction.senderId">
               <img src="assets/imgs/p3.png" *ngIf="transaction.itemAt == transaction.courierId">
-              <button ion-button block (click)="courierConfirm(transaction)" *ngIf="transaction.courierConfirm == false && (transaction.itemAt == transaction.courierId || transaction.itemAt == transaction.senderId)">Click me if item is with you</button>
-              <button ion-button block *ngIf="transaction.courierConfirm == true">Confirmed</button>
+              <button ion-button block (click)="startTravel(transaction)" *ngIf="transaction.itemAt == transaction.courierId && !transaction.travelstarted">Start this Travel
+              </button>
+              <button ion-button block (click)="courierConfirm(transaction)" *ngIf="transaction.itemAt == transaction.senderId">Click here if you have the item</button>
             </ion-card-content>
           </div>
+          <!-- end courier -->
+
+
           <div *ngIf="receiver == true && transaction.receiverId == loggedInUser">
             <ion-card-header text-center>
               <b>{{transaction.itemName}}</b>
@@ -106,19 +112,18 @@
                 </ion-row>
               </ion-grid>
               <p text-center class="itemAt">
-                <span *ngIf="transaction.itemAt == transaction.senderId">Item is still with the sender, {{transaction.senderName}}</span>
-                <span *ngIf="transaction.itemAt == transaction.courierId">Item is with {{transaction.courierName}}</span>
+                <span *ngIf="transaction.itemAt == transaction.senderId">Item is with:<br>{{transaction.senderName}}</span>
+                <span *ngIf="transaction.itemAt == transaction.courierId">Item is with:<br>{{transaction.courierName}}</span>
               </p>
+              <p text-center class="itemAt" *ngIf="transaction.travelstarted">Travel has started</p>
               <img src="assets/imgs/p2.png" *ngIf="transaction.itemAt == transaction.senderId">
               <img src="assets/imgs/p3.png" *ngIf="transaction.itemAt == transaction.courierId">
-              <img src="assets/imgs/p4.png" *ngIf="transaction.itemAt == transaction.receiverId">
-              <button ion-button block (click)="itemTapped(transaction)">Open map</button>
-              <button ion-button block (click)="receiverConfirm(transaction)" *ngIf="transaction.itemAt == transaction.courierId && transaction.receiverConfirm == false">Confirm</button>
-              <button ion-button block *ngIf="transaction.receiverConfirm == true">Receiver confirmed</button>
-              <button ion-button block *ngIf="transaction.itemAt == transaction.courierId" (click)="track(transaction)">Track courier</button>
+              <button ion-button block (click)="receiverConfirm(transaction)" *ngIf="transaction.itemAt == transaction.courierId && transaction.travelstarted">Click here if you have the item</button>
+              <button ion-button block *ngIf="transaction.itemAt == transaction.courierId && transaction.travelstarted"  (click)="track(transaction)">
+              Track courier</button>
             </ion-card-content>
           </div>
-        </div>
+        <!-- </div> -->
       </ion-card>
     </ion-list>
   </div>

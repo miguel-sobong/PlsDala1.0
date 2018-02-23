@@ -38,11 +38,6 @@ export class ReviewPage {
 
 rate = (r) => (this.rating = r);
 
-  // rate(index){
-  //   this.rating = index;
-  //   console.log(this.rating);
-  // }
-
   submit(){
     this.temp = firebase.database().ref("temp").child(firebase.auth().currentUser.uid).push({timestamp: firebase.database.ServerValue.TIMESTAMP});
     var check = true;
@@ -61,7 +56,7 @@ rate = (r) => (this.rating = r);
       })
     }).then(_=>{
       new Promise(resolve=>{
-        firebase.database().ref('transactions').child(this.selectedItem.dbkey).child("timestampDone").once("value", snap=>{
+        firebase.database().ref('transactions/done').child(this.selectedItem.dbkey).child("timestampDone").once("value", snap=>{
           firebase.database().ref("temp").child(this.temp.key).once("value", time =>{
             if(snap.val() + 604800000 > time.val()){
               resolve(true);
@@ -90,6 +85,21 @@ rate = (r) => (this.rating = r);
                   rating: snap.val().rating + this.rating,
                   totalrate: snap.val().totalrate + 1
                 })
+              })
+
+
+              var transbool = firebase.database().ref('transactions/done').child(this.selectedItem.dbkey);
+              transbool.once("value", snapshot=>{
+                console.log(snapshot.val());
+                if(firebase.auth().currentUser.uid == snapshot.val().senderId){
+                  transbool.update({
+                    senderReviewed: true
+                  })
+                }else{
+                  transbool.update({
+                    receiverReviewed: true
+                  })
+                }
               })
 
               this.toastCtrl.create({

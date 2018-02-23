@@ -415,8 +415,9 @@ export class PlsdalaProvider {
   addTransaction(item){
     firebase.database().ref('travels').child(item.travelKey).once("value", snapshot=>{
       firebase.database().ref('users').child(item.courierId).once("value", courier=>{
-        const newTransaction = this.afd.list('transactions').push({});
+        const newTransaction = this.afd.list('transactions/ongoing').push({});
         newTransaction.set({
+          travelkey: item.travelKey,
           senderId: item.senderId,
           courierId: item.courierId,
           receiverId: item.receiverId,
@@ -432,10 +433,6 @@ export class PlsdalaProvider {
           toY: snapshot.val().toY,
           toAddress: snapshot.val().toAddress,
           itemAt: item.senderId,
-          senderConfirm: false,
-          courierConfirm: false,
-          receiverConfirm: false,
-          isDone: false,
           timestamp: firebase.database.ServerValue.TIMESTAMP,
           timestampDone: 0
         });

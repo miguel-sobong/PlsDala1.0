@@ -14,7 +14,7 @@ export class ProfilePage {
 	currentUser: string;
 	profileimage: string;
 	profileName: string;
-	profileEmail: string;
+	profileUsername: string;
 	profileDescription: string;
 	editProfile: boolean = false;
 	fname: string;
@@ -33,7 +33,7 @@ export class ProfilePage {
     .once('value', user => {
     	console.log(user.val());
     	this.profileName = user.val().firstname + ' ' + user.val().lastname;
-    	this.profileEmail = user.val().email;
+    	this.profileUsername = user.val().username;
     	this.profileDescription = user.val().description;
     	this.profileimage = user.val().profileimage;
     	this.fname = user.val().firstname;
@@ -57,7 +57,7 @@ export class ProfilePage {
         console.log(res[i].reviewer);
         firebase.database().ref('users').child(res[i].reviewer).once("value", snapshot=>{
           console.log(snapshot.val());
-          this.ListOfitems.push({firstname:snapshot.val().firstname, lastname: snapshot.val().lastname, 
+          this.ListOfitems.push({username: snapshot.val().username, firstname:snapshot.val().firstname, lastname: snapshot.val().lastname, 
             email:snapshot.val().email, review: res[i].description, rating: res[i].rating, timestamp: res[i].timestamp});
           });
       }

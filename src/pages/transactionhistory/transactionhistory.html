@@ -13,7 +13,6 @@
 </ion-header>
 <ion-content>
   <ion-list *ngFor="let transaction of transactionList$ | async">
-    <div *ngIf="transaction.isDone == true">
       <div *ngIf="loggedInUser == transaction.senderId || loggedInUser == transaction.courierId || loggedInUser == transaction.receiverId"> <ion-card>
         <ion-card-header text-center>
           <b>{{transaction.itemName}}</b>
@@ -34,20 +33,15 @@
           </ion-grid>
             <img src="assets/imgs/p4.png">
           <div *ngIf="loggedInUser == transaction.senderId">
-            <button ion-button block (click)="review(transaction.courierId, transaction.key)">Review Courier</button>
-            <button ion-button block (click)="review(transaction.receiverId, transaction.key)">Review Receiver</button>
-          </div>
-          <div *ngIf="loggedInUser == transaction.courierId">
-            <button ion-button block (click)="review(transaction.senderId, transaction.key)">Review Sender</button>
-            <button ion-button block (click)="review(transaction.receiverId, transaction.key)">Review Receiver</button>
+            <button ion-button block (click)="review(transaction.courierId, transaction.key)" *ngIf="!transaction.senderReviewed">Review {{transaction.courierName}}</button>
+            <button ion-button block *ngIf="transaction.senderReviewed">You already reviewed<br> {{transaction.courierName}}</button>
           </div>
           <div *ngIf="loggedInUser == transaction.receiverId">
-            <button ion-button block (click)="review(transaction.senderId, transaction.key)">Review Sender</button>
-            <button ion-button block (click)="review(transaction.courierId, transaction.key)">Review Courier</button>
+            <button ion-button block (click)="review(transaction.courierId, transaction.key)" *ngIf="!transaction.receiverReviewed">Review {{transaction.courierName}}</button>
+            <button ion-button block *ngIf="transaction.receiverReviewed">You already reviewed<br> {{transaction.courierName}}</button>
           </div>
         </ion-card-content>
         </ion-card>
       </div>
-    </div>
   </ion-list>
 </ion-content>

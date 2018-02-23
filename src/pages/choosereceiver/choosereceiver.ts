@@ -48,7 +48,7 @@ initialize(loader){
          for(let i=0;i<res.length;i++){
             if(this.user != res[i].key && this.user != this.selectedItem){
                this.listOfUsersforFilter.push({firstname:res[i].firstname,lastname:res[i].lastname,id:res[i].id,
-                 username:res[i].username,fnln:res[i].lastname+" "+res[i].firstname,fnln2:res[i].firstname+" "+res[i].lastname});
+                 username:res[i].username,fnln:res[i].lastname+" "+res[i].firstname,fnln2:res[i].firstname+" "+res[i].lastname, isTerminated: res[i].isTerminated});
              
               this.listOfUsersforFilter2nd=this.listOfUsersforFilter;
 

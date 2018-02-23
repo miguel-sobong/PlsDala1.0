@@ -68,9 +68,9 @@ export class ContinuechatPage {
           }
           return false;
         })
+      this.newmessage = '';
       });
       this.content.scrollToBottom();
-      this.newmessage = '';
 	  }
   }
 

@@ -28,7 +28,7 @@ export class TransactionhistoryPage {
   		content: 'Loading transactions',
   	});
   	loader.present();
-	this.transactionList$ = this.afd.list('transactions/', ref=>ref.orderByChild("timestampDone"))
+	this.transactionList$ = this.afd.list('transactions/done', ref=>ref.orderByChild("timestampDone"))
 	.snapshotChanges()
 	    .map(
 	      changes => {
@@ -37,10 +37,6 @@ export class TransactionhistoryPage {
 	          key: c.payload.key, ...c.payload.val()
 	        })).slice().reverse();
 	      });
-  }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad TransactionhistoryPage');
   }
 
   review(uid, dbkey){

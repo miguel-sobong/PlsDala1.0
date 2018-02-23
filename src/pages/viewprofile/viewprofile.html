@@ -8,7 +8,7 @@
 <ion-content text-center>
   <img class="pp" src="{{profileImage}}" (click)="openModal(profileImage)">
   <h2>{{profileName}}</h2>
-  <p>{{profileEmail}}</p>
+  <p>{{profileUsername}}</p>
   <div class="review profile" text-center *ngIf="userRating">
     {{userRating}} / 5
     <ion-icon name="star" *ngIf="Round(userRating) > 0"></ion-icon>
@@ -20,7 +20,7 @@
   <p class="description" *ngIf="profileDescription">{{profileDescription}}</p>
   <div class="review">
 	  <ion-list ion-item *ngFor="let item of ListOfitems">
-	  	{{item.firstname}} {{item.lastname}}<br>
+	  	{{item.firstname}} {{item.lastname}} ({{item.username}})<br>
 	  	<ion-icon name="star" *ngIf="item.rating > 0"></ion-icon>
 		<ion-icon name="star" *ngIf="item.rating > 1"></ion-icon>
 		<ion-icon name="star" *ngIf="item.rating > 2"></ion-icon>

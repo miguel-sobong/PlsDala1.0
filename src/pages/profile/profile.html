@@ -9,7 +9,7 @@
 <ion-content text-center>
   <img class="pp" src="{{profileimage}}" (click)="presentActionSheet()">
   <h2>{{profileName}}</h2>
-  <p>{{profileEmail}}</p>
+  <p>{{profileUsername}}</p>
   <div class="review profile" text-center *ngIf="userRating">
     {{userRating}} / 5
     <ion-icon name="star" *ngIf="Round(userRating) > 0"></ion-icon>
@@ -23,14 +23,6 @@
   <div *ngIf="editProfile" class="editProfile">
     <form novalidate>
       <ion-list>
-        <!--         <ion-item>
-          <ion-label floating>First Name</ion-label>
-          <ion-input type="text" name="fname" [(ngModel)]="fname"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label floating>Last Name</ion-label>
-          <ion-input type="text" name="lname" [(ngModel)]="lname"></ion-input>
-        </ion-item> -->
         <ion-item>
           <ion-label floating>Description</ion-label>
           <ion-textarea type="text" name="description" [(ngModel)]="description"></ion-textarea>
@@ -43,7 +35,7 @@
   </div>
   <div class="review">
     <ion-list ion-item *ngFor="let item of ListOfitems">
-      {{item.firstname}} {{item.lastname}}
+      {{item.firstname}} {{item.lastname}} ({{item.username}})
       <br>
       <ion-icon name="star" *ngIf="item.rating > 0"></ion-icon>
       <ion-icon name="star" *ngIf="item.rating > 1"></ion-icon>

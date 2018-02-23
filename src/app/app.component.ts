@@ -184,7 +184,7 @@ export class MyApp {
   setPages(){
     this.pages = [
       { title: 'Travel Board',component: HomePage, icon:"ios-paper-outline"},
-      { title: 'Messages', component: ChatlistPage,icon:"ios-chatbubbles-outline" },
+      { title: 'Messages', component: ChatlistPage,icon:"ios-chatbubbles-outline", message_notif: "true" },
       { title: 'Transactions', component: TransactionsPage, icon:"ios-clipboard-outline"},
       { title: 'Transaction History', component: TransactionhistoryPage, icon:"ios-archive-outline"}
     ];
