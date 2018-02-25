@@ -1,3 +1,10 @@
+<div id="custom-overlay" [style.display]="splash ? 'flex': 'none'">
+  <div class="flb">
+    <div class="Aligner-item Aligner-item--top"></div>
+    <img src="assets/imgs/plsdala.png">
+    <div class="Aligner-item Aligner-item--bottom"></div>
+  </div>
+</div>
 <ion-menu [content]="content">
   <ion-content>
     <ion-list no-border>
@@ -8,6 +15,9 @@
       <button menuClose ion-item class="border" [class.activeHighlight]="checkActive(p)" *ngFor="let p of pages" (click)="openPage(p)">
         <ion-icon [name]="p.icon" item-left></ion-icon>
         {{p.title}}
+      </button>
+      <button menuClose ion-item class="border" (click)="termsandconditions()">
+        <ion-icon name="ios-book-outline" item-left></ion-icon>Terms and Conditions
       </button>
       <button menuClose ion-item (click)="logoutUser(event)">
         <ion-icon name="ios-log-out-outline" item-left></ion-icon>Logout

@@ -11,8 +11,9 @@ import { ChatlistPage } from '../pages/chatlist/chatlist';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { TransactionsPage } from '../pages/transactions/transactions';
 import { TransactionhistoryPage } from '../pages/transactionhistory/transactionhistory';
-
+import { TermsandconditionPage } from '../pages/termsandcondition/termsandcondition';
 import { AuthenticationProvider } from '../providers/authentication/authentication';
+import { LocalNotifications } from '@ionic-native/local-notifications'
 
 @Component({
   templateUrl: 'app.html'
@@ -33,10 +34,14 @@ export class MyApp {
   isDeclined;
   username;
   verificationNode;
+  notifNode;
+  splash = true;
 
   constructor(public loadingCtrl: LoadingController, public afAuth: AngularFireAuth, public toastController: ToastController, 
     public alert: AlertController, public authenticationProvider: AuthenticationProvider, public events: Events, public platform: Platform,
-   public statusBar: StatusBar, public splashScreen: SplashScreen) {
+   public statusBar: StatusBar, public splashScreen: SplashScreen, public localNotifs: LocalNotifications) {
+    this.initializeApp();
+    setTimeout(() => this.splash = false, 4000);
     if(!localStorage.getItem("verified")){
       localStorage.setItem("verified", "false");
     }
@@ -46,7 +51,6 @@ export class MyApp {
     if(!localStorage.getItem("notVerified")){
       localStorage.setItem("notVerified", "false");
     }
-    this.initializeApp();
     const authObserver = afAuth.authState.subscribe( user => {
       if (user) {
         // if(!user.emailVerified){ 
@@ -79,6 +83,7 @@ export class MyApp {
               {
                 this.setPages();
                 this.createWatchers();
+                this.scheduleNotification();
                 this.rootPage = HomePage; //HomePage
                 this.presentModalForVerification(this.isVerified, this.isDeclined);
               }     
@@ -94,6 +99,8 @@ export class MyApp {
           this.userNode.off();
         if(this.verificationNode)
           this.verificationNode.off();
+        if(this.notifNode)
+          this.notifNode.off();
         // authObserver.unsubscribe();
       }
     });
@@ -184,7 +191,7 @@ export class MyApp {
   setPages(){
     this.pages = [
       { title: 'Travel Board',component: HomePage, icon:"ios-paper-outline"},
-      { title: 'Messages', component: ChatlistPage,icon:"ios-chatbubbles-outline", message_notif: "true" },
+      { title: 'Messages', component: ChatlistPage,icon:"ios-chatbubbles-outline"},
       { title: 'Transactions', component: TransactionsPage, icon:"ios-clipboard-outline"},
       { title: 'Transaction History', component: TransactionhistoryPage, icon:"ios-archive-outline"}
     ];
@@ -222,7 +229,6 @@ export class MyApp {
           text: 'Yes',
           handler: () => {
             this.authenticationProvider.logoutUser().then(success=>{
-              // this.rootPage = LoginPage;
             }, fail => {
               this.toastController.create({
                  message: fail.message,
@@ -295,6 +301,47 @@ export class MyApp {
         }]
       }).present();
     }
+  }
+
+  termsandconditions(){
+  	this.nav.setRoot(TermsandconditionPage);
+  }
+
+  scheduleNotification() {  
+    // firebase.database().ref('user_transactions').child(firebase.auth().currentUser.uid)
+    // .once("value", notifs=>{
+    //   notifs.forEach(notif=>{
+    //     if(notif.val()){
+    //       if(!notif.val().isDisplayed){
+    //         this.localNotifs.schedule({
+    //           id: Math.round(Math.random() * 10000), 
+    //           title:notif.val().title,
+    //           text:notif.val().message
+    //         });
+    //         firebase.database().ref('user_notifications').child(firebase.auth().currentUser.uid).child(notif.key).update({
+    //           isDisplayed: true
+    //         });
+    //       }
+    //     }
+    //     return false;
+    //   })
+    // })
+
+    this.notifNode = firebase.database().ref('user_notifications').child(firebase.auth().currentUser.uid);
+    this.notifNode.on("child_added", notifs=>{
+      if(!notifs.val().isDisplayed){
+        this.localNotifs.schedule({
+          id: Math.round(Math.random() * 10000), 
+          title:notifs.val().title,
+          text:notifs.val().message
+        });
+        firebase.database().ref('user_notifications').child(firebase.auth().currentUser.uid).child(notifs.key).update({
+          isDisplayed: true
+        });
+      }
+    }).then(()=>{
+      firebase.database().ref('user_notifications').child(firebase.auth().currentUser.uid).remove();
+    });
   }
 
 }

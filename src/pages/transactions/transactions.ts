@@ -9,6 +9,7 @@ import { Observable } from 'rxjs/Observable';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { HelpfortransactionPage } from '../helpfortransaction/helpfortransaction';
 import { TrackPage } from '../track/track';
+import { PlsdalaProvider } from '../../providers/plsdala/plsdala';
 import * as firebase from 'firebase';
 @IonicPage()
 @Component({
@@ -23,8 +24,10 @@ export class TransactionsPage {
 	loggedInUser;
   help: any;
 
-  constructor(public alert: AlertController, public afd: AngularFireDatabase, public modal: ModalController, public loading: LoadingController, 
-  	public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public alert: AlertController, public afd: AngularFireDatabase, 
+    public modal: ModalController, public loading: LoadingController, 
+  	public navCtrl: NavController, public navParams: NavParams,
+    public plsdala: PlsdalaProvider) {
     this.help = HelpfortransactionPage;
   	this.courier = true;
   	this.loggedInUser = firebase.auth().currentUser.uid;
@@ -118,7 +121,21 @@ export class TransactionsPage {
         });
       }
     }).then(()=>{
+      this.plsdala.sendNotifs(transaction.senderId, 'Delivery Successful', `${transaction.val().receiverName} has successfully received the item`);
       firebase.database().ref('transactions').child('ongoing').child(transaction.key).remove();
+      firebase.database().ref('users').child(transaction.courierId).once("value", snapshot=>{
+        if(snapshot.val().totaltransaction == 1){
+          firebase.database().ref('users').child(transaction.courierId).update({
+            totaltransaction: 0,
+            isTrackable: false
+          });
+        }
+        else{
+          firebase.database().ref('users').child(transaction.courierId).update({
+            totaltransaction: snapshot.val().totaltransaction - 1
+          });
+        }
+      })
     })
   }
 
@@ -129,7 +146,9 @@ export class TransactionsPage {
   senderCourier(transaction){
     firebase.database().ref('transactions').child('ongoing').child(transaction.key).update({
       itemAt: transaction.courierId
-    })
+    });
+
+    this.plsdala.sendNotifs(transaction.receiverId, 'Item Delivery', `The courier, ${transaction.val().courierName} has the item now`);
   }
 
   courierConfirm(transaction){
@@ -157,13 +176,18 @@ export class TransactionsPage {
           firebase.database().ref('transactions').child('ongoing').child(snap.key).update({
             travelstarted: true
           });
+        this.plsdala.sendNotifs(snap.val().senderId, 'Travel has started', `${snap.val().courierName} has started travelling`);
+        this.plsdala.sendNotifs(snap.val().receiverId, 'Travel has started', `${snap.val().courierName} has started travelling`);
         }
         return false;
       })
     });
 
-    firebase.database().ref('users').child(firebase.auth().currentUser.uid).update({
-      isTrackable: true
+    firebase.database().ref('users').child(firebase.auth().currentUser.uid).once("value", snapshot=>{
+      firebase.database().ref('users').child(firebase.auth().currentUser.uid).update({
+        totaltransaction: snapshot.val().totaltransaction + 1,
+        isTrackable: true
+      });
     });
   }
 }

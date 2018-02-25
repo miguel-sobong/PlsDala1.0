@@ -23,12 +23,13 @@ export class AuthenticationProvider {
           username: userData.username,
           email: user.email.toLowerCase(),
           id: user.uid,
-          profileimage: "https://firebasestorage.googleapis.com/v0/b/plsdala-8609a.appspot.com/o/users%2Fdefault.jpg?alt=media&token=fce4cb44-fc6e-4b05-a1c3-29a18833b515",
+          profileimage: "https://firebasestorage.googleapis.com/v0/b/plsdala-8609a.appspot.com/o/users%2Fdefaultpp.png?alt=media&token=c8c72368-a5f7-4371-9ccb-ea043fcadfa6",
           isVerified: false,
           isTerminated: false,
           isDeclined: false,
           rating: 0,
           totalrate: 0,
+          totaltransaction: 0,
           isTrackable: false,
           timestamp: firebase.database.ServerValue.TIMESTAMP
         });

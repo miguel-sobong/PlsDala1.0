@@ -21,11 +21,13 @@ export class ContinuechatPage {
   	items: Observable<any>;
   	userInChat: any;
     user: any;
+    username: any;
 
   constructor(public modal: ModalController, public plsdala: PlsdalaProvider, public afd: AngularFireDatabase, public navCtrl: NavController, public navParams: NavParams) {
     firebase.database().ref('users/')
     .child(firebase.auth().currentUser.uid)
     .once('value', user => {
+      this.username = `${user.val().firstname} %{user.val().lastname} (${user.val().username})`;
       this.user = user;
       this.userInChat = user.key;
       this.selectedItem = navParams.get('item');
@@ -93,12 +95,20 @@ export class ContinuechatPage {
       user2: item.senderId,
       user3: item.receiverId
       };
+    var senderName;
+    firebase.database().ref('users').child(item.receiverId).once("value", snapshot=>{
+      senderName = `${snapshot.val().firstname} ${snapshot.val().lastname} (${snapshot.val().username})`; 
+    })
     this.plsdala.addReceiverInChat(usersWithReceiver).then(key=>{
       console.log(key, item.key);
       this.plsdala.getUsersInThree(usersWithReceiver, key);
       firebase.database().ref('messages/' + this.selectedItem['key']).child(item.key).update({
         isAccepted: true
       });
+
+      this.plsdala.sendNotifs(item.senderId, 'Item Delivery', `${this.username} has accepted the delivery request`);
+      this.plsdala.sendNotifs(item.receiverId, 'Item Delivery', `${item.senderName} has sent you an item via ${this.username}`);
+
       firebase.database().ref('messages/' + key + '/' + item.key).update({
         courierId: item.courierId,
         images: item.images,

@@ -55,7 +55,9 @@ export class PlsdalaProvider {
 	    	}
 	    	else{
 	    		//turn off subscribe
-	    		this.watch.unsubscribe();
+          if(this.watch)
+	    		  this.watch.unsubscribe();
+          firebase.database().ref('user_location').child(firebase.auth().currentUser.uid).remove();
 	    	}
 	    }
     });
@@ -443,6 +445,14 @@ export class PlsdalaProvider {
         }
       });
     });
+  }
+
+  sendNotifs(uid, title, message){
+    firebase.database().ref('user_notifications').child(uid).push({
+      message: message,
+      title: title,
+      isDisplayed: false
+    })
   }
  
 }

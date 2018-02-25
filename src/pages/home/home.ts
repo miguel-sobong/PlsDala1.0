@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
+import { NavController, NavParams, ToastController, AlertController, Platform } from 'ionic-angular';
 import { AddtravelPage } from '../addtravel/addtravel';
 import { PlsdalaProvider } from '../../providers/plsdala/plsdala';
 import { TravelPage } from '../../pages/travel/travel';
@@ -27,7 +27,7 @@ export class HomePage
 
   constructor(public authenticationProvider: AuthenticationProvider, public alert: AlertController,
    public navCtrl: NavController, public navParams: NavParams, 
-    public plsdala: PlsdalaProvider, public toastCtrl: ToastController, private datepipe:DatePipe) {
+    public plsdala: PlsdalaProvider, public platform: Platform, public toastCtrl: ToastController, private datepipe:DatePipe) {
     this.helpPage = HelpPage;
     this.ListOfitems = [];
     this.ListOfitems2nd = [];
@@ -42,7 +42,7 @@ export class HomePage
   }
 
   Round(number){
-    return Math.round(number);
+    return Math.round(number);  
   }
 
   checkVerification(){
@@ -95,7 +95,6 @@ export class HomePage
                 fromX:res[i].fromX, fromY:res[i].fromY, key:res[i].key, toX:res[i].toX, toY:res[i].toY, userId:res[i].userId, 
                 rating: rating, isTerminated: snapshot.val().isTerminated});
               this.ListOfitems2nd = this.ListOfitems;
-              console.log(this.ListOfitems2nd);
           });       
         }
       })

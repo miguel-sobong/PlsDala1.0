@@ -27,6 +27,7 @@ export class ChatPage {
   link: any;
   key: any;
   chatName: any;
+  username: any;
     
   constructor(public modal: ModalController, public afd:  AngularFireDatabase, public navCtrl: NavController, 
     public navParams: NavParams, public plsdala: PlsdalaProvider) {
@@ -37,7 +38,8 @@ export class ChatPage {
     .child(firebase.auth().currentUser.uid)
     .once('value', user => {
       this.loggedInUser = user;
-      this.userInChat = user.key;
+      this.userInChat = user.key; 
+      this.username = `${user.val().firstname} ${user.val().lastname} (${user.val().username})`;
       var users = {
         user1: this.loggedInUser.key, 
         user2: this.user.userId
@@ -72,6 +74,7 @@ export class ChatPage {
         receiverId: this.user.userId,
       };
       this.plsdala.addMessage(details, users);
+      this.plsdala.sendNotifs(this.user.userId, 'New Message', `${this.username} has requested to send an item`);
       this.content.scrollToBottom();
       this.newmessage = '';
     }
@@ -88,20 +91,47 @@ export class ChatPage {
       this.navCtrl.push(ViewprofilePage, {item: key});
   }
 
-  Accept(item){
+  Accept(item)
+  {
     console.log(this.items);
     var usersWithReceiver = {
       user1: item.senderId,
       user2: item.courierId,
       user3: item.receiverId
       };
+    var senderName;
+    firebase.database().ref('users').child(item.receiverId).once("value", snapshot=>{
+      senderName = `${snapshot.val().firstname} ${snapshot.val().lastname} (${snapshot.val().username})`; 
+    })
     this.plsdala.addReceiverInChat(usersWithReceiver).then(key=>{
       console.log(key, item.key);
       this.plsdala.getUsersInThree(usersWithReceiver, key);
       firebase.database().ref('messages/' + this.key).child(item.key).update({
         isAccepted: true
       });
+      this.plsdala.sendNotifs(item.senderId, 'Item Delivery', `${this.username} has accepted the delivery request`);
+      this.plsdala.sendNotifs(item.receiverId, 'Item Delivery', `${senderName} has sent you an item via ${this.username}`);
+
+      firebase.database().ref('messages/' + key + '/' + item.key).update({
+        courierId: item.courierId,
+        images: item.images,
+        isAccepted: true,
+        isDeclined: false,
+        isItem: true,
+        itemName: item.itemName,
+        key: item.key,
+        receiverId: item.receiverId,
+        receiverName: item.receiverName,
+        senderName: item.senderName,
+        senderId: item.senderId,
+        timestamp: item.timestamp,
+        threadId: this.key,
+        msgId: item.key,
+        receiverAccepted: false,
+        travelKey: item.travelKey
+      });
     });
+    this.plsdala.addTransaction(item);
   }
 
   Decline(item){

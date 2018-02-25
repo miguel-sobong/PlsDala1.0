@@ -21,6 +21,7 @@ export class AdditemPage {
   public picdata:any; 
   public imageName:any;
   public maximage:any;
+  username: any;
   public FirstName:any;
   userData = { user_id: "", token: "", imageB64: "" };
 	@ViewChild('textArea') textArea: ElementRef;
@@ -33,7 +34,15 @@ export class AdditemPage {
   constructor(public modalCtrl: ModalController, public toastCtrl: ToastController, public camera: Camera, 
     public navCtrl: NavController, public navParams: NavParams, public actionSheetCtrl: ActionSheetController,
     public alertCtrl: AlertController, public plsdala: PlsdalaProvider) {
+    firebase.database().ref('users').child(firebase.auth().currentUser.uid).once("value", snapshot=>{
+      this.username = `${snapshot.val().firstname} ${snapshot.val().lastname} (${snapshot.val().username})`;
+    })
     this.selectedItem = navParams.get('item');
+    var users = {
+      user1: firebase.auth().currentUser.uid,
+      user2: this.selectedItem['userId']
+    }
+    this.plsdala.getMessages(users);
   }
 
   ngOnInit() 
@@ -153,6 +162,7 @@ export class AdditemPage {
               for (let i in this.picdata){
                 this.plsdala.uploadItemPhoto(this.picdata[i], i, this.selectedItem['key'], keyData);
               };
+              this.plsdala.sendNotifs(this.selectedItem['userId'], 'Delivery Request', `${this.username} has requested to send an item`);
             })
           });
         }else{

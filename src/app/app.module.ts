@@ -28,6 +28,7 @@ import { HelpfortransactionPage} from '../pages/helpfortransaction/helpfortransa
 import { HelpfortransactionhistoryPage } from '../pages/helpfortransactionhistory/helpfortransactionhistory';
 import { HelpfortravelPage } from '../pages/helpfortravel/helpfortravel';
 import { TrackPage } from '../pages/track/track';
+import { TermsandconditionPage } from '../pages/termsandcondition/termsandcondition'
 
 import { HttpModule } from '@angular/http';
 import { AngularFireModule } from 'angularfire2';
@@ -44,6 +45,7 @@ import { PlsdalaProvider } from '../providers/plsdala/plsdala';
 import { Camera } from '@ionic-native/camera';
 import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse} from '@ionic-native/background-geolocation';
 import { Geolocation } from '@ionic-native/geolocation';
+import { LocalNotifications } from '@ionic-native/local-notifications';
   // Initialize Firebase
   var firebaseConfig = {
     apiKey: "AIzaSyATmp3oSFtqK4gHK2ZQs9-NBrBYcXjvakc",
@@ -80,7 +82,8 @@ import { Geolocation } from '@ionic-native/geolocation';
     HelpfortransactionPage,
     HelpfortransactionhistoryPage,
     HelpfortravelPage,
-    TrackPage
+    TrackPage,
+    TermsandconditionPage
   ],
   imports: [
     BrowserModule,
@@ -116,7 +119,8 @@ import { Geolocation } from '@ionic-native/geolocation';
     HelpfortransactionPage,
     HelpfortransactionhistoryPage,
     HelpfortravelPage,
-    TrackPage
+    TrackPage,
+    TermsandconditionPage
   ],
   providers: [
     StatusBar,
@@ -128,7 +132,8 @@ import { Geolocation } from '@ionic-native/geolocation';
     Camera,
     DatePipe,
     BackgroundGeolocation,
-    Geolocation
+    Geolocation,
+    LocalNotifications
   ]
 })
 export class AppModule {}
