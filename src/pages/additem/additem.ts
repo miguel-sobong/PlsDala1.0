@@ -162,7 +162,8 @@ export class AdditemPage {
               for (let i in this.picdata){
                 this.plsdala.uploadItemPhoto(this.picdata[i], i, this.selectedItem['key'], keyData);
               };
-              this.plsdala.sendNotifs(this.selectedItem['userId'], 'Delivery Request', `${this.username} has requested to send an item`);
+            }).then(()=>{
+              this.plsdala.sendNotifs(this.selectedItem['userId'], 'Delivery Request', `${this.username} has requested to send an item`); 
             })
           });
         }else{

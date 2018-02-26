@@ -9,7 +9,6 @@ import * as firebase from 'firebase';
 import { DatePipe } from '@angular/common';
 import { AuthenticationProvider } from '../../providers/authentication/authentication';
 import { HelpPage } from '../help/help';
-import { LocalNotifications } from '@ionic-native/local-notifications'
 
 @Component({
   selector: 'page-home',
@@ -28,8 +27,7 @@ export class HomePage
 
   constructor(public authenticationProvider: AuthenticationProvider, public alert: AlertController,
    public navCtrl: NavController, public navParams: NavParams, 
-    public plsdala: PlsdalaProvider, public platform: Platform, public toastCtrl: ToastController, private datepipe:DatePipe, 
-    public localNotifs: LocalNotifications) {
+    public plsdala: PlsdalaProvider, public platform: Platform, public toastCtrl: ToastController, private datepipe:DatePipe) {
     this.helpPage = HelpPage;
     this.ListOfitems = [];
     this.ListOfitems2nd = [];
@@ -37,7 +35,6 @@ export class HomePage
     this.currentUserId = firebase.auth().currentUser.uid;
     this.initializeItems();
     this.checkVerification();
-    this.scheduleNotification();
   }
 
   addTravel(event){
@@ -46,41 +43,6 @@ export class HomePage
 
   Round(number){
     return Math.round(number);  
-  }
-
-  scheduleNotification() {  
-    // firebase.database().ref('user_transactions').child(firebase.auth().currentUser.uid)
-    // .once("value", notifs=>{
-    //   notifs.forEach(notif=>{
-    //     if(notif.val()){
-    //       if(!notif.val().isDisplayed){
-    //         this.localNotifs.schedule({
-    //           id: Math.round(Math.random() * 10000), 
-    //           title:notif.val().title,
-    //           text:notif.val().message
-    //         });
-    //         firebase.database().ref('user_notifications').child(firebase.auth().currentUser.uid).child(notif.key).update({
-    //           isDisplayed: true
-    //         });
-    //       }
-    //     }
-    //     return false;
-    //   })
-    // })
-
-    firebase.database().ref('user_notifications').child(firebase.auth().currentUser.uid)
-    .on("child_added", notifs=>{
-      if(!notifs.val().isDisplayed){
-        this.localNotifs.schedule({
-          id: Math.round(Math.random() * 10000), 
-          title:notifs.val().title,
-          text:notifs.val().message
-        });
-        firebase.database().ref('user_notifications').child(firebase.auth().currentUser.uid).child(notifs.key).update({
-          isDisplayed: true
-        });
-      }
-    });
   }
 
   checkVerification(){

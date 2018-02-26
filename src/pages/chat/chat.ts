@@ -74,7 +74,7 @@ export class ChatPage {
         receiverId: this.user.userId,
       };
       this.plsdala.addMessage(details, users);
-      this.plsdala.sendNotifs(this.user.userId, 'New Message', `${this.username} has requested to send an item`);
+      this.plsdala.sendNotifs(this.user.userId, 'New Message', `${this.username}: ${this.newmessage}`);
       this.content.scrollToBottom();
       this.newmessage = '';
     }

@@ -121,7 +121,7 @@ export class TransactionsPage {
         });
       }
     }).then(()=>{
-      this.plsdala.sendNotifs(transaction.senderId, 'Delivery Successful', `${transaction.val().receiverName} has successfully received the item`);
+      this.plsdala.sendNotifs(transaction.senderId, 'Delivery Successful', `${transaction.receiverName} has successfully received the item`);
       firebase.database().ref('transactions').child('ongoing').child(transaction.key).remove();
       firebase.database().ref('users').child(transaction.courierId).once("value", snapshot=>{
         if(snapshot.val().totaltransaction == 1){
@@ -143,14 +143,6 @@ export class TransactionsPage {
     this.navCtrl.push(TrackPage, { item: courierId });
   }
 
-  senderCourier(transaction){
-    firebase.database().ref('transactions').child('ongoing').child(transaction.key).update({
-      itemAt: transaction.courierId
-    });
-
-    this.plsdala.sendNotifs(transaction.receiverId, 'Item Delivery', `The courier, ${transaction.val().courierName} has the item now`);
-  }
-
   courierConfirm(transaction){
     this.alert.create({
       title: "Please make sure the item is not illegal",
@@ -159,7 +151,11 @@ export class TransactionsPage {
         text: "Yes",
         role: 'cancel',
         handler: ()=>{
-          this.senderCourier(transaction);
+          firebase.database().ref('transactions').child('ongoing').child(transaction.key).update({
+            itemAt: transaction.courierId
+          });
+
+          this.plsdala.sendNotifs(transaction.receiverId, 'Item Delivery', `The courier, ${transaction.courierName} has the item now`);
         }
       },
       {

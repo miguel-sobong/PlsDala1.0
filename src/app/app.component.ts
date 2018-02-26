@@ -12,6 +12,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { TransactionsPage } from '../pages/transactions/transactions';
 import { TransactionhistoryPage } from '../pages/transactionhistory/transactionhistory';
 import { TermsandconditionPage } from '../pages/termsandcondition/termsandcondition';
+import { LocalNotifications } from '@ionic-native/local-notifications'
 
 import { AuthenticationProvider } from '../providers/authentication/authentication';
 
@@ -34,11 +35,12 @@ export class MyApp {
   isDeclined;
   username;
   verificationNode;
+  notifsNode;
   splash = true;
 
   constructor(public loadingCtrl: LoadingController, public afAuth: AngularFireAuth, public toastController: ToastController, 
     public alert: AlertController, public authenticationProvider: AuthenticationProvider, public events: Events, public platform: Platform,
-   public statusBar: StatusBar, public splashScreen: SplashScreen) {
+   public statusBar: StatusBar, public splashScreen: SplashScreen, public localNotifs: LocalNotifications) {
     this.initializeApp();
     setTimeout(() => this.splash = false, 4000);
     if(!localStorage.getItem("verified")){
@@ -97,6 +99,8 @@ export class MyApp {
           this.userNode.off();
         if(this.verificationNode)
           this.verificationNode.off();
+        if(this.notifsNode)
+          this.notifsNode.off();
         // authObserver.unsubscribe();
       }
     });
@@ -153,6 +157,23 @@ export class MyApp {
      }
     //this.verificationNode.off();
    });
+
+
+
+    this.notifsNode = firebase.database().ref('user_notifications').child(firebase.auth().currentUser.uid);
+    this.notifsNode.on("child_added", notifs=>{
+      if(notifs.child('isDisplayed').val() == false){
+        firebase.database().ref('user_notifications').child(firebase.auth().currentUser.uid).child(notifs.key).update({
+          isDisplayed: true
+        }).then(()=>{
+          this.localNotifs.schedule({
+            id: Math.round(Math.random() * 10000), 
+            title:notifs.val().title,
+            text:notifs.val().message
+          })
+        })
+      }
+    });
   }
 
   terminateUserAlert(){

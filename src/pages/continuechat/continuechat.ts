@@ -27,7 +27,7 @@ export class ContinuechatPage {
     firebase.database().ref('users/')
     .child(firebase.auth().currentUser.uid)
     .once('value', user => {
-      this.username = `${user.val().firstname} %{user.val().lastname} (${user.val().username})`;
+      this.username = user.val().username;
       this.user = user;
       this.userInChat = user.key;
       this.selectedItem = navParams.get('item');
@@ -56,18 +56,18 @@ export class ContinuechatPage {
       const check = firebase.database().ref('threads');
       check.once('value', snapshot=>{
         snapshot.forEach(snap=>{
-          if(snap.hasChild(this.selectedItem['key'])){
-            firebase.database().ref().child('threads/').child(snap.key).child(this.selectedItem['key']).update({
-              lastMessage: this.user.val().firstname + ' ' + this.user.val().lastname + ': ' + this.newmessage,
-              seen: false,
-              timestamp: firebase.database.ServerValue.TIMESTAMP
-            }).then(_=>{
-              firebase.database().ref('threads/').child(this.userInChat).child(this.selectedItem['key']).update({
-                seen: true
-              });
-              return true;
+          if(snap.key != firebase.auth().currentUser.uid)
+            this.plsdala.sendNotifs(snap.key, 'New Message', `${this.user.val().firstname} ${this.user.val().lastname} (${this.user.val().username}): ${this.newmessage}`);
+          firebase.database().ref().child('threads/').child(snap.key).child(this.selectedItem['key']).update({
+            lastMessage: this.user.val().firstname + ' ' + this.user.val().lastname + ': ' + this.newmessage,
+            seen: false,
+            timestamp: firebase.database.ServerValue.TIMESTAMP
+          }).then(_=>{
+            firebase.database().ref('threads/').child(this.userInChat).child(this.selectedItem['key']).update({
+              seen: true
             });
-          }
+            return true;
+          });
           return false;
         })
       this.newmessage = '';
@@ -96,7 +96,7 @@ export class ContinuechatPage {
       user3: item.receiverId
       };
     var senderName;
-    firebase.database().ref('users').child(item.receiverId).once("value", snapshot=>{
+    firebase.database().ref('users').child(item.senderId).once("value", snapshot=>{
       senderName = `${snapshot.val().firstname} ${snapshot.val().lastname} (${snapshot.val().username})`; 
     })
     this.plsdala.addReceiverInChat(usersWithReceiver).then(key=>{

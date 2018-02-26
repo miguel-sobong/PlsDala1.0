@@ -35,6 +35,7 @@ export class ChatlistPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ChatlistPage');
+    firebase.database().ref('user_notifications').child(firebase.auth().currentUser.uid).remove();
   }
 
   messageUser(event, item){
