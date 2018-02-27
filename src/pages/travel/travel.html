@@ -20,7 +20,7 @@
   <div #map id="map"></div>
 </ion-content>
 <ion-footer *ngIf="user != selectedItem.userId">
-  <div *ngIf="UserIsVerified">
+  <div *ngIf="UserIsVerified && !UserIsDeclined">
     <button ion-button color="primary" block (click)="addItem($event)">
       Request Delivery
     </button>

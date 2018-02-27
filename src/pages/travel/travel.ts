@@ -23,6 +23,7 @@ export class TravelPage {
   help: any;
   posterName: string;
   posterImage: string;
+  UserIsDeclined: any;
 
   constructor(public loadingCtrl: LoadingController, public navCtrl: NavController, public navParams: NavParams, public toastCtrl: ToastController) {
     var loader = this.loadingCtrl.create({
@@ -31,9 +32,16 @@ export class TravelPage {
     this.help = HelpfortravelPage;
     firebase.database().ref('users/' + firebase.auth().currentUser.uid)
     .child('isVerified')
-    .on('value', isVerified => {
+    .once('value', isVerified => {
         this.UserIsVerified = isVerified.val()
     });
+
+    firebase.database().ref('users/' + firebase.auth().currentUser.uid)
+    .child('isDeclined')
+    .once('value', isDeclined => {
+        this.UserIsDeclined = isDeclined.val()
+    });
+
     loader.present();
     this.selectedItem = navParams.get('item');
     console.log(this.selectedItem);

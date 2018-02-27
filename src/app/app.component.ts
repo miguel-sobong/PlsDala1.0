@@ -54,20 +54,21 @@ export class MyApp {
     }
     const authObserver = afAuth.authState.subscribe( user => {
       if (user) {
-        // if(!user.emailVerified){ 
-          // user.sendEmailVerification().then(()=>{
-          //   this.alert.create({
-          //     message: 'An email confirmation has been sent to ' + user.email,
-          //     buttons: [{
-          //       text: 'Ok',
-          //       role: 'cancel'
-          //     }]
-          //   }).present();
-          // }); 
-          // this.authenticationProvider.logoutUser(); 
-        // }
-        if(true) //change to else later
+        if(!user.emailVerified){ 
+          user.sendEmailVerification().then(()=>{
+            this.alert.create({
+              message: 'An email confirmation has been sent to ' + user.email,
+              buttons: [{
+                text: 'Ok',
+                role: 'cancel'
+              }]
+            }).present();
+          }); 
+          this.authenticationProvider.logoutUser(); 
+        }
+        else //change to else later
         {
+          firebase.database().ref('users').child(firebase.auth().currentUser.uid).update({emailVerified: true});
           var loader = this.loadingCtrl.create({
             content: 'Getting user data. Please wait'
           });
@@ -263,7 +264,6 @@ export class MyApp {
   }
 
   presentModalForVerification(isVerified, isDeclined){
-    var checked;
     if(isVerified == false && localStorage.getItem("notVerified") == "false"){
       if(isDeclined == false){
         this.alert.create({

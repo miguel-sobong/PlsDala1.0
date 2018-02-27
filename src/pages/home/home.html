@@ -39,9 +39,7 @@
         </ion-card-content>
     </ion-list>
   </div>
-
-  <ion-fab right bottom margin (click)="addTravel($event)" *ngIf="UserIsVerified">
+  <ion-fab right bottom margin (click)="addTravel($event)" *ngIf="UserIsVerified && !UserIsDeclined">
     <button ion-fab class="fabBtn" color="primary"><ion-icon name="add"></ion-icon></button>
   </ion-fab>
-
 </ion-content>

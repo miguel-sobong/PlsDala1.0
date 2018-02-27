@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, Events, NavController, LoadingController, ToastController, AlertController } from 'ionic-angular';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { RegisterPage } from '../register/register';
 import { AuthenticationProvider } from '../../providers/authentication/authentication';
 import { CommonProvider } from '../../providers/common/common';
-import { HomePage } from '../../pages/home/home';
-import { EmailValidator } from '../../validator/email-validator';
 import * as firebase from 'firebase';
 
 @IonicPage()

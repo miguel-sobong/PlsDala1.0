@@ -3,10 +3,9 @@ import { IonicPage, NavController, NavParams, LoadingController, ModalController
 import { ViewphotoPage } from '../viewphoto/viewphoto';
 import { ViewprofilePage } from '../viewprofile/viewprofile';
 import { ProfilePage } from '../profile/profile';
-import { TravelPage } from '../travel/travel';
 import { ViewmapPage } from '../viewmap/viewmap'
 import { Observable } from 'rxjs/Observable';
-import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
+import { AngularFireDatabase } from 'angularfire2/database';
 import { HelpfortransactionPage } from '../helpfortransaction/helpfortransaction';
 import { TrackPage } from '../track/track';
 import { PlsdalaProvider } from '../../providers/plsdala/plsdala';

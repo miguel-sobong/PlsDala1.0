@@ -20,9 +20,7 @@ export class ReviewPage {
   description: any;
   temp;
   constructor(public toastCtrl: ToastController, public navCtrl: NavController, public navParams: NavParams) {
-    var timestamp;
     this.selectedItem = navParams.get('item');
-    console.log(this.selectedItem.dbkey, this.selectedItem.uid);
     this.getUser(this.selectedItem.uid);
   }
 

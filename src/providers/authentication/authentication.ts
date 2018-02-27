@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Events } from 'ionic-angular';
 import * as firebase from 'firebase';
 
 @Injectable()
@@ -27,6 +26,7 @@ export class AuthenticationProvider {
           isVerified: false,
           isTerminated: false,
           isDeclined: false,
+          emailVerified: false,
           rating: 0,
           totalrate: 0,
           totaltransaction: 0,

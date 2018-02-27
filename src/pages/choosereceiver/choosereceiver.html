@@ -8,7 +8,7 @@
   <div class="travellist">
     <ion-list *ngFor="let item of listOfUsersforFilter">
       <div *ngIf="selectedItem != item.id">
-        <div *ngIf="!item.isTerminated">
+        <div *ngIf="!item.isTerminated && item.emailVerified">
           <ion-item>
             <ion-label (click)="viewProfile(item.id)">
               <h4><b>{{item.firstname}} {{item.lastname}} ({{item.username}})</b></h4>

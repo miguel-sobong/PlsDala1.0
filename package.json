@@ -67,7 +67,10 @@
         "ACCOUNT_TYPE": "$PACKAGE_NAME.account",
         "CONTENT_AUTHORITY": "$PACKAGE_NAME"
       },
-      "cordova-plugin-camera": {},
+      "cordova-plugin-camera": {
+        "CAMERA_USAGE_DESCRIPTION": " ",
+        "PHOTOLIBRARY_USAGE_DESCRIPTION": " "
+      },
       "cordova-plugin-local-notification": {}
     },
     "platforms": [

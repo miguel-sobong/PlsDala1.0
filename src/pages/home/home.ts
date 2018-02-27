@@ -3,7 +3,6 @@ import { NavController, NavParams, ToastController, AlertController, Platform } 
 import { AddtravelPage } from '../addtravel/addtravel';
 import { PlsdalaProvider } from '../../providers/plsdala/plsdala';
 import { TravelPage } from '../../pages/travel/travel';
-import { LoginPage } from '../../pages/login/login'
 import { Observable } from 'rxjs/Observable';
 import * as firebase from 'firebase';
 import { DatePipe } from '@angular/common';
@@ -24,6 +23,7 @@ export class HomePage
   ListOfitems2nd: Array<any>;  
   helpPage;
   verifyViewer;
+  UserIsDeclined: any;
 
   constructor(public authenticationProvider: AuthenticationProvider, public alert: AlertController,
    public navCtrl: NavController, public navParams: NavParams, 
@@ -31,7 +31,6 @@ export class HomePage
     this.helpPage = HelpPage;
     this.ListOfitems = [];
     this.ListOfitems2nd = [];
-    var checked = false;
     this.currentUserId = firebase.auth().currentUser.uid;
     this.initializeItems();
     this.checkVerification();
@@ -50,6 +49,12 @@ export class HomePage
    userRef.child('isVerified')
     .once('value', isVerified => {
       this.UserIsVerified = isVerified.val();
+    });
+
+   var userRef = firebase.database().ref('users').child(firebase.auth().currentUser.uid);
+   userRef.child('isDeclined')
+    .once('value', isDeclined => {
+      this.UserIsDeclined = isDeclined.val();
     });
 
     var verifyViewer = firebase.database().ref('users').child(firebase.auth().currentUser.uid);
@@ -82,7 +87,7 @@ export class HomePage
         this.ListOfitems2nd=[];
         var date = new Date();
         var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-        var today = new Date(today);
+        today = new Date(today);
         for(let i=0;i<res.length;i++){
           var checkDate = new Date(res[i].fromDate);
           if(checkDate < today) { continue };

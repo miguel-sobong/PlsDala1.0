@@ -9,7 +9,7 @@ import 'rxjs/add/observable/fromPromise';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
 import * as firebase from 'firebase';
-import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
+import { AngularFireDatabase } from 'angularfire2/database';
 
 @IonicPage()
 @Component({
@@ -131,7 +131,7 @@ export class ChatPage {
         travelKey: item.travelKey
       });
     });
-    this.plsdala.addTransaction(item);
+    this.plsdala.addTransaction(item, senderName);
   }
 
   Decline(item){

@@ -133,16 +133,16 @@ export class ProfilePage {
   }
 
   submitEdit(){
-    console.log(this.description);
+    var editData = {};
     if(this.description){
-    	var editData = {
+    	editData = {
     		// firstname: this.fname,
     		// lastname: this.lname,
     		description: this.description
     	}
     }
     else{
-      var editData = {
+      editData = {
         description: ""
       }
     }

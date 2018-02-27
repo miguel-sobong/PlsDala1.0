@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, Content, ModalController } from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
-import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
+import { AngularFireDatabase } from 'angularfire2/database';
 import { PlsdalaProvider } from '../../providers/plsdala/plsdala';
 import { ViewphotoPage } from '../viewphoto/viewphoto';
 import {  ViewprofilePage } from '../viewprofile/viewprofile';
@@ -88,8 +88,6 @@ export class ContinuechatPage {
   }
 
   Accept(item){
-    console.log(this.items);
-    console.log(item);
     var usersWithReceiver = {
       user1: item.courierId,
       user2: item.senderId,
@@ -107,7 +105,7 @@ export class ContinuechatPage {
       });
 
       this.plsdala.sendNotifs(item.senderId, 'Item Delivery', `${this.username} has accepted the delivery request`);
-      this.plsdala.sendNotifs(item.receiverId, 'Item Delivery', `${item.senderName} has sent you an item via ${this.username}`);
+      this.plsdala.sendNotifs(item.receiverId, 'Item Delivery', `${senderName} has sent you an item via ${this.username}`);
 
       firebase.database().ref('messages/' + key + '/' + item.key).update({
         courierId: item.courierId,
@@ -119,7 +117,7 @@ export class ContinuechatPage {
         key: item.key,
         receiverId: item.receiverId,
         receiverName: item.receiverName,
-        senderName: item.senderName,
+        senderName: senderName,
         senderId: item.senderId,
         timestamp: item.timestamp,
         threadId: this.selectedItem['key'],
@@ -128,7 +126,7 @@ export class ContinuechatPage {
         travelKey: item.travelKey
       });
     });
-    this.plsdala.addTransaction(item);
+    this.plsdala.addTransaction(item, senderName);
   }
 
   Decline(item){

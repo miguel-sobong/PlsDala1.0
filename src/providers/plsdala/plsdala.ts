@@ -1,6 +1,5 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';;
-import { ToastController } from 'ionic-angular'
+import { Injectable } from '@angular/core';
+import { ToastController } from 'ionic-angular';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 // import { Observable } from 'rxjs/Observable';
 import { Http } from '@angular/http';
@@ -24,13 +23,7 @@ export class PlsdalaProvider {
 
   constructor(private geo: Geolocation, public toastCtrl: ToastController, public afd: AngularFireDatabase, public http: Http) {
     this.travelList = this.afd.list('travels');
-    firebase.database().ref('users/')
-    .child(firebase.auth().currentUser.uid)
-    .once('value', user => {
-      this.user = user;
-    });
-
- 	this.watchUserLocation();
+   	this.watchUserLocation();
   }
 
   watchUserLocation(){
@@ -365,19 +358,19 @@ export class PlsdalaProvider {
         this.http.get(url + users.user2 + '.json').map(res => res.json()).subscribe(user2data => {
           this.http.get(url + users.user3 + '.json').map(res => res.json()).subscribe(user3data => {
             firebase.database().ref().child('threads/' + users.user1 + '/' + key).set({
-              lastMessage: user1data['firstname'] + ' ' + user1data['lastname'] +' sent an item!',
+              lastMessage: user2data['firstname'] + ' ' + user2data['lastname'] +' sent an item!',
               seen: true,
               timestamp: firebase.database.ServerValue.TIMESTAMP,
               title: user2data['firstname'] + ' ' + user2data['lastname'] + ' and ' + user3data['firstname'] + ' ' + user3data['lastname']
             });
             firebase.database().ref().child('threads/' + users.user2 + '/' + key).set({
-              lastMessage: user1data['firstname'] + ' ' + user1data['lastname'] +' sent an item!',
+              lastMessage: user2data['firstname'] + ' ' + user2data['lastname'] +' sent an item!',
               seen: false,
               timestamp: firebase.database.ServerValue.TIMESTAMP,
               title: user1data['firstname'] + ' ' + user1data['lastname'] + ' and ' + user3data['firstname'] + ' ' + user3data['lastname']
             });
             firebase.database().ref().child('threads/' + users.user3 + '/' + key).set({
-              lastMessage: user1data['firstname'] + ' ' + user1data['lastname'] +' sent an item!',
+              lastMessage: user2data['firstname'] + ' ' + user2data['lastname'] +' sent an item!',
               seen: false,
               timestamp: firebase.database.ServerValue.TIMESTAMP,
               title: user1data['firstname'] + ' ' + user1data['lastname'] + ' and ' + user2data['firstname'] + ' ' + user2data['lastname']
@@ -414,37 +407,37 @@ export class PlsdalaProvider {
     return this.afd.list('travel_items/' + travelKey);
   }
 
-  addTransaction(item){
-    firebase.database().ref('travels').child(item.travelKey).once("value", snapshot=>{
-      firebase.database().ref('users').child(item.courierId).once("value", courier=>{
-        const newTransaction = this.afd.list('transactions/ongoing').push({});
-        newTransaction.set({
-          travelkey: item.travelKey,
-          senderId: item.senderId,
-          courierId: item.courierId,
-          receiverId: item.receiverId,
-          itemName: item.itemName,
-          images: item.images,
-          senderName: item.senderName,
-          receiverName: item.receiverName,
-          courierName: courier.val().firstname + " " + courier.val().lastname + " (" + courier.val().username + ")",
-          fromX: snapshot.val().fromX,
-          fromY: snapshot.val().fromY,
-          fromAddress: snapshot.val().fromAddress,
-          toX: snapshot.val().toX,
-          toY: snapshot.val().toY,
-          toAddress: snapshot.val().toAddress,
-          itemAt: item.senderId,
-          timestamp: firebase.database.ServerValue.TIMESTAMP,
-          timestampDone: 0
-        });
-        if(item.itemDescription){
-          newTransaction.update({
-            itemDescription: item.itemDescription
+  addTransaction(item, senderName){
+      firebase.database().ref('travels').child(item.travelKey).once("value", snapshot=>{
+        firebase.database().ref('users').child(item.courierId).once("value", courier=>{
+          const newTransaction = this.afd.list('transactions/ongoing').push({});
+          newTransaction.set({
+            travelkey: item.travelKey,
+            senderId: item.senderId,
+            courierId: item.courierId,
+            receiverId: item.receiverId,
+            itemName: item.itemName,
+            images: item.images,
+            senderName: senderName,
+            receiverName: item.receiverName,
+            courierName: courier.val().firstname + " " + courier.val().lastname + " (" + courier.val().username + ")",
+            fromX: snapshot.val().fromX,
+            fromY: snapshot.val().fromY,
+            fromAddress: snapshot.val().fromAddress,
+            toX: snapshot.val().toX,
+            toY: snapshot.val().toY,
+            toAddress: snapshot.val().toAddress,
+            itemAt: item.senderId,
+            timestamp: firebase.database.ServerValue.TIMESTAMP,
+            timestampDone: 0
           });
-        }
+          if(item.itemDescription){
+            newTransaction.update({
+              itemDescription: item.itemDescription
+            });
+          }
+        });
       });
-    });
   }
 
   sendNotifs(uid, title, message){

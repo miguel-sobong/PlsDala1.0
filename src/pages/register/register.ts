@@ -4,8 +4,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonProvider } from '../../providers/common/common';
 import { AuthenticationProvider } from '../../providers/authentication/authentication';
 import { EmailValidator } from '../../validator/email-validator';
-import { HomePage } from '../../pages/home/home';
-import * as firebase from 'firebase';
 
 @IonicPage()
 @Component({
@@ -83,6 +81,7 @@ export class RegisterPage {
                 localStorage.setItem("notVerified", "false"); // for home popup
                 localStorage.setItem("verified", "false");
                 localStorage.setItem("decline", "false");
+                this.navCtrl.pop();
               }, fail=>{
                 this.alertController.create({
                   message: fail.message,

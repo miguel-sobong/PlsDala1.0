@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, ModalController, NavController, NavParams, LoadingController } from 'ionic-angular';
 import * as firebase from 'firebase';
 import { Observable } from 'rxjs/Observable';
-import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
+import { AngularFireDatabase } from 'angularfire2/database';
 import { ReviewPage } from '../review/review';
 import { ViewprofilePage } from '../viewprofile/viewprofile';
 import { ProfilePage } from '../profile/profile';
