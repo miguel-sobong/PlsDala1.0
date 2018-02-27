@@ -5,6 +5,7 @@ import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { Http } from '@angular/http';
 import firebase from 'firebase';
 import { Geolocation } from '@ionic-native/geolocation';
+import { AngularFireAuth } from 'angularfire2/auth';
 @Injectable()
 export class PlsdalaProvider {
 
@@ -21,9 +22,21 @@ export class PlsdalaProvider {
   watch;
 
 
-  constructor(private geo: Geolocation, public toastCtrl: ToastController, public afd: AngularFireDatabase, public http: Http) {
+  constructor(public afAuth: AngularFireAuth, private geo: Geolocation, public toastCtrl: ToastController, public afd: AngularFireDatabase, public http: Http) {
+    afAuth.authState.subscribe( user => {
+      if(user){
+        firebase.database().ref('users').child(firebase.auth().currentUser.uid)
+        .once('value', user=>{
+          this.user = user;
+          console.log(`${user.val().lastname} ${user.val().firstname}`);
+        });
+       this.watchUserLocation();
+      }
+      else{
+        console.log('logged out');
+      }
+    });
     this.travelList = this.afd.list('travels');
-   	this.watchUserLocation();
   }
 
   watchUserLocation(){
@@ -164,7 +177,7 @@ export class PlsdalaProvider {
         const newMessage = this.afd.list('messages/' + data).push({});
         newMessage.set({
           content: details.content,
-          senderName: details.senderName,
+          senderName: `${this.user.val().firstname} ${this.user.val().lastname} (${this.user.val().username})`,
           senderId: firebase.auth().currentUser.uid,
           timestamp: firebase.database.ServerValue.TIMESTAMP
         });
@@ -408,6 +421,7 @@ export class PlsdalaProvider {
   }
 
   addTransaction(item, senderName){
+    console.log("addtrans: " + senderName);
       firebase.database().ref('travels').child(item.travelKey).once("value", snapshot=>{
         firebase.database().ref('users').child(item.courierId).once("value", courier=>{
           const newTransaction = this.afd.list('transactions/ongoing').push({});

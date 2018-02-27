@@ -49,7 +49,6 @@ export class ContinuechatPage {
 	  	const newMessage = this.afd.list('messages/' + this.selectedItem['key']).push({});
 	  	newMessage.set({
 	  		content: this.newmessage,
-	  		senderName: this.user.val().firstname + ' ' + this.user.val().lastname,
 	  		senderId: this.user.key,
 	  		timestamp: firebase.database.ServerValue.TIMESTAMP
 	  	});

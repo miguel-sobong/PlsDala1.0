@@ -43,7 +43,6 @@ import { CommonProvider } from '../providers/common/common';
 import { PlsdalaProvider } from '../providers/plsdala/plsdala';
 
 import { Camera } from '@ionic-native/camera';
-import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse} from '@ionic-native/background-geolocation';
 import { Geolocation } from '@ionic-native/geolocation';
 import { LocalNotifications } from '@ionic-native/local-notifications';
   // Initialize Firebase
@@ -131,7 +130,6 @@ import { LocalNotifications } from '@ionic-native/local-notifications';
     PlsdalaProvider,
     Camera,
     DatePipe,
-    BackgroundGeolocation,
     Geolocation,
     LocalNotifications
   ]

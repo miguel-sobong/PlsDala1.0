@@ -159,8 +159,6 @@ export class MyApp {
     //this.verificationNode.off();
    });
 
-
-
     this.notifsNode = firebase.database().ref('user_notifications').child(firebase.auth().currentUser.uid);
     this.notifsNode.on("child_added", notifs=>{
       if(notifs.child('isDisplayed').val() == false){
