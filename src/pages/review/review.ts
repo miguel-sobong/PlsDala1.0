@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
 import * as firebase from 'firebase';
 
 @IonicPage()
@@ -19,7 +19,7 @@ export class ReviewPage {
   inputText: string;
   description: any;
   temp;
-  constructor(public toastCtrl: ToastController, public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public loading: LoadingController, public toastCtrl: ToastController, public navCtrl: NavController, public navParams: NavParams) {
     this.selectedItem = navParams.get('item');
     this.getUser(this.selectedItem.uid);
   }
@@ -37,11 +37,14 @@ export class ReviewPage {
 rate = (r) => (this.rating = r);
 
   submit(){
+    var loader = this.loading.create({
+      content: 'Rating user...'
+    });
+    loader.present();
     this.temp = firebase.database().ref("temp").child(firebase.auth().currentUser.uid).push({timestamp: firebase.database.ServerValue.TIMESTAMP});
     var check = true;
     firebase.database().ref('reviews').child(this.selectedItem.uid).once("value",user=>{
       user.forEach(snapshot=>{
-        console.log(snapshot.val().transaction);
         snapshot.forEach(snap=>{
           if(((snapshot.val().transaction == this.selectedItem.dbkey) 
             && (snap.key == "reviewer" && snap.val() == firebase.auth().currentUser.uid))){
@@ -60,6 +63,7 @@ rate = (r) => (this.rating = r);
               resolve(true);
             }
             else{
+              loader.dismiss();
               this.toastCtrl.create({
                 message: 'Cannot review user anymore. One week has already passed',
                 duration: 3000
@@ -99,7 +103,8 @@ rate = (r) => (this.rating = r);
                   })
                 }
               })
-
+              
+              loader.dismiss();
               this.toastCtrl.create({
                 message: 'Successfully reviewed user',
                 duration: 3000
@@ -108,6 +113,7 @@ rate = (r) => (this.rating = r);
               this.navCtrl.pop();
             }
             else{
+              loader.dismiss();
               this.toastCtrl.create({
                 message: 'Please have input in all fields',
                 duration: 3000
@@ -115,6 +121,7 @@ rate = (r) => (this.rating = r);
             }
           }
           else{
+              loader.dismiss();
             this.toastCtrl.create({
               message: 'You have already reviewed this user for this transaction.',
               duration: 3000

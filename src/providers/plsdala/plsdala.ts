@@ -40,32 +40,35 @@ export class PlsdalaProvider {
   }
 
   watchUserLocation(){
-    var watchOptions = {
+    console.log('track ini');
+    const watchOptions = {
     	enableHighAccurary: true,
-    	maximumAge:300000,
+    	maximumAge:5000,
     	timeout: 5000
     }
 
-    firebase.database().ref('users').child(firebase.auth().currentUser.uid).on("child_changed", snap=>{
-    	if(snap.key == "isTrackable")
+    firebase.database().ref('users').child(firebase.auth().currentUser.uid).on("value", snap=>{
+      console.log('track change');
+    	if(snap.val().isTrackable)
     	{
-    		if(snap.val() == true){ 
-			    this.watch = this.geo.watchPosition(watchOptions).subscribe(pos => {
-			    	if(pos.coords != undefined){
-			    		firebase.database().ref("user_location").child(firebase.auth().currentUser.uid).update({
-			    			lat: pos.coords.latitude,
-			    			long: pos.coords.longitude
-			    		});
-			    	}
-			    });
-	    	}
-	    	else{
-	    		//turn off subscribe
-          if(this.watch)
-	    		  this.watch.unsubscribe();
-          firebase.database().ref('user_location').child(firebase.auth().currentUser.uid).remove();
-	    	}
+        console.log('track start');
+			  this.watch = this.geo.watchPosition(watchOptions).subscribe(pos => {
+          console.log(pos.coords);
+			  	if(pos.coords != undefined){
+			  		firebase.database().ref("user_location").child(firebase.auth().currentUser.uid).update({
+			  			lat: pos.coords.latitude,
+			  			long: pos.coords.longitude
+			  		});
+			  	}
+			  });
 	    }
+      else{
+        console.log('track end');
+          //turn off subscribe
+        if(this.watch)
+          this.watch.unsubscribe();
+        firebase.database().ref('user_location').child(firebase.auth().currentUser.uid).remove();
+      }
     });
   }
 
@@ -423,7 +426,9 @@ export class PlsdalaProvider {
   addTransaction(item, senderName){
     console.log("addtrans: " + senderName);
       firebase.database().ref('travels').child(item.travelKey).once("value", snapshot=>{
+        console.log("snap", snapshot.val());
         firebase.database().ref('users').child(item.courierId).once("value", courier=>{
+        console.log("cour", courier.val());
           const newTransaction = this.afd.list('transactions/ongoing').push({});
           newTransaction.set({
             travelkey: item.travelKey,
@@ -450,6 +455,7 @@ export class PlsdalaProvider {
               itemDescription: item.itemDescription
             });
           }
+        console.log("finish");
         });
       });
   }

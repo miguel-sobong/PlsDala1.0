@@ -20,7 +20,7 @@
             <ion-card-header>
               <h4><b>{{item.firstname}} {{item.lastname}} ({{item.username}})</b></h4>
               <span *ngIf="item.rating" class="review">     
-          {{item.rating}} / 5
+          {{item.rating}}
           <ion-icon name="star" *ngIf="Round(item.rating) > 0"></ion-icon>
           <ion-icon name="star" *ngIf="Round(item.rating) > 1"></ion-icon>
           <ion-icon name="star" *ngIf="Round(item.rating) > 2"></ion-icon>

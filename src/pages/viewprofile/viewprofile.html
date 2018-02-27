@@ -10,7 +10,7 @@
   <h2>{{profileName}}</h2>
   <p>{{profileUsername}}</p>
   <div class="review profile" text-center *ngIf="userRating">
-    {{userRating}} / 5
+    {{userRating}}
     <ion-icon name="star" *ngIf="Round(userRating) > 0"></ion-icon>
     <ion-icon name="star" *ngIf="Round(userRating) > 1"></ion-icon>
     <ion-icon name="star" *ngIf="Round(userRating) > 2"></ion-icon>

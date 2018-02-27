@@ -91,16 +91,14 @@ export class ChatPage {
       this.navCtrl.push(ViewprofilePage, {item: key});
   }
 
-  Accept(item)
-  {
-    console.log(this.items);
+    Accept(item){
     var usersWithReceiver = {
-      user1: item.senderId,
-      user2: item.courierId,
+      user1: item.courierId,
+      user2: item.senderId,
       user3: item.receiverId
       };
     var senderName;
-    firebase.database().ref('users').child(item.receiverId).once("value", snapshot=>{
+    firebase.database().ref('users').child(item.senderId).once("value", snapshot=>{
       senderName = `${snapshot.val().firstname} ${snapshot.val().lastname} (${snapshot.val().username})`; 
     })
     this.plsdala.addReceiverInChat(usersWithReceiver).then(key=>{
@@ -108,30 +106,33 @@ export class ChatPage {
       this.plsdala.getUsersInThree(usersWithReceiver, key);
       firebase.database().ref('messages/' + this.key).child(item.key).update({
         isAccepted: true
+      })
+      .then(()=>{
+        this.plsdala.sendNotifs(item.senderId, 'Item Delivery', `${this.username} has accepted the delivery request`);
+        this.plsdala.sendNotifs(item.receiverId, 'Item Delivery', `${senderName} has sent you an item via ${this.username}`);
+        firebase.database().ref('messages/' + key + '/' + item.key).update({
+          courierId: item.courierId,
+          images: item.images,
+          isAccepted: true,
+          isDeclined: false,
+          isItem: true,
+          itemName: item.itemName,
+          key: item.key,
+          receiverId: item.receiverId,
+          receiverName: item.receiverName,
+          senderName: senderName,
+          senderId: item.senderId,
+          timestamp: item.timestamp,
+          threadId: this.key,
+          msgId: item.key,
+          receiverAccepted: false,
+          travelKey: item.travelKey
+        });
+      })
+      .then(()=>{
+        this.plsdala.addTransaction(item, senderName);
       });
-      this.plsdala.sendNotifs(item.senderId, 'Item Delivery', `${this.username} has accepted the delivery request`);
-      this.plsdala.sendNotifs(item.receiverId, 'Item Delivery', `${senderName} has sent you an item via ${this.username}`);
-
-      firebase.database().ref('messages/' + key + '/' + item.key).update({
-        courierId: item.courierId,
-        images: item.images,
-        isAccepted: true,
-        isDeclined: false,
-        isItem: true,
-        itemName: item.itemName,
-        key: item.key,
-        receiverId: item.receiverId,
-        receiverName: item.receiverName,
-        senderName: item.senderName,
-        senderId: item.senderId,
-        timestamp: item.timestamp,
-        threadId: this.key,
-        msgId: item.key,
-        receiverAccepted: false,
-        travelKey: item.travelKey
-      });
-    });
-    this.plsdala.addTransaction(item, senderName);
+    })
   }
 
   Decline(item){

@@ -102,31 +102,31 @@ export class ContinuechatPage {
       this.plsdala.getUsersInThree(usersWithReceiver, key);
       firebase.database().ref('messages/' + this.selectedItem['key']).child(item.key).update({
         isAccepted: true
-      });
-
-      this.plsdala.sendNotifs(item.senderId, 'Item Delivery', `${this.username} has accepted the delivery request`);
-      this.plsdala.sendNotifs(item.receiverId, 'Item Delivery', `${senderName} has sent you an item via ${this.username}`);
-
-      firebase.database().ref('messages/' + key + '/' + item.key).update({
-        courierId: item.courierId,
-        images: item.images,
-        isAccepted: true,
-        isDeclined: false,
-        isItem: true,
-        itemName: item.itemName,
-        key: item.key,
-        receiverId: item.receiverId,
-        receiverName: item.receiverName,
-        senderName: senderName,
-        senderId: item.senderId,
-        timestamp: item.timestamp,
-        threadId: this.selectedItem['key'],
-        msgId: item.key,
-        receiverAccepted: false,
-        travelKey: item.travelKey
-      });
-    });
-    this.plsdala.addTransaction(item, senderName);
+      })
+      .then(()=>{
+        this.plsdala.sendNotifs(item.senderId, 'Item Delivery', `${this.username} has accepted the delivery request`);
+        this.plsdala.sendNotifs(item.receiverId, 'Item Delivery', `${senderName} has sent you an item via ${this.username}`);
+        firebase.database().ref('messages/' + key + '/' + item.key).update({
+          courierId: item.courierId,
+          images: item.images,
+          isAccepted: true,
+          isDeclined: false,
+          isItem: true,
+          itemName: item.itemName,
+          key: item.key,
+          receiverId: item.receiverId,
+          receiverName: item.receiverName,
+          senderName: senderName,
+          senderId: item.senderId,
+          timestamp: item.timestamp,
+          threadId: this.selectedItem['key'],
+          msgId: item.key,
+          receiverAccepted: false,
+          travelKey: item.travelKey
+        });
+        this.plsdala.addTransaction(item, senderName);
+      })
+    })
   }
 
   Decline(item){
