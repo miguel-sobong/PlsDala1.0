@@ -6,7 +6,7 @@
 
 
 <ion-content text-center>
-  <img class="pp" src="{{profileImage}}" (click)="openModal(profileImage)">
+  <img class="pp" src="{{profileImage}}" (tap)="openModal(profileImage)">
   <h2>{{profileName}}</h2>
   <p>{{profileUsername}}</p>
   <div class="review profile" text-center *ngIf="userRating">

@@ -7,7 +7,7 @@
 
 <ion-content>
   <ion-list>
-    <ion-item *ngFor="let item of autocompleteItems" tappable (click)="chooseItem(item)">
+    <ion-item *ngFor="let item of autocompleteItems" tappable (tap)="chooseItem(item)">
       {{ item }}
     </ion-item>
   </ion-list>
@@ -15,6 +15,6 @@
 </ion-content>
 
 <ion-footer ion-fixed>    
-    <button ion-button block (click)="AddLocation()">Add</button>
-    <button ion-button block clear (click)="Cancel()">Cancel</button>
+    <button ion-button block (tap)="AddLocation()">Add</button>
+    <button ion-button block clear (tap)="Cancel()">Cancel</button>
 </ion-footer>

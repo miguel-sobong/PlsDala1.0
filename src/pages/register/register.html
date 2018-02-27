@@ -48,7 +48,7 @@
     <ion-item class="error-mesage" *ngIf="(registerForm.value.password1 != registerForm.value.password2) && registerForm.controls.password1.dirty && registerForm.controls.password1.dirty">
       <p>Password doesn't match</p>
     </ion-item>
-    <div margin class="item"><ion-checkbox margin-right #termsandconditions formControlName="termsandconditions"></ion-checkbox> <span>I agree to PlsDala's <b (click)="viewTermsAndConditions()"><u>Terms and Conditions</u></b></span></div>
+    <div margin class="item"><ion-checkbox margin-right #termsandconditions formControlName="termsandconditions"></ion-checkbox> <span>I agree to PlsDala's <b (tap)="viewTermsAndConditions()"><u>Terms and Conditions</u></b></span></div>
     <button class="btn-submit" ion-button color="compliment" round block>Register</button>
   </form>
 </ion-content>

@@ -28,8 +28,8 @@
       </div>
     </form>
     <div>
-      <p class="brand">No account yet? <a (click)="goToRegister()" class="brand">Register here!</a></p>
-      <p class="brand">Forgot password? <a (click)="forgotPassword()" class="brand">Recover my account!</a></p>
+      <p class="brand">No account yet? <a (tap)="goToRegister()" class="brand">Register here!</a></p>
+      <p class="brand">Forgot password? <a (tap)="forgotPassword()" class="brand">Recover my account!</a></p>
     </div>
     <div *ngIf="forgotBool" class="forgotPassword">
       <form>
@@ -39,7 +39,7 @@
             <ion-input type="email" name="email" [(ngModel)]="recoveryEmail"></ion-input>
           </ion-item>
           <div padding>
-            <button ion-button color="primary" round block (click)="submitRecover()">Recover</button>
+            <button ion-button color="primary" round block (tap)="submitRecover()">Recover</button>
           </div>
         </ion-list>
       </form>

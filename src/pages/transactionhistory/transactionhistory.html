@@ -19,25 +19,25 @@
         </ion-card-header>
         <ion-card-content>
           <p text-center>{{transaction.itemDescription}}</p>
-          <p (click)="viewProfile(transaction.senderId)">sent by: {{transaction.senderName}}</p>
-          <p (click)="viewProfile(transaction.courierId)">via {{transaction.courierName}}</p>
-          <p (click)="viewProfile(transaction.receiverId)">sent to: {{transaction.receiverName}}</p>
+          <p (tap)="viewProfile(transaction.senderId)">sent by: {{transaction.senderName}}</p>
+          <p (tap)="viewProfile(transaction.courierId)">via {{transaction.courierName}}</p>
+          <p (tap)="viewProfile(transaction.receiverId)">sent to: {{transaction.receiverName}}</p>
           <p>from: {{transaction.fromAddress}}</p>
           <p>to: {{transaction.toAddress}}</p>
           <ion-grid>
             <ion-row>
               <ion-col col-4 *ngFor="let img of transaction.images">
-                <img src="{{img}}" (click)="openModal(img)">
+                <img src="{{img}}" (tap)="openModal(img)">
               </ion-col>
             </ion-row>
           </ion-grid>
             <img src="assets/imgs/p4.png">
           <div *ngIf="loggedInUser == transaction.senderId">
-            <button ion-button block (click)="review(transaction.courierId, transaction.key)" *ngIf="!transaction.senderReviewed">Review {{transaction.courierName}}</button>
+            <button ion-button block (tap)="review(transaction.courierId, transaction.key)" *ngIf="!transaction.senderReviewed">Review {{transaction.courierName}}</button>
             <button ion-button block *ngIf="transaction.senderReviewed">You already reviewed<br> {{transaction.courierName}}</button>
           </div>
           <div *ngIf="loggedInUser == transaction.receiverId">
-            <button ion-button block (click)="review(transaction.courierId, transaction.key)" *ngIf="!transaction.receiverReviewed">Review {{transaction.courierName}}</button>
+            <button ion-button block (tap)="review(transaction.courierId, transaction.key)" *ngIf="!transaction.receiverReviewed">Review {{transaction.courierName}}</button>
             <button ion-button block *ngIf="transaction.receiverReviewed">You already reviewed<br> {{transaction.courierName}}</button>
           </div>
         </ion-card-content>

@@ -15,13 +15,13 @@
   <ion-grid class="navTop" ion-fixed>
     <ion-row text-center>
       <ion-col col-4>
-        <div class="navcust" [ngClass]="{'active': sender == true}" (click)="active('sender')">Sender</div>
+        <div class="navcust" [ngClass]="{'active': sender == true}" (tap)="active('sender')">Sender</div>
       </ion-col>
       <ion-col col-4>
-        <div class="navcust" [ngClass]="{'active': courier == true}" (click)="active('courier')">Courier</div>
+        <div class="navcust" [ngClass]="{'active': courier == true}" (tap)="active('courier')">Courier</div>
       </ion-col>
       <ion-col col-4>
-        <div class="navcust" [ngClass]="{'active': receiver == true}" (click)="active('receiver')">Receiver</div>
+        <div class="navcust" [ngClass]="{'active': receiver == true}" (tap)="active('receiver')">Receiver</div>
       </ion-col>
     </ion-row>
   </ion-grid>
@@ -35,15 +35,15 @@
             </ion-card-header>
             <ion-card-content>
               <p text-center>{{transaction.itemDescription}}</p>
-              <p (click)="viewProfile(transaction.senderId)">sent by: {{transaction.senderName}}</p>
-              <p (click)="viewProfile(transaction.courierId)">via {{transaction.courierName}}</p>
-              <p (click)="viewProfile(transaction.receiverId)">sent to: {{transaction.receiverName}}</p>
+              <p (tap)="viewProfile(transaction.senderId)">sent by: {{transaction.senderName}}</p>
+              <p (tap)="viewProfile(transaction.courierId)">via {{transaction.courierName}}</p>
+              <p (tap)="viewProfile(transaction.receiverId)">sent to: {{transaction.receiverName}}</p>
               <p>from: {{transaction.fromAddress}}</p>
               <p>to: {{transaction.toAddress}}</p>
               <ion-grid>
                 <ion-row>
                   <ion-col col-4 *ngFor="let img of transaction.images">
-                    <img src="{{img}}" (click)="openModal(img)">
+                    <img src="{{img}}" (tap)="openModal(img)">
                   </ion-col>
                 </ion-row>
               </ion-grid>
@@ -54,7 +54,7 @@
               <p text-center class="itemAt" *ngIf="transaction.travelstarted">Travel has started</p>
               <img src="assets/imgs/p2.png" *ngIf="transaction.itemAt == transaction.senderId">
               <img src="assets/imgs/p3.png" *ngIf="transaction.itemAt == transaction.courierId">
-              <button ion-button block *ngIf="transaction.itemAt == transaction.courierId && transaction.travelstarted"  (click)="track(transaction)">Track courier</button>
+              <button ion-button block *ngIf="transaction.itemAt == transaction.courierId && transaction.travelstarted"  (tap)="track(transaction)">Track courier</button>
             </ion-card-content>
           </div> 
           <!-- end sender -->
@@ -66,15 +66,15 @@
             </ion-card-header>
             <ion-card-content>
               <p text-center>{{transaction.itemDescription}}</p>
-              <p (click)="viewProfile(transaction.senderId)">sent by: {{transaction.senderName}}</p>
-              <p (click)="viewProfile(transaction.courierId)">via {{transaction.courierName}}</p>
-              <p (click)="viewProfile(transaction.receiverId)">sent to: {{transaction.receiverName}}</p>
+              <p (tap)="viewProfile(transaction.senderId)">sent by: {{transaction.senderName}}</p>
+              <p (tap)="viewProfile(transaction.courierId)">via {{transaction.courierName}}</p>
+              <p (tap)="viewProfile(transaction.receiverId)">sent to: {{transaction.receiverName}}</p>
               <p>from: {{transaction.fromAddress}}</p>
               <p>to: {{transaction.toAddress}}</p>
               <ion-grid>
                 <ion-row>
                   <ion-col col-4 *ngFor="let img of transaction.images" class="imagecontainer">
-                    <img src="{{img}}" (click)="openModal(img)">
+                    <img src="{{img}}" (tap)="openModal(img)">
                   </ion-col>
                 </ion-row>
               </ion-grid>
@@ -85,9 +85,9 @@
               <p text-center class="itemAt" *ngIf="transaction.travelstarted">Travel has started</p>
               <img src="assets/imgs/p2.png" *ngIf="transaction.itemAt == transaction.senderId">
               <img src="assets/imgs/p3.png" *ngIf="transaction.itemAt == transaction.courierId">
-              <button ion-button block (click)="startTravel(transaction)" *ngIf="transaction.itemAt == transaction.courierId && !transaction.travelstarted">Start this Travel
+              <button ion-button block (tap)="startTravel(transaction)" *ngIf="transaction.itemAt == transaction.courierId && !transaction.travelstarted">Start this Travel
               </button>
-              <button ion-button block (click)="courierConfirm(transaction)" *ngIf="transaction.itemAt == transaction.senderId">Click here if you have the item</button>
+              <button ion-button block (tap)="courierConfirm(transaction)" *ngIf="transaction.itemAt == transaction.senderId">tap here if you have the item</button>
             </ion-card-content>
           </div>
           <!-- end courier -->
@@ -99,15 +99,15 @@
             </ion-card-header>
             <ion-card-content>
               <p text-center>{{transaction.itemDescription}}</p>
-              <p (click)="viewProfile(transaction.senderId)">sent by: {{transaction.senderName}}</p>
-              <p (click)="viewProfile(transaction.courierId)">via {{transaction.courierName}}</p>
-              <p (click)="viewProfile(transaction.receiverId)">sent to: {{transaction.receiverName}}</p>
+              <p (tap)="viewProfile(transaction.senderId)">sent by: {{transaction.senderName}}</p>
+              <p (tap)="viewProfile(transaction.courierId)">via {{transaction.courierName}}</p>
+              <p (tap)="viewProfile(transaction.receiverId)">sent to: {{transaction.receiverName}}</p>
               <p>from: {{transaction.fromAddress}}</p>
               <p>to: {{transaction.toAddress}}</p>
               <ion-grid>
                 <ion-row>
                   <ion-col col-4 *ngFor="let img of transaction.images">
-                    <img src="{{img}}" (click)="openModal(img)">
+                    <img src="{{img}}" (tap)="openModal(img)">
                   </ion-col>
                 </ion-row>
               </ion-grid>
@@ -118,8 +118,8 @@
               <p text-center class="itemAt" *ngIf="transaction.travelstarted">Travel has started</p>
               <img src="assets/imgs/p2.png" *ngIf="transaction.itemAt == transaction.senderId">
               <img src="assets/imgs/p3.png" *ngIf="transaction.itemAt == transaction.courierId">
-              <button ion-button block (click)="receiverConfirm(transaction)" *ngIf="transaction.itemAt == transaction.courierId && transaction.travelstarted">Click here if you have the item</button>
-              <button ion-button block *ngIf="transaction.itemAt == transaction.courierId && transaction.travelstarted"  (click)="track(transaction)">
+              <button ion-button block (tap)="receiverConfirm(transaction)" *ngIf="transaction.itemAt == transaction.courierId && transaction.travelstarted">tap here if you have the item</button>
+              <button ion-button block *ngIf="transaction.itemAt == transaction.courierId && transaction.travelstarted"  (tap)="track(transaction)">
               Track courier</button>
             </ion-card-content>
           </div>

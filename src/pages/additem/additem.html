@@ -4,7 +4,7 @@
   </ion-navbar>
 </ion-header>
 <ion-content text-center margin-top>
-  <button ion-button [disabled]="disabled" (click)="presentActionSheet()">
+  <button ion-button [disabled]="disabled" (tap)="presentActionSheet()">
     <ion-icon name="camera"></ion-icon>&nbsp;Add Photo
   </button>
   <br>You may upload up to 3 pictures
@@ -12,14 +12,14 @@
     <ion-row>
       <ion-col col-4 *ngFor="let photo of photos; let id = index ">
         <ion-card class="block">
-          <ion-icon name="trash" class="deleteIcon" (click)="deletePhoto(id)"></ion-icon>
+          <ion-icon name="trash" class="deleteIcon" (tap)="deletePhoto(id)"></ion-icon>
           <img [src]="photo" *ngIf="photo" />
         </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>
   <ion-list no-lines>
-    <ion-item (click)="chooseReceiver()">
+    <ion-item (tap)="chooseReceiver()">
       <ion-label floating>Receiver</ion-label>
       <ion-input type="text" [(ngModel)]="receiver" disabled="true"></ion-input>
     </ion-item>
@@ -34,5 +34,5 @@
   </ion-list>
 </ion-content>
 <ion-footer ion-fixed>
-  <button ion-button block color="primary" (click)="addItem()">Add</button>
+  <button ion-button block color="primary" (tap)="addItem()">Add</button>
 </ion-footer>

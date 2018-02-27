@@ -12,7 +12,7 @@
 		    From
 		  </ion-card-header>
 		  <ion-card-content>
-		    <ion-item (click)="fromLocation()">
+		    <ion-item (tap)="fromLocation()">
 				<ion-label floating>Location</ion-label>
 	        	<ion-input #location formControlName="fromLocation" type="text" disabled="true" [value]="addTravelForm.value.fromLocation"></ion-input>
 			</ion-item>
@@ -28,7 +28,7 @@
 		    To
 		  </ion-card-header>
 		  <ion-card-content>
-		    <ion-item (click)="toLocation()">
+		    <ion-item (tap)="toLocation()">
 				<ion-label floating>Location</ion-label>
 	        	<ion-input #location formControlName="toLocation" type="text" disabled="true" [value]="addTravelForm.value.toLocation" id="toDate"></ion-input>
 			</ion-item>

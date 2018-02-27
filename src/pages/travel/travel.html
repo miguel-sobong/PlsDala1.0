@@ -10,7 +10,7 @@
 </ion-header>
 <ion-content margin-top>
   <div text-center>
-    <div (click)="viewProfile()">
+    <div (tap)="viewProfile()">
       <img src="{{posterImage}}" style="height: 150px; width: 150px; border-radius: 15%;">
       <p text><b>{{posterName}}</b></p>
     </div>
@@ -21,10 +21,10 @@
 </ion-content>
 <ion-footer *ngIf="user != selectedItem.userId">
   <div *ngIf="UserIsVerified && !UserIsDeclined">
-    <button ion-button color="primary" block (click)="addItem($event)">
+    <button ion-button color="primary" block (tap)="addItem($event)">
       Request Delivery
     </button>
-    <button ion-button color="primary" block (click)="messageUser($event)">
+    <button ion-button color="primary" block (tap)="messageUser($event)">
       Message {{selectedItem.firstname}} {{selectedItem.lastname}}
     </button>
   </div>

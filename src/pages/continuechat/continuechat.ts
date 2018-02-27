@@ -50,6 +50,7 @@ export class ContinuechatPage {
 	  	newMessage.set({
 	  		content: this.newmessage,
 	  		senderId: this.user.key,
+        senderName: `${this.user.val().firstname} ${this.user.val().lastname} (${this.username})`,
 	  		timestamp: firebase.database.ServerValue.TIMESTAMP
 	  	});
       const check = firebase.database().ref('threads');

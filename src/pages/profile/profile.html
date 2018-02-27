@@ -7,7 +7,7 @@
   </ion-navbar>
 </ion-header>
 <ion-content text-center>
-  <img class="pp" src="{{profileimage}}" (click)="presentActionSheet()">
+  <img class="pp" src="{{profileimage}}" (tap)="presentActionSheet()">
   <h2>{{profileName}}</h2>
   <p>{{profileUsername}}</p>
   <div class="review profile" text-center *ngIf="userRating">
@@ -19,7 +19,7 @@
     <ion-icon name="star" *ngIf="Round(userRating) > 4"></ion-icon>
   </div>
   <p class="description" *ngIf="profileDescription">{{profileDescription}}</p>
-  <button ion-button (click)="EditProfile()">Add Description</button>
+  <button ion-button (tap)="EditProfile()">Add Description</button>
   <div *ngIf="editProfile" class="editProfile">
     <form novalidate>
       <ion-list>
@@ -28,7 +28,7 @@
           <ion-textarea type="text" name="description" [(ngModel)]="description"></ion-textarea>
         </ion-item>
         <div padding>
-          <button ion-button color="primary" round block (click)="submitEdit()">Submit Description</button>
+          <button ion-button color="primary" round block (tap)="submitEdit()">Submit Description</button>
         </div>
       </ion-list>
     </form>

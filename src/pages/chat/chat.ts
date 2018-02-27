@@ -66,6 +66,7 @@ export class ChatPage {
       var details = {
         content: this.newmessage,
         receiverFirstname: this.user.firstname,
+        senderName: `${this.user.val().firstname} ${this.user.val().lastname} (${this.username})`,
         receiverLastname: this.user.lastname
       }
       var users = {
