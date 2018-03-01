@@ -61,12 +61,11 @@ export class ChatPage {
     }
 
   addMessage(){
-    console.log(this.items);
     if(this.newmessage){
       var details = {
         content: this.newmessage,
         receiverFirstname: this.user.firstname,
-        senderName: `${this.user.val().firstname} ${this.user.val().lastname} (${this.username})`,
+        senderName: `${this.username}`,
         receiverLastname: this.user.lastname
       }
       var users = {

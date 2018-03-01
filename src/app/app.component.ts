@@ -12,8 +12,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { TransactionsPage } from '../pages/transactions/transactions';
 import { TransactionhistoryPage } from '../pages/transactionhistory/transactionhistory';
 import { TermsandconditionPage } from '../pages/termsandcondition/termsandcondition';
-import { LocalNotifications } from '@ionic-native/local-notifications'
-
+import { LocalNotifications } from '@ionic-native/local-notifications';
 import { AuthenticationProvider } from '../providers/authentication/authentication';
 
 @Component({
@@ -84,7 +83,7 @@ export class MyApp {
               else
               {
                 this.setPages();
-                this.createWatchers();
+                this.createWatchers(user.uid);
                 this.rootPage = HomePage; //HomePage
                 this.presentModalForVerification(this.isVerified, this.isDeclined);
               }     
@@ -107,15 +106,15 @@ export class MyApp {
     });
   }
 
-  createWatchers(){
-    this.terminateNode = firebase.database().ref('users/' + firebase.auth().currentUser.uid);
+  createWatchers(uid){
+    this.terminateNode = firebase.database().ref('users/' + uid);
     this.terminateNode.on('child_changed', changes => {
        if(changes.key == "isTerminated" && changes.val() == true){
          this.terminateUserAlert();
       }
     });
 
-   this.verificationNode = firebase.database().ref('users').child(firebase.auth().currentUser.uid);
+   this.verificationNode = firebase.database().ref('users').child(uid);
    this.verificationNode.on("child_changed", changes =>{
      console.log('verificationNode');
      if(changes.key == "isVerified"){
@@ -159,7 +158,7 @@ export class MyApp {
     //this.verificationNode.off();
    });
 
-    this.notifsNode = firebase.database().ref('user_notifications').child(firebase.auth().currentUser.uid);
+    this.notifsNode = firebase.database().ref('user_notifications').child(uid);
     this.notifsNode.on("child_added", notifs=>{
       if(notifs.child('isDisplayed').val() == false){
         firebase.database().ref('user_notifications').child(firebase.auth().currentUser.uid).child(notifs.key).update({
@@ -185,7 +184,6 @@ export class MyApp {
       }]
     }).present();
     this.authenticationProvider.logoutUser();
-    this.rootPage = LoginPage;
   }
 
   getUserInfo(uid){
