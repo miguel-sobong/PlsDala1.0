@@ -45,6 +45,7 @@ import { PlsdalaProvider } from '../providers/plsdala/plsdala';
 import { Camera } from '@ionic-native/camera';
 import { Geolocation } from '@ionic-native/geolocation';
 import { LocalNotifications } from '@ionic-native/local-notifications';
+import { Diagnostic } from '@ionic-native/diagnostic';
   // Initialize Firebase
   var firebaseConfig = {
     apiKey: "AIzaSyATmp3oSFtqK4gHK2ZQs9-NBrBYcXjvakc",
@@ -131,7 +132,8 @@ import { LocalNotifications } from '@ionic-native/local-notifications';
     Camera,
     DatePipe,
     Geolocation,
-    LocalNotifications
+    LocalNotifications,
+    Diagnostic
   ]
 })
 export class AppModule {}

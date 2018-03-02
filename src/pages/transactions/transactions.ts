@@ -10,6 +10,7 @@ import { HelpfortransactionPage } from '../helpfortransaction/helpfortransaction
 import { TrackPage } from '../track/track';
 import { PlsdalaProvider } from '../../providers/plsdala/plsdala';
 import * as firebase from 'firebase';
+import { Diagnostic } from '@ionic-native/diagnostic';
 @IonicPage()
 @Component({
   selector: 'page-transactions',
@@ -23,7 +24,7 @@ export class TransactionsPage {
 	loggedInUser;
   help: any;
 
-  constructor(public alert: AlertController, public afd: AngularFireDatabase, 
+  constructor(public Diagnostic: Diagnostic, public alert: AlertController, public afd: AngularFireDatabase, 
     public modal: ModalController, public loading: LoadingController, 
   	public navCtrl: NavController, public navParams: NavParams,
     public plsdala: PlsdalaProvider) {
@@ -94,7 +95,6 @@ export class TransactionsPage {
     });
 
     firebase.database().ref('transactions').child('ongoing').child(transaction.key).once("value", transaction=>{
-      firebase.database().ref('transactions').child('done').set(transaction.key);
       var trans =  firebase.database().ref('transactions').child('done').child(transaction.key)
       trans.update({
           travelkey: transaction.val().travelkey,
@@ -183,6 +183,17 @@ export class TransactionsPage {
         totaltransaction: snapshot.val().totaltransaction + 1,
         isTrackable: true
       });
+
+      this.alert.create({
+        title: 'Please make sure to have your location on',
+        message: 'Turning on your location will help the other users you are in transaction with to track you',
+        buttons: [{
+          text: 'Ok',
+          role: 'cancel'
+        }]
+      }).present();
     });
+
+
   }
 }

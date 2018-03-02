@@ -36,7 +36,7 @@ export class AdditemPage {
     public alertCtrl: AlertController, public plsdala: PlsdalaProvider) {
     firebase.database().ref('users').child(firebase.auth().currentUser.uid).once("value", snapshot=>{
       this.username = `${snapshot.val().firstname} ${snapshot.val().lastname} (${snapshot.val().username})`;
-    })
+    });
     this.selectedItem = navParams.get('item');
     var users = {
       user1: firebase.auth().currentUser.uid,
@@ -210,7 +210,6 @@ export class AdditemPage {
    {
     this.alertCtrl.create({
       title: "Are you sure you want to delete this photo?",
-      message: "",
       buttons: [
         {
           text: "Yes",

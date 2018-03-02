@@ -28,7 +28,6 @@ export class PlsdalaProvider {
         firebase.database().ref('users').child(firebase.auth().currentUser.uid)
         .once('value', user=>{
           this.user = user;
-          console.log(`${user.val().lastname} ${user.val().firstname}`);
         });
        this.watchUserLocation();
       }
@@ -40,18 +39,15 @@ export class PlsdalaProvider {
   }
 
   watchUserLocation(){
-    console.log('track ini');
     const watchOptions = {
     	enableHighAccurary: true,
-    	maximumAge:5000,
-    	timeout: 5000
+    	timeout: 2500
     }
 
-    firebase.database().ref('users').child(firebase.auth().currentUser.uid).on("value", snap=>{
-      console.log('track change');
-    	if(snap.val().isTrackable)
+    firebase.database().ref('users').child(firebase.auth().currentUser.uid).child('isTrackable').on("value", snap=>{
+      console.log(snap.val());
+    	if(snap.val())
     	{
-        console.log('track start');
 			  this.watch = this.geo.watchPosition(watchOptions).subscribe(pos => {
           console.log(pos.coords);
 			  	if(pos.coords != undefined){
@@ -63,7 +59,6 @@ export class PlsdalaProvider {
 			  });
 	    }
       else{
-        console.log('track end');
           //turn off subscribe
         if(this.watch)
           this.watch.unsubscribe();

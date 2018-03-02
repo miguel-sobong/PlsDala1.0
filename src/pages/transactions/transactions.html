@@ -28,7 +28,6 @@
   <div class="containera">
     <ion-list *ngFor="let transaction of transactionList$ | async">
       <ion-card *ngIf="loggedInUser == transaction.senderId || loggedInUser == transaction.courierId || loggedInUser == transaction.receiverId">
-        <!-- <div *ngIf="transaction.isDone == false"> -->
           <div *ngIf="sender == true && transaction.senderId == loggedInUser">
             <ion-card-header text-center>
               <b>{{transaction.itemName}}</b>
@@ -123,7 +122,6 @@
               Track courier</button>
             </ion-card-content>
           </div>
-        <!-- </div> -->
       </ion-card>
     </ion-list>
   </div>

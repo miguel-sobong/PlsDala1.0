@@ -14,14 +14,15 @@ export class TrackPage {
 	selectedItem: any;
  	map;
   from;
-  marker: any;
   directionsService = new google.maps.DirectionsService;
   directionsDisplay = new google.maps.DirectionsRenderer;
+  trackNode: any;
+  doneNode: any;
 
   constructor(public toastCtrl: ToastController, public navCtrl: NavController, public navParams: NavParams, public alert: AlertController) {
   	this.selectedItem = navParams.get('item');
-    console.log(this.selectedItem);
-    firebase.database().ref('transactions/ongoing').on("child_removed", snapshot=>{
+    this.doneNode = firebase.database().ref('transactions/ongoing');
+    this.doneNode.on("child_removed", snapshot=>{
       if(snapshot.key  == this.selectedItem.key){
         this.navCtrl.pop();
         this.alert.create({
@@ -41,11 +42,10 @@ export class TrackPage {
   }
 
   getData(){
-    return new Promise(resolve=>{
-      firebase.database().ref('user_location').child(this.selectedItem.courierId).on("value", snap=>{
-          console.log(snap, snap.key, snap.val());
+
+     this.trackNode = firebase.database().ref('user_location').child(this.selectedItem.courierId);
+     this.trackNode.on("value", snap=>{
           if(snap.val()){
-            // this.updateMarkerPosition(snap.val().lat, snap.val().long);
             this.directionsService.route({
               origin: {lat: snap.val().lat, lng: snap.val().long},
               destination: {lat: this.selectedItem.toX, lng: this.selectedItem.toY},
@@ -68,17 +68,13 @@ export class TrackPage {
             }).present();
           }
         });
-      }
-    )
-  }
+   }
 
-    updateMarkerPosition(x, y){
-      console.log("up mark");
-      this.marker.setPosition({
-        lat: x,
-        lng: y
-      });
-    }
+   ionViewDidLeave(){
+     this.trackNode.off();
+     this.doneNode.off();
+   }
+
 
    initMap() {
       let departure = new google.maps.LatLng(9.3068, 123.3054);
@@ -87,11 +83,12 @@ export class TrackPage {
         center: departure
       });
       
-      this.marker = new google.maps.Marker({map: this.map});
-      this.directionsDisplay.setMap(this.map);
+      this.directionsDisplay.setOptions({map: this.map, preserveViewport: true});
 
       this.getData();
     }
+
+    ionV
 
   back(){
   	this.navCtrl.pop();

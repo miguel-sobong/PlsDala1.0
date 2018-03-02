@@ -134,4 +134,10 @@ export class ContinuechatPage {
       isDeclined: true
      });  
   }
+
+  ionViewDidLeave(){
+    firebase.database().ref('threads').child(firebase.auth().currentUser.uid).child(this.selectedItem['key']).update({
+      seen: true
+    });
+  }
 }

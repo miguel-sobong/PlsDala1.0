@@ -51,19 +51,19 @@ export class AddtravelPage {
       });
       loader.present();
       this.plsdala.addTravel(this.toData, this.fromData, this.addTravelForm.value.toDate, this.addTravelForm.value.fromDate).then(added=>{
+        loader.dismiss();
         this.toastCtrl.create({
           message: 'Added to travel list!',
           duration: 3000
         }).present();
-        loader.dismiss();
         this.navCtrl.pop();
         this.navCtrl.setRoot(HomePage);
       }, error => {
+        loader.dismiss();
         this.toastCtrl.create({
           message: error,
           duration: 3000,
           }).present();
-          loader.dismiss();
       });
     }
   }
@@ -81,7 +81,6 @@ export class AddtravelPage {
       if(data!=null){
       this.toData = data;
       this.addTravelForm.value.toLocation = data.address;
-      console.log(this.addTravelForm.value.toLocation);
       }
       else{
         this.toastCtrl.create({
@@ -106,7 +105,6 @@ export class AddtravelPage {
       console.log(data);
       this.fromData = data;
       this.addTravelForm.value.fromLocation = data.address;
-      console.log(this.addTravelForm.value.fromLocation);
       }
       else{
         this.toastCtrl.create({
