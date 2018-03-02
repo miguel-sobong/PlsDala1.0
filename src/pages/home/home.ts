@@ -8,7 +8,6 @@ import * as firebase from 'firebase';
 import { DatePipe } from '@angular/common';
 import { AuthenticationProvider } from '../../providers/authentication/authentication';
 import { HelpPage } from '../help/help';
-import { Diagnostic } from '@ionic-native/diagnostic';
 
 @Component({
   selector: 'page-home',
@@ -26,7 +25,7 @@ export class HomePage
   verifyViewer;
   UserIsDeclined: any;
 
-  constructor(public diagnostic: Diagnostic, public authenticationProvider: AuthenticationProvider, public alert: AlertController,
+  constructor(public authenticationProvider: AuthenticationProvider, public alert: AlertController,
    public navCtrl: NavController, public navParams: NavParams, 
     public plsdala: PlsdalaProvider, public platform: Platform, public toastCtrl: ToastController, private datepipe:DatePipe) {
     this.helpPage = HelpPage;
@@ -35,14 +34,6 @@ export class HomePage
     this.currentUserId = firebase.auth().currentUser.uid;
     this.initializeItems();
     this.checkVerification();
-    this.diagnostic.isLocationEnabled().then(data=>{
-      if(data){
-        console.log("hi " + data);
-      }
-      else{
-        console.log("hi " + data);
-      }
-    })
   }
 
   addTravel(event){

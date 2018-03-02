@@ -46,6 +46,7 @@ import { Camera } from '@ionic-native/camera';
 import { Geolocation } from '@ionic-native/geolocation';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 import { Diagnostic } from '@ionic-native/diagnostic';
+import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
   // Initialize Firebase
   var firebaseConfig = {
     apiKey: "AIzaSyATmp3oSFtqK4gHK2ZQs9-NBrBYcXjvakc",
@@ -133,7 +134,8 @@ import { Diagnostic } from '@ionic-native/diagnostic';
     DatePipe,
     Geolocation,
     LocalNotifications,
-    Diagnostic
+    Diagnostic,
+    BackgroundGeolocation
   ]
 })
 export class AppModule {}

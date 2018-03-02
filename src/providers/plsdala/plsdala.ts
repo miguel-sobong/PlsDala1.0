@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { ToastController } from 'ionic-angular';
+import { ToastController, Platform } from 'ionic-angular';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 // import { Observable } from 'rxjs/Observable';
 import { Http } from '@angular/http';
 import firebase from 'firebase';
 import { Geolocation } from '@ionic-native/geolocation';
 import { AngularFireAuth } from 'angularfire2/auth';
+import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
 @Injectable()
 export class PlsdalaProvider {
 
@@ -22,7 +23,7 @@ export class PlsdalaProvider {
   watch;
 
 
-  constructor(public afAuth: AngularFireAuth, private geo: Geolocation, public toastCtrl: ToastController, public afd: AngularFireDatabase, public http: Http) {
+  constructor(public platform: Platform, public backgroundGeolocation: BackgroundGeolocation, public afAuth: AngularFireAuth, private geo: Geolocation, public toastCtrl: ToastController, public afd: AngularFireDatabase, public http: Http) {
     afAuth.authState.subscribe( user => {
       if(user){
         firebase.database().ref('users').child(firebase.auth().currentUser.uid)
@@ -31,11 +32,28 @@ export class PlsdalaProvider {
         });
        this.watchUserLocation();
       }
-      else{
-        console.log('logged out');
-      }
     });
     this.travelList = this.afd.list('travels');
+  }
+
+  backgroundGeo(){
+    console.log("starting");
+    const config = {
+      desiredAccuracy: 0,
+      stationaryRadius: 20,
+      distanceFilter: 30
+    };
+
+    this.backgroundGeolocation.configure(config)
+    .subscribe((location: BackgroundGeolocationResponse)=>{
+      firebase.database().ref('user_location').child(firebase.auth().currentUser.uid).update({
+        lat: location.latitude,
+        long: location.longitude
+      });
+      this.backgroundGeolocation.finish();
+    });
+
+    this.backgroundGeolocation.start();
   }
 
   watchUserLocation(){
@@ -57,9 +75,23 @@ export class PlsdalaProvider {
 			  		});
 			  	}
 			  });
+
+       this.platform.pause.subscribe(pause=>{
+         if(pause)
+           this.backgroundGeo();
+       });
+
+       this.platform.resume.subscribe(resume=>{
+         if(resume)
+          this.backgroundGeolocation.stop();
+       });
 	    }
       else{
           //turn off subscribe
+        if(this.platform.resume)
+          this.platform.resume.unsubscribe();
+        if(this.platform.pause)
+          this.platform.pause.unsubscribe();
         if(this.watch)
           this.watch.unsubscribe();
         firebase.database().ref('user_location').child(firebase.auth().currentUser.uid).remove();

@@ -24,7 +24,7 @@ export class TransactionsPage {
 	loggedInUser;
   help: any;
 
-  constructor(public Diagnostic: Diagnostic, public alert: AlertController, public afd: AngularFireDatabase, 
+  constructor(public diagnostic: Diagnostic, public alert: AlertController, public afd: AngularFireDatabase, 
     public modal: ModalController, public loading: LoadingController, 
   	public navCtrl: NavController, public navParams: NavParams,
     public plsdala: PlsdalaProvider) {
@@ -188,12 +188,15 @@ export class TransactionsPage {
         title: 'Please make sure to have your location on',
         message: 'Turning on your location will help the other users you are in transaction with to track you',
         buttons: [{
+          text: 'Turn on location',
+          role: 'cancel',
+          handler: ()=>this.diagnostic.switchToLocationSettings()
+          },
+          {
           text: 'Ok',
           role: 'cancel'
         }]
       }).present();
     });
-
-
   }
 }
