@@ -79,7 +79,7 @@ export class TrackPage {
    initMap() {
       let departure = new google.maps.LatLng(9.3068, 123.3054);
       this.map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 10,
+        zoom: 7,
         center: departure
       });
       

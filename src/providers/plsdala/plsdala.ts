@@ -7,7 +7,7 @@ import firebase from 'firebase';
 import { Geolocation } from '@ionic-native/geolocation';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
-@Injectable()
+import { Diagnostic } from '@ionic-native/diagnostic';@Injectable()
 export class PlsdalaProvider {
 
 
@@ -23,7 +23,7 @@ export class PlsdalaProvider {
   watch;
 
 
-  constructor(public platform: Platform, public backgroundGeolocation: BackgroundGeolocation, public afAuth: AngularFireAuth, private geo: Geolocation, public toastCtrl: ToastController, public afd: AngularFireDatabase, public http: Http) {
+  constructor(public diagnostic: Diagnostic, public platform: Platform, public backgroundGeolocation: BackgroundGeolocation, public afAuth: AngularFireAuth, private geo: Geolocation, public toastCtrl: ToastController, public afd: AngularFireDatabase, public http: Http) {
     afAuth.authState.subscribe( user => {
       if(user){
         firebase.database().ref('users').child(firebase.auth().currentUser.uid)
@@ -33,6 +33,7 @@ export class PlsdalaProvider {
        this.watchUserLocation();
       }
     });
+    // this.locationStateHandler();
     this.travelList = this.afd.list('travels');
   }
 
@@ -59,7 +60,8 @@ export class PlsdalaProvider {
   watchUserLocation(){
     const watchOptions = {
     	enableHighAccurary: true,
-    	timeout: 2500
+    	timeout: 1250,
+      maximumAge: 500
     }
 
     firebase.database().ref('users').child(firebase.auth().currentUser.uid).child('isTrackable').on("value", snap=>{
@@ -495,4 +497,11 @@ export class PlsdalaProvider {
     })
   }
  
+ // locationStateHandler(){
+ //   console.log('statehandler');
+ //   this.diagnostic.registerLocationStateChangeHandler(snap=>{
+ //     alert('state:' + snap.locationMode.LOCATION_OFF);
+ //   });
+ //   console.log('statehandler end');
+ // }
 }

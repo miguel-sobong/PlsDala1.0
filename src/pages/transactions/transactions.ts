@@ -183,20 +183,35 @@ export class TransactionsPage {
         totaltransaction: snapshot.val().totaltransaction + 1,
         isTrackable: true
       });
-
-      this.alert.create({
-        title: 'Please make sure to have your location on',
-        message: 'Turning on your location will help the other users you are in transaction with to track you',
-        buttons: [{
-          text: 'Turn on location',
-          role: 'cancel',
-          handler: ()=>this.diagnostic.switchToLocationSettings()
-          },
-          {
-          text: 'Ok',
-          role: 'cancel'
-        }]
-      }).present();
+     this.diagnostic.isLocationEnabled().then(data=>{
+       if(!data){
+        this.alert.create({
+          title: 'Your phone location is turned off',
+          message: 'Turning on your location will help the other users you are in transaction with to track you',
+          buttons: [{
+            text: 'Turn on location',
+            role: 'cancel',
+            handler: ()=>this.diagnostic.switchToLocationSettings()
+            },
+            {
+            text: 'Ok',
+            role: 'cancel'
+          }]
+        }).present();
+       }
+       else{
+        this.alert.create({
+          title: 'Your phone location is turned on',
+          message: 'This will help the other users you are in transaction with to track you',
+          buttons: [{
+            text: 'Ok',
+            role: 'cancel'
+          }]
+        }).present();         
+       }
+     })
     });
+    
+    // this.plsdala.locationStateHandler(transaction);
   }
 }
