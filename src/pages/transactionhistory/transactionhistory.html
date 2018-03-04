@@ -19,9 +19,9 @@
         </ion-card-header>
         <ion-card-content>
           <p text-center>{{transaction.itemDescription}}</p>
-          <p (tap)="viewProfile(transaction.senderId)"><b>sent by:</b> {{transaction.senderName}}</p>
-          <p (tap)="viewProfile(transaction.courierId)"><b>via</b> {{transaction.courierName}}</p>
-          <p (tap)="viewProfile(transaction.receiverId)"><b>sent to:</b> {{transaction.receiverName}}</p>
+          <p (tap)="viewProfile(transaction.senderId)"><b>Sent by:</b> {{transaction.senderName}}</p>
+          <p (tap)="viewProfile(transaction.courierId)"><b>Via</b> {{transaction.courierName}}</p>
+          <p (tap)="viewProfile(transaction.receiverId)"><b>Sent to:</b> {{transaction.receiverName}}</p>
           <p><b>from:</b> {{transaction.fromAddress}}</p>
           <p><b>to:</b> {{transaction.toAddress}}</p>
           <ion-grid>
