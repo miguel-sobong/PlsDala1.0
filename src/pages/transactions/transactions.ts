@@ -212,6 +212,6 @@ export class TransactionsPage {
      })
     });
     
-    // this.plsdala.locationStateHandler(transaction);
+    // this.plsdala.locationStateHandler(transaction.travelkey);
   }
 }

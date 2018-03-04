@@ -23,8 +23,13 @@ export class PlsdalaProvider {
   user: any;  
   watch;
   resumeNode;
+  locationOnNotifs;
+  locationOffNotifs;
 
-  constructor(public diagnostic: Diagnostic, public platform: Platform, public backgroundGeolocation: BackgroundGeolocation, public afAuth: AngularFireAuth, private geo: Geolocation, public toastCtrl: ToastController, public afd: AngularFireDatabase, public http: Http) {
+  constructor(public diagnostic: Diagnostic, public platform: Platform, 
+    public backgroundGeolocation: BackgroundGeolocation, public afAuth: AngularFireAuth, 
+    private geo: Geolocation, public toastCtrl: ToastController, public afd: AngularFireDatabase, 
+    public http: Http) {
     afAuth.authState.subscribe( user => {
       if(user){
         firebase.database().ref('users').child(firebase.auth().currentUser.uid)
@@ -44,7 +49,6 @@ export class PlsdalaProvider {
           this.backgroundGeolocation.stop();
       }
     });
-    // this.locationStateHandler();
     this.travelList = this.afd.list('travels');
   }
 
@@ -509,11 +513,30 @@ export class PlsdalaProvider {
     });
   }
  
- // locationStateHandler(){
- //   console.log('statehandler');
- //   this.diagnostic.registerLocationStateChangeHandler(snap=>{
- //     alert('state:' + snap.locationMode.LOCATION_OFF);
- //   });
- //   console.log('statehandler end');
+ // locationStateHandler(transactionKey){
+ //   setTimeout(()=>{
+ //     this.diagnostic.isLocationEnabled().then(data=>{
+ //       if(data){
+ //        firebase.database().ref('transactions').child('ongoing').once("value", snapshot=>{
+ //          snapshot.forEach(snap=>{
+ //            if(snap.val().travelkey == transactionKey){
+ //              firebase.database().ref('transactions').child('ongoing').child(snap.key).update({
+ //                travelstarted: true
+ //              });
+ //            this.sendNotifs(snap.val().senderId, '${this.user.val().firstname} ${this.user.val().lastname} (${this.user.val().username}) has turned on his location', `Your tracking will now be more accurate`);
+ //            this.sendNotifs(snap.val().receiverId, '${this.user.val().firstname} ${this.user.val().lastname} (${this.user.val().username}) has turned on his location', `Your tracking will now be more accurate`);
+ //            }
+ //            return false;
+ //          })
+ //        });
+ //       }
+ //       else{
+ //         console.log('disabled');
+ //       }
+ //     });
+
+ //     this.locationStateHandler(transactionKey);
+ //   }, 10000);
+
  // }
 }
