@@ -8,6 +8,7 @@ import * as firebase from 'firebase';
 import { DatePipe } from '@angular/common';
 import { AuthenticationProvider } from '../../providers/authentication/authentication';
 import { HelpPage } from '../help/help';
+import { Diagnostic } from '@ionic-native/diagnostic';
 
 @Component({
   selector: 'page-home',
@@ -25,7 +26,7 @@ export class HomePage
   verifyViewer;
   UserIsDeclined: any;
 
-  constructor(public authenticationProvider: AuthenticationProvider, public alert: AlertController,
+  constructor(public diagnostic: Diagnostic, public authenticationProvider: AuthenticationProvider, public alert: AlertController,
    public navCtrl: NavController, public navParams: NavParams, 
     public plsdala: PlsdalaProvider, public platform: Platform, public toastCtrl: ToastController, private datepipe:DatePipe) {
     this.helpPage = HelpPage;
@@ -34,6 +35,9 @@ export class HomePage
     this.currentUserId = firebase.auth().currentUser.uid;
     this.initializeItems();
     this.checkVerification();
+    // this.diagnostic.registerLocationStateChangeHandler(data=>{
+    //   console.log('data: ' + data);
+    // });
   }
 
   addTravel(event){
@@ -118,8 +122,8 @@ export class HomePage
        this.ListOfitems = this.ListOfitems.filter((ListOfitem) => {
           return (ListOfitem.fromAddress.toLowerCase().indexOf(val.toLowerCase()) > -1||
             ListOfitem.toAddress.toLowerCase().indexOf(val.toLowerCase()) >-1 ||
-            this.datepipe.transform(ListOfitem.fromDate, 'mediumDate').toLowerCase().indexOf(val.toLowerCase()) > -1 ||
-            this.datepipe.transform(ListOfitem.toDate, 'mediumDate').toLowerCase().indexOf(val.toLowerCase()) > -1);
+            this.datepipe.transform(ListOfitem.fromDate, 'longDate').toLowerCase().indexOf(val.toLowerCase()) > -1 ||
+            this.datepipe.transform(ListOfitem.toDate, 'longDate').toLowerCase().indexOf(val.toLowerCase()) > -1);
            
          
        })

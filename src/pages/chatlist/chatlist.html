@@ -6,21 +6,15 @@
     <ion-title>Chat Threads</ion-title>
   </ion-navbar>
 </ion-header>
-<ion-content>
-  <ion-list *ngFor="let item of chatList$ | async" >
-  <ion-card (tap)="messageUser($event, item)">
-    <ion-card-header>
-      <h2 text-center class="chatListName">{{item.title}}</h2>
+<ion-content class="sidemenuBg">
+  <ion-list>
+    <button ion-item *ngFor="let item of chatList$ | async" (tap)="messageUser($event, item)">
       <div class="notif">
-       <ion-badge *ngIf="item.seen == false" color="danger">unread</ion-badge>
+        <ion-badge *ngIf="item.seen == false" color="danger">unread</ion-badge>
       </div>
-    </ion-card-header>
-    <ion-card-content>
-      {{item.lastMessage}}
-      <br>
-      <br>
+      <h3><b>{{item.title}}</b></h3>
+      <p>{{item.lastMessage}}</p>
       <div class="chatTimestamp">{{item.timestamp | date:'mediumDate'}} {{item.timestamp | date:'shortTime'}}</div>
-    </ion-card-content>
-  </ion-card>
-</ion-list>
+    </button>
+  </ion-list>
 </ion-content>

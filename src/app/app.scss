@@ -31,9 +31,7 @@ button{
  }
 .activeHighlight{
 	background-color: #F2AF01;
-
 }
-
 // App Global Sass
 // --------------------------------------------------
 // Put style rules here that you want to apply globally. These
@@ -99,6 +97,11 @@ button{
   -webkit-animation: animation 2800ms linear infinite both;
   animation: animation 2800ms linear infinite both;
 }
+
+ion-content:not(.sidemenuBg){
+  background-color: #fbfbfb;
+}
+
 
 /* Generated with Bounce.js. Edit at http://bouncejs.com#%7Bl%3A1%2Cs%3A%5B%7BT%3A%22t%22%2Ce%3A%22b%22%2Cd%3A1000%2CD%3A0%2Cf%3A%7Bx%3A-500%2Cy%3A0%7D%2Ct%3A%7Bx%3A0%2Cy%3A0%7D%2Cs%3A5%2Cb%3A2%7D%2C%7BT%3A%22k%22%2Ce%3A%22s%22%2Cd%3A1000%2CD%3A0%2Cf%3A%7Bx%3A0%2Cy%3A0%7D%2Ct%3A%7Bx%3A120%2Cy%3A0%7D%2Cs%3A3%2Cb%3A4%7D%2C%7BT%3A%22t%22%2Ce%3A%22S%22%2Cd%3A1000%2CD%3A800%2Cf%3A%7Bx%3A0%2Cy%3A0%7D%2Ct%3A%7Bx%3A0%2Cy%3A-50%7D%2Cs%3A2%2Cb%3A4%7D%2C%7BT%3A%22t%22%2Ce%3A%22b%22%2Cd%3A1000%2CD%3A1800%2Cf%3A%7Bx%3A0%2Cy%3A0%7D%2Ct%3A%7Bx%3A500%2Cy%3A0%7D%2Cs%3A3%2Cb%3A4%7D%2C%7BT%3A%22k%22%2Ce%3A%22b%22%2Cd%3A1000%2CD%3A1750%2Cf%3A%7Bx%3A0%2Cy%3A0%7D%2Ct%3A%7Bx%3A40%2Cy%3A0%7D%2Cs%3A3%2Cb%3A4%7D%5D%7D */
 

@@ -31,9 +31,8 @@
           <p text-center>{{item.itemDescription}}</p>
           <hr>
           <div>
-            <p (tap)="viewProfile(item.senderId)">Sent by: {{item.senderName}}</p>
-            <br>
-            <p (tap)="viewProfile(item.receiverId)">Send to: {{item.receiverName}}</p>
+            <p (tap)="viewProfile(item.senderId)"><b>Sent by:</b> {{item.senderName}}</p>
+            <p (tap)="viewProfile(item.receiverId)"><b>Send to:</b> {{item.receiverName}}</p>
           </div>
           <ion-grid>
             <ion-row>

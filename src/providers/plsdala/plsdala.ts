@@ -7,7 +7,8 @@ import firebase from 'firebase';
 import { Geolocation } from '@ionic-native/geolocation';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
-import { Diagnostic } from '@ionic-native/diagnostic';@Injectable()
+import { Diagnostic } from '@ionic-native/diagnostic';
+@Injectable()
 export class PlsdalaProvider {
 
 
@@ -21,7 +22,7 @@ export class PlsdalaProvider {
   users: any;
   user: any;  
   watch;
-
+  resumeNode;
 
   constructor(public diagnostic: Diagnostic, public platform: Platform, public backgroundGeolocation: BackgroundGeolocation, public afAuth: AngularFireAuth, private geo: Geolocation, public toastCtrl: ToastController, public afd: AngularFireDatabase, public http: Http) {
     afAuth.authState.subscribe( user => {
@@ -29,8 +30,18 @@ export class PlsdalaProvider {
         firebase.database().ref('users').child(firebase.auth().currentUser.uid)
         .once('value', user=>{
           this.user = user;
+          console.log(`${user.val().firstname} ${user.val().lastname} `)
+        }).then(()=>{
+         this.watchUserLocation();
         });
-       this.watchUserLocation();
+      }
+      else
+      {
+        this.user = null;
+        if(this.resumeNode)
+          this.resumeNode.off();
+        if(this.backgroundGeolocation)
+          this.backgroundGeolocation.stop();
       }
     });
     // this.locationStateHandler();
@@ -38,11 +49,10 @@ export class PlsdalaProvider {
   }
 
   backgroundGeo(){
-    console.log("starting");
     const config = {
       desiredAccuracy: 0,
       stationaryRadius: 20,
-      distanceFilter: 30
+      distanceFilter: 10
     };
 
     this.backgroundGeolocation.configure(config)
@@ -61,11 +71,11 @@ export class PlsdalaProvider {
     const watchOptions = {
     	enableHighAccurary: true,
     	timeout: 1250,
-      maximumAge: 500
+      maximumAge: 0
     }
 
-    firebase.database().ref('users').child(firebase.auth().currentUser.uid).child('isTrackable').on("value", snap=>{
-      console.log(snap.val());
+    this.resumeNode = firebase.database().ref('users').child(firebase.auth().currentUser.uid).child('isTrackable');
+    this.resumeNode.on("value", snap=>{
     	if(snap.val())
     	{
 			  this.watch = this.geo.watchPosition(watchOptions).subscribe(pos => {
@@ -79,23 +89,25 @@ export class PlsdalaProvider {
 			  });
 
        this.platform.pause.subscribe(pause=>{
-         if(pause)
+         if(pause && this.user){
+           console.log('pause start');
            this.backgroundGeo();
+         }
        });
 
        this.platform.resume.subscribe(resume=>{
-         if(resume)
-          this.backgroundGeolocation.stop();
+         if(resume && this.user){
+           console.log('res start');
+           this.backgroundGeolocation.stop();
+         }
        });
 	    }
-      else{
-          //turn off subscribe
-        if(this.platform.resume)
-          this.platform.resume.unsubscribe();
-        if(this.platform.pause)
-          this.platform.pause.unsubscribe();
+      else
+      {
         if(this.watch)
           this.watch.unsubscribe();
+        if(this.backgroundGeolocation)
+          this.backgroundGeolocation.stop();
         firebase.database().ref('user_location').child(firebase.auth().currentUser.uid).remove();
       }
     });
@@ -494,7 +506,7 @@ export class PlsdalaProvider {
       message: message,
       title: title,
       isDisplayed: false
-    })
+    });
   }
  
  // locationStateHandler(){

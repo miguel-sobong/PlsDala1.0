@@ -34,11 +34,11 @@
             </ion-card-header>
             <ion-card-content>
               <p text-center>{{transaction.itemDescription}}</p>
-              <p (tap)="viewProfile(transaction.senderId)">sent by: {{transaction.senderName}}</p>
-              <p (tap)="viewProfile(transaction.courierId)">via {{transaction.courierName}}</p>
-              <p (tap)="viewProfile(transaction.receiverId)">sent to: {{transaction.receiverName}}</p>
-              <p>from: {{transaction.fromAddress}}</p>
-              <p>to: {{transaction.toAddress}}</p>
+              <p (tap)="viewProfile(transaction.senderId)"><b>Sent by:</b> {{transaction.senderName}}</p>
+              <p (tap)="viewProfile(transaction.courierId)"><b>Via</b> {{transaction.courierName}}</p>
+              <p (tap)="viewProfile(transaction.receiverId)"><b>Sent to:</b> {{transaction.receiverName}}</p>
+              <p><b>From:</b> {{transaction.fromAddress}}</p>
+              <p><b>To:</b> {{transaction.toAddress}}</p>
               <ion-grid>
                 <ion-row>
                   <ion-col col-4 *ngFor="let img of transaction.images">
@@ -65,11 +65,11 @@
             </ion-card-header>
             <ion-card-content>
               <p text-center>{{transaction.itemDescription}}</p>
-              <p (tap)="viewProfile(transaction.senderId)">sent by: {{transaction.senderName}}</p>
-              <p (tap)="viewProfile(transaction.courierId)">via {{transaction.courierName}}</p>
-              <p (tap)="viewProfile(transaction.receiverId)">sent to: {{transaction.receiverName}}</p>
-              <p>from: {{transaction.fromAddress}}</p>
-              <p>to: {{transaction.toAddress}}</p>
+              <p (tap)="viewProfile(transaction.senderId)"><b>Sent by:</b> {{transaction.senderName}}</p>
+              <p (tap)="viewProfile(transaction.courierId)"><b>Via</b> {{transaction.courierName}}</p>
+              <p (tap)="viewProfile(transaction.receiverId)"><b>Sent to:</b> {{transaction.receiverName}}</p>
+              <p><b>From:</b> {{transaction.fromAddress}}</p>
+              <p><b>To:</b> {{transaction.toAddress}}</p>
               <ion-grid>
                 <ion-row>
                   <ion-col col-4 *ngFor="let img of transaction.images" class="imagecontainer">
@@ -98,11 +98,11 @@
             </ion-card-header>
             <ion-card-content>
               <p text-center>{{transaction.itemDescription}}</p>
-              <p (tap)="viewProfile(transaction.senderId)">sent by: {{transaction.senderName}}</p>
-              <p (tap)="viewProfile(transaction.courierId)">via {{transaction.courierName}}</p>
-              <p (tap)="viewProfile(transaction.receiverId)">sent to: {{transaction.receiverName}}</p>
-              <p>from: {{transaction.fromAddress}}</p>
-              <p>to: {{transaction.toAddress}}</p>
+              <p (tap)="viewProfile(transaction.senderId)"><b>Sent by:</b> {{transaction.senderName}}</p>
+              <p (tap)="viewProfile(transaction.courierId)"><b>Via</b> {{transaction.courierName}}</p>
+              <p (tap)="viewProfile(transaction.receiverId)"><b>Sent to:</b> {{transaction.receiverName}}</p>
+              <p><b>From:</b> {{transaction.fromAddress}}</p>
+              <p><b>To:</b> {{transaction.toAddress}}</p>
               <ion-grid>
                 <ion-row>
                   <ion-col col-4 *ngFor="let img of transaction.images">
