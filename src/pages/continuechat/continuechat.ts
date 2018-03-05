@@ -46,9 +46,10 @@ export class ContinuechatPage {
   {
 	  if(this.newmessage)
     {
+      var message = this.newmessage;
 	  	const newMessage = this.afd.list('messages/' + this.selectedItem['key']).push({});
 	  	newMessage.set({
-	  		content: this.newmessage,
+	  		content: message,
 	  		senderId: this.user.key,
         senderName: `${this.user.val().firstname} ${this.user.val().lastname} (${this.username})`,
 	  		timestamp: firebase.database.ServerValue.TIMESTAMP
@@ -57,9 +58,9 @@ export class ContinuechatPage {
       check.once('value', snapshot=>{
         snapshot.forEach(snap=>{
           if(snap.key != firebase.auth().currentUser.uid)
-            this.plsdala.sendNotifs(snap.key, 'New Message', `${this.user.val().firstname} ${this.user.val().lastname} (${this.user.val().username}): ${this.newmessage}`);
+            this.plsdala.sendNotifs(snap.key, 'New Message', `${this.user.val().firstname} ${this.user.val().lastname} (${this.user.val().username}): ${message}`);
           firebase.database().ref().child('threads/').child(snap.key).child(this.selectedItem['key']).update({
-            lastMessage: this.user.val().firstname + ' ' + this.user.val().lastname + ': ' + this.newmessage,
+            lastMessage: this.user.val().firstname + ' ' + this.user.val().lastname + ': ' + message,
             seen: false,
             timestamp: firebase.database.ServerValue.TIMESTAMP
           }).then(_=>{
@@ -70,8 +71,8 @@ export class ContinuechatPage {
           });
           return false;
         })
-      this.newmessage = '';
       });
+      this.newmessage = '';
       this.content.scrollToBottom();
 	  }
   }

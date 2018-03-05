@@ -148,7 +148,6 @@ export class TransactionsPage {
       message: "<b>By clicking '<i>Yes</i>', you are agreeing that PlsDala will not be liable if the item you are delivering is illegal</b>",
       buttons: [{
         text: "Yes",
-        role: 'cancel',
         handler: ()=>{
           firebase.database().ref('transactions').child('ongoing').child(transaction.key).update({
             itemAt: transaction.courierId
@@ -188,9 +187,9 @@ export class TransactionsPage {
         this.alert.create({
           title: 'Your phone location is turned off',
           message: 'Turning on your location will help the other users you are in transaction with to track you',
-          buttons: [{
+          buttons: 
+          [{
             text: 'Turn on location',
-            role: 'cancel',
             handler: ()=>this.diagnostic.switchToLocationSettings()
             },
             {

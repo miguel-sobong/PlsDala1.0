@@ -62,8 +62,9 @@ export class ChatPage {
 
   addMessage(){
     if(this.newmessage){
+      var message = this.newmessage;
       var details = {
-        content: this.newmessage,
+        content: message,
         receiverFirstname: this.user.firstname,
         senderName: `${this.username}`,
         receiverLastname: this.user.lastname
@@ -73,9 +74,9 @@ export class ChatPage {
         receiverId: this.user.userId,
       };
       this.plsdala.addMessage(details, users);
-      this.plsdala.sendNotifs(this.user.userId, 'New Message', `${this.username}: ${this.newmessage}`);
-      this.content.scrollToBottom();
+      this.plsdala.sendNotifs(this.user.userId, 'New Message', `${this.username}: ${message}`);
       this.newmessage = '';
+      this.content.scrollToBottom();
     }
   }
 
@@ -90,7 +91,8 @@ export class ChatPage {
       this.navCtrl.push(ViewprofilePage, {item: key});
   }
 
-    Accept(item){
+  Accept(item)
+  {
     var usersWithReceiver = {
       user1: item.courierId,
       user2: item.senderId,
@@ -99,9 +101,8 @@ export class ChatPage {
     var senderName;
     firebase.database().ref('users').child(item.senderId).once("value", snapshot=>{
       senderName = `${snapshot.val().firstname} ${snapshot.val().lastname} (${snapshot.val().username})`; 
-    })
+    });
     this.plsdala.addReceiverInChat(usersWithReceiver).then(key=>{
-      console.log(key, item.key);
       this.plsdala.getUsersInThree(usersWithReceiver, key);
       firebase.database().ref('messages/' + this.key).child(item.key).update({
         isAccepted: true

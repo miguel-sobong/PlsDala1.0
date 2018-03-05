@@ -23,14 +23,14 @@ export class ProfilePage {
   reviewList$: Observable<any>;
   ListOfitems: Array<any>;
   userRating: any;
+  userNode: any;
 
   constructor(public actionSheetCtrl: ActionSheetController, public camera: Camera, 
   	public toastCtrl: ToastController , public plsdala: PlsdalaProvider, 
   	public navCtrl: NavController, public navParams: NavParams) {
   	this.currentUser = firebase.auth().currentUser.uid;
-    firebase.database().ref('users/')
-    .child(firebase.auth().currentUser.uid)
-    .once('value', user => {
+    this.userNode = firebase.database().ref('users/').child(firebase.auth().currentUser.uid);
+    this.userNode.on('value', user => {
     	console.log(user.val());
     	this.profileName = user.val().firstname + ' ' + user.val().lastname;
     	this.profileUsername = user.val().username;
@@ -63,6 +63,10 @@ export class ProfilePage {
       }
       console.log(this.ListOfitems);
     })
+  }
+
+  ionViewDidLeave(){
+    this.userNode.off();
   }
 
   Round(number){

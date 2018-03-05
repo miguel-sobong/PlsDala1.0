@@ -25,6 +25,7 @@ export class PlsdalaProvider {
   resumeNode;
   locationOnNotifs;
   locationOffNotifs;
+  locationStateHandlerNode;
 
   constructor(public diagnostic: Diagnostic, public alert: AlertController, public platform: Platform, 
     public backgroundGeolocation: BackgroundGeolocation, public afAuth: AngularFireAuth, 
@@ -40,7 +41,6 @@ export class PlsdalaProvider {
           this.locationOnNotifs = false;
           this.locationOffNotifs = false;
          this.watchUserLocation();
-         this.locationStateHandler();
         });
       }
       else
@@ -50,6 +50,8 @@ export class PlsdalaProvider {
           this.resumeNode.off();
         if(this.backgroundGeolocation)
           this.backgroundGeolocation.stop();
+        if(this.locationStateHandlerNode)
+          clearTimeout(this.locationStateHandlerNode);
       }
     });
     this.travelList = this.afd.list('travels');
@@ -108,6 +110,7 @@ export class PlsdalaProvider {
            this.backgroundGeolocation.stop();
          }
        });
+         this.locationStateHandler();
       }
       else
       {
@@ -405,7 +408,7 @@ export class PlsdalaProvider {
             [users.user1]: true,
             [users.user2]: true,
             [users.user3]: true,
-          })
+          });
           resolve(threadUsers.key);
          }
          else{
@@ -512,68 +515,77 @@ export class PlsdalaProvider {
     firebase.database().ref('user_notifications').child(uid).push({
       message: message,
       title: title,
-      isDisplayed: false
+      isDisplayed: false,
+      timestamp: firebase.database.ServerValue.TIMESTAMP
     });
   }
  
  locationStateHandler(){
-   setTimeout(()=>{
-     this.diagnostic.isLocationEnabled().then(enabled=>{
-       if(enabled)
-       {
-         if(!this.locationOnNotifs)
+   firebase.database().ref('users').child(firebase.auth().currentUser.uid).child('isTrackable').on('value', snapshot=>{
+     if(snapshot.val()){
+       this.diagnostic.isLocationEnabled().then(enabled=>{
+         if(enabled)
          {
-           firebase.database().ref('transactions').child('ongoing').once('value', snapshot=>{
-             snapshot.forEach(snap=>{
-               if(snap.val().courierId == firebase.auth().currentUser.uid && snap.val().travelstarted){
-                 var title = `The courier has his location on`;
-                 var message = `Your tracking of ${this.user.val().firstname} ${this.user.val().lastname} (${this.user.val().username}) will be more accurate`;
-                this.sendNotifs(snap.val().senderId, title, message);
-                this.sendNotifs(snap.val().receiverId, title, message);
-               }
-               return false;
-             })
-           });
+           if(!this.locationOnNotifs)
+           {
+             firebase.database().ref('transactions').child('ongoing').once('value', snapshot=>{
+               snapshot.forEach(snap=>{
+                 if(snap.val().courierId == firebase.auth().currentUser.uid && snap.val().travelstarted){
+                   var title = `The courier has his location on`;
+                   var message = `Tracking of ${this.user.val().firstname} ${this.user.val().lastname} (${this.user.val().username}) will be more accurate`;
+                  this.sendNotifs(snap.val().senderId, title, message);
+                  this.sendNotifs(snap.val().receiverId, title, message);
+                 }
+                 return false;
+               })
+             });
+             this.alert.create({
+               title: `Your phone's location is turned on`,
+               message: 'Keeping it on will help other users in your transaction',
+               buttons: [{
+                 text: 'Ok',
+                 role: 'cancel'
+               }]
+             }).present();
+             this.locationOnNotifs = true;
+             this.locationOffNotifs = false;
+           }
+         }
+         else
+         {
+           if(!this.locationOffNotifs){
+             firebase.database().ref('transactions').child('ongoing').once('value', snapshot=>{
+               snapshot.forEach(snap=>{
+                 if(snap.val().travelstarted){
+                   var title = `The courier has his location off`;
+                   var message = `Tracking of ${this.user.val().firstname} ${this.user.val().lastname} (${this.user.val().username}) may not be accurate`;
+                  this.sendNotifs(snap.val().senderId, title, message);
+                  this.sendNotifs(snap.val().receiverId, title, message);
+                 }
+                 return false;
+               })
+             });
+             this.locationOffNotifs = true;
+             this.locationOnNotifs = false;
+           }
            this.alert.create({
-             title: 'Your location is turned on',
-             message: '',
+             title: `Your phone's location is hard to detect`,
+             message: `You can connect to the internet or turn on your GPS`,
              buttons: [{
                text: 'Ok',
                role: 'cancel'
              }]
            }).present();
-           this.locationOnNotifs = true;
-           this.locationOffNotifs = false;
          }
+         this.locationStateHandlerNode = setTimeout(()=>{
+           this.locationStateHandler();
+         }, 30 * 60000);
+       });
+     }else{
+       if(this.locationStateHandler){
+          clearTimeout(this.locationStateHandlerNode);
        }
-       else
-       {
-         if(!this.locationOffNotifs){
-           firebase.database().ref('transactions').child('ongoing').once('value', snapshot=>{
-             snapshot.forEach(snap=>{
-               if(snap.val().courierId = firebase.auth().currentUser.uid && snap.val().travelstarted){
-                 var title = `The courier has his location off`;
-                 var message = `Your tracking of ${this.user.val().firstname} ${this.user.val().lastname} (${this.user.val().username}) will be less accurate`;
-                this.sendNotifs(snap.val().senderId, title, message);
-                this.sendNotifs(snap.val().receiverId, title, message);
-               }
-               return false;
-             })
-           });
-           this.locationOffNotifs = true;
-           this.locationOnNotifs = false;
-         }
-         this.alert.create({
-           title: 'Your location is turned off',
-           message: '',
-           buttons: [{
-             text: 'Ok',
-             role: 'cancel'
-           }]
-         }).present();
-       }
-     this.locationStateHandler();
-     });
-   }, 5 * 60000);
- }
+     }
+   });
+   }
 }

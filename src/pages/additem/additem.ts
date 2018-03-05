@@ -167,21 +167,30 @@ export class AdditemPage {
             })
           });
         }else{
-          this.toastCtrl.create({
+          this.alertCtrl.create({
             message: 'Please add an item name',
-            duration: 3000
+            buttons: [{
+              text: 'Ok',
+              role: 'cancel'
+            }]
           }).present();
         }
       }else{
-        this.toastCtrl.create({
+        this.alertCtrl.create({
           message: 'Please add a receiver',
-          duration: 3000
+            buttons: [{
+              text: 'Ok',
+              role: 'cancel'
+            }]
         }).present();
       }
     }else{
-      this.toastCtrl.create({
+      this.alertCtrl.create({
         message: 'Please add photos of your item',
-        duration: 3000
+            buttons: [{
+              text: 'Ok',
+              role: 'cancel'
+            }]
       }).present();
     }
   }

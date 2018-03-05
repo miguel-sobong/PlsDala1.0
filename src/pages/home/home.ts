@@ -35,9 +35,6 @@ export class HomePage
     this.currentUserId = firebase.auth().currentUser.uid;
     this.initializeItems();
     this.checkVerification();
-    // this.diagnostic.registerLocationStateChangeHandler(data=>{
-    //   console.log('data: ' + data);
-    // });
   }
 
   addTravel(event){

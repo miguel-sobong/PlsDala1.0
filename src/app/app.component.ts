@@ -14,6 +14,7 @@ import { TransactionhistoryPage } from '../pages/transactionhistory/transactionh
 import { TermsandconditionPage } from '../pages/termsandcondition/termsandcondition';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 import { AuthenticationProvider } from '../providers/authentication/authentication';
+import { DatePipe } from '@angular/common';
 
 @Component({
   templateUrl: 'app.html'
@@ -37,7 +38,7 @@ export class MyApp {
   notifsNode;
   splash = true;
 
-  constructor(public loadingCtrl: LoadingController, public afAuth: AngularFireAuth, public toastController: ToastController, 
+  constructor(public datePipe: DatePipe, public loadingCtrl: LoadingController, public afAuth: AngularFireAuth, public toastController: ToastController, 
     public alert: AlertController, public authenticationProvider: AuthenticationProvider, public events: Events, public platform: Platform,
    public statusBar: StatusBar, public splashScreen: SplashScreen, public localNotifs: LocalNotifications) {
     this.initializeApp();
@@ -158,16 +159,17 @@ export class MyApp {
     //this.verificationNode.off();
    });
 
-    this.notifsNode = firebase.database().ref('user_notifications').child(uid);
+    this.notifsNode = firebase.database().ref('user_notifications').child(uid).orderByChild('timestamp');
     this.notifsNode.on("child_added", notifs=>{
       if(notifs.child('isDisplayed').val() == false){
+        var timestamp = this.datePipe.transform(notifs.val().timestamp, 'shortDate') + ' ' + this.datePipe.transform(notifs.val().timestamp, 'shortTime');
         firebase.database().ref('user_notifications').child(firebase.auth().currentUser.uid).child(notifs.key).update({
           isDisplayed: true
         }).then(()=>{
           this.localNotifs.schedule({
             id: Math.round(Math.random() * 10000), 
             title:notifs.val().title,
-            text:notifs.val().message
+            text:notifs.val().message + '\n\n' + timestamp
           })
         })
       }
