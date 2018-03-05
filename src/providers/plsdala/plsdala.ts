@@ -176,6 +176,7 @@ export class PlsdalaProvider {
         }
         snapshot.forEach(snap=>{
           snap.forEach(snap2=>{
+            dbUserCount++;
             for(let user in users){
               if(threadId){
                 break;
@@ -183,7 +184,7 @@ export class PlsdalaProvider {
               if(snap2.key == users[user]){
                 finalCheck++;
                 console.log(finalCheck);
-                if(finalCheck == clUserCount){
+                if(finalCheck == clUserCount && finalCheck == dbUserCount){
                   console.log('yay');
                   threadId = snap.key;
                   resolve(threadId);
@@ -192,10 +193,10 @@ export class PlsdalaProvider {
                 break;
               }
             }
-            dbUserCount++;
             return false;
           })
           finalCheck=0;
+            dbUserCount=0;
           return false;
         })
         resolve(null);
