@@ -572,9 +572,14 @@ export class PlsdalaProvider {
            this.alert.create({
              title: `Your phone's location is hard to detect`,
              message: `You can connect to the internet or turn on your GPS`,
-             buttons: [{
-               text: 'Ok',
-               role: 'cancel'
+             buttons: 
+             [{
+              text: 'Turn on location',
+              handler: ()=>this.diagnostic.switchToLocationSettings()
+              },
+              {
+              text: 'Ok',
+              role: 'cancel'
              }]
            }).present();
          }

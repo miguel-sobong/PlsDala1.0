@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, ActionSheetController, ToastController, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, ActionSheetController, ToastController, ModalController, LoadingController } from 'ionic-angular';
 import { Camera, CameraOptions } from "@ionic-native/camera";
 import { ChatPage } from '../chat/chat';
 import { ChoosereceiverPage } from '../choosereceiver/choosereceiver';
@@ -33,7 +33,7 @@ export class AdditemPage {
 
   constructor(public modalCtrl: ModalController, public toastCtrl: ToastController, public camera: Camera, 
     public navCtrl: NavController, public navParams: NavParams, public actionSheetCtrl: ActionSheetController,
-    public alertCtrl: AlertController, public plsdala: PlsdalaProvider) {
+    public alertCtrl: AlertController, public plsdala: PlsdalaProvider, public loading: LoadingController) {
     firebase.database().ref('users').child(firebase.auth().currentUser.uid).once("value", snapshot=>{
       this.username = `${snapshot.val().firstname} ${snapshot.val().lastname} (${snapshot.val().username})`;
     });
@@ -146,10 +146,7 @@ export class AdditemPage {
             name: this.ItemName, 
             description: this.ItemDescription
           };
-          this.navCtrl.pop();
-          this.navCtrl.push(ChatPage,{
-            item: this.selectedItem
-          }).then(_=>{
+          // .then(_=>{
             this.toastCtrl.create({
               message: 'Adding item',
               duration: 3000
@@ -164,8 +161,12 @@ export class AdditemPage {
               };
             }).then(()=>{
               this.plsdala.sendNotifs(this.selectedItem['userId'], 'Delivery Request', `${this.username} has requested to send an item`); 
+              this.navCtrl.pop();
+              this.navCtrl.push(ChatPage,{
+                item: this.selectedItem
+              });
             })
-          });
+          // });
         }else{
           this.alertCtrl.create({
             message: 'Please add an item name',
