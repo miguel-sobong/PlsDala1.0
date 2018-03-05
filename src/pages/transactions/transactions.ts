@@ -211,7 +211,5 @@ export class TransactionsPage {
        }
      })
     });
-    
-    // this.plsdala.locationStateHandler(transaction.travelkey);
   }
 }

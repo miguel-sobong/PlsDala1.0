@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ToastController, Platform } from 'ionic-angular';
+import { ToastController, Platform, AlertController } from 'ionic-angular';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 // import { Observable } from 'rxjs/Observable';
 import { Http } from '@angular/http';
@@ -26,7 +26,7 @@ export class PlsdalaProvider {
   locationOnNotifs;
   locationOffNotifs;
 
-  constructor(public diagnostic: Diagnostic, public platform: Platform, 
+  constructor(public diagnostic: Diagnostic, public alert: AlertController, public platform: Platform, 
     public backgroundGeolocation: BackgroundGeolocation, public afAuth: AngularFireAuth, 
     private geo: Geolocation, public toastCtrl: ToastController, public afd: AngularFireDatabase, 
     public http: Http) {
@@ -37,7 +37,10 @@ export class PlsdalaProvider {
           this.user = user;
           console.log(`${user.val().firstname} ${user.val().lastname} `)
         }).then(()=>{
+          this.locationOnNotifs = false;
+          this.locationOffNotifs = false;
          this.watchUserLocation();
+         this.locationStateHandler();
         });
       }
       else
@@ -73,24 +76,24 @@ export class PlsdalaProvider {
 
   watchUserLocation(){
     const watchOptions = {
-    	enableHighAccurary: true,
-    	timeout: 1250,
+      enableHighAccurary: true,
+      timeout: 1250,
       maximumAge: 0
     }
 
     this.resumeNode = firebase.database().ref('users').child(firebase.auth().currentUser.uid).child('isTrackable');
     this.resumeNode.on("value", snap=>{
-    	if(snap.val())
-    	{
-			  this.watch = this.geo.watchPosition(watchOptions).subscribe(pos => {
+      if(snap.val())
+      {
+        this.watch = this.geo.watchPosition(watchOptions).subscribe(pos => {
           console.log(pos.coords);
-			  	if(pos.coords != undefined){
-			  		firebase.database().ref("user_location").child(firebase.auth().currentUser.uid).update({
-			  			lat: pos.coords.latitude,
-			  			long: pos.coords.longitude
-			  		});
-			  	}
-			  });
+          if(pos.coords != undefined){
+            firebase.database().ref("user_location").child(firebase.auth().currentUser.uid).update({
+              lat: pos.coords.latitude,
+              long: pos.coords.longitude
+            });
+          }
+        });
 
        this.platform.pause.subscribe(pause=>{
          if(pause && this.user){
@@ -105,7 +108,7 @@ export class PlsdalaProvider {
            this.backgroundGeolocation.stop();
          }
        });
-	    }
+      }
       else
       {
         if(this.watch)
@@ -513,30 +516,64 @@ export class PlsdalaProvider {
     });
   }
  
- // locationStateHandler(transactionKey){
- //   setTimeout(()=>{
- //     this.diagnostic.isLocationEnabled().then(data=>{
- //       if(data){
- //        firebase.database().ref('transactions').child('ongoing').once("value", snapshot=>{
- //          snapshot.forEach(snap=>{
- //            if(snap.val().travelkey == transactionKey){
- //              firebase.database().ref('transactions').child('ongoing').child(snap.key).update({
- //                travelstarted: true
- //              });
- //            this.sendNotifs(snap.val().senderId, '${this.user.val().firstname} ${this.user.val().lastname} (${this.user.val().username}) has turned on his location', `Your tracking will now be more accurate`);
- //            this.sendNotifs(snap.val().receiverId, '${this.user.val().firstname} ${this.user.val().lastname} (${this.user.val().username}) has turned on his location', `Your tracking will now be more accurate`);
- //            }
- //            return false;
- //          })
- //        });
- //       }
- //       else{
- //         console.log('disabled');
- //       }
- //     });
-
- //     this.locationStateHandler(transactionKey);
- //   }, 10000);
-
- // }
+ locationStateHandler(){
+   setTimeout(()=>{
+     this.diagnostic.isLocationEnabled().then(enabled=>{
+       if(enabled)
+       {
+         if(!this.locationOnNotifs)
+         {
+           firebase.database().ref('transactions').child('ongoing').once('value', snapshot=>{
+             snapshot.forEach(snap=>{
+               if(snap.val().courierId == firebase.auth().currentUser.uid && snap.val().travelstarted){
+                 var title = `The courier has his location on`;
+                 var message = `Your tracking of ${this.user.val().firstname} ${this.user.val().lastname} (${this.user.val().username}) will be more accurate`;
+                this.sendNotifs(snap.val().senderId, title, message);
+                this.sendNotifs(snap.val().receiverId, title, message);
+               }
+               return false;
+             })
+           });
+           this.alert.create({
+             title: 'Your location is turned on',
+             message: '',
+             buttons: [{
+               text: 'Ok',
+               role: 'cancel'
+             }]
+           }).present();
+           this.locationOnNotifs = true;
+           this.locationOffNotifs = false;
+         }
+       }
+       else
+       {
+         if(!this.locationOffNotifs){
+           firebase.database().ref('transactions').child('ongoing').once('value', snapshot=>{
+             snapshot.forEach(snap=>{
+               if(snap.val().courierId = firebase.auth().currentUser.uid && snap.val().travelstarted){
+                 var title = `The courier has his location off`;
+                 var message = `Your tracking of ${this.user.val().firstname} ${this.user.val().lastname} (${this.user.val().username}) will be less accurate`;
+                this.sendNotifs(snap.val().senderId, title, message);
+                this.sendNotifs(snap.val().receiverId, title, message);
+               }
+               return false;
+             })
+           });
+           this.locationOffNotifs = true;
+           this.locationOnNotifs = false;
+         }
+         this.alert.create({
+           title: 'Your location is turned off',
+           message: '',
+           buttons: [{
+             text: 'Ok',
+             role: 'cancel'
+           }]
+         }).present();
+       }
+     this.locationStateHandler();
+     });
+   }, 5 * 60000);
+ }
 }
