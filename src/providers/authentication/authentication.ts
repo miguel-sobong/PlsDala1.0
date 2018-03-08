@@ -51,7 +51,7 @@ export class AuthenticationProvider {
     })
   }
 
-  checkUsernameAndEmail(username, email){
+  checkUsernameAndEmail(username, email, fname, lname, bday){
     return new Promise(resolve=>{
       firebase.database().ref('users').once("value", snapshot=>{
         if(snapshot.val())
@@ -63,6 +63,11 @@ export class AuthenticationProvider {
             }
             else if(username == user.val().username){
               resolve("username-fail");
+              return true;
+            }
+            else if(this.toTitleCase(fname) == user.val().firstname && this.toTitleCase(lname) == user.val().lastname && bday == user.val().birthdate)
+            {
+              resolve('repeating-values');
               return true;
             }
             resolve(true)

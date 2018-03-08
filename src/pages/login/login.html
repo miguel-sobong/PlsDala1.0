@@ -28,8 +28,8 @@
       </div>
     </form>
     <div>
-      <p class="brand">No account yet? <a (tap)="goToRegister()" class="brand">Register here!</a></p>
-      <p class="brand">Forgot password? <a (tap)="forgotPassword()" class="brand">Recover my account!</a></p>
+      <p class="brand" (tap)="goToRegister()">No account yet? <a>Register here!</a></p>
+      <p class="brand" (tap)="forgotPassword()">Forgot password? <a>Reset my password!</a></p>
     </div>
     <div *ngIf="forgotBool" class="forgotPassword">
       <form>

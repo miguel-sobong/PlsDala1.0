@@ -160,7 +160,10 @@ export class AdditemPage {
                 this.plsdala.uploadItemPhoto(this.picdata[i], i, this.selectedItem['key'], keyData);
               };
             }).then(()=>{
-              this.plsdala.sendNotifs(this.selectedItem['userId'], 'Delivery Request', `${this.username} has requested to send an item`); 
+              this.plsdala.sendNotifs(this.selectedItem['userId'], 'Delivery Request', `${this.username} has requested to send an item`);
+              firebase.database().ref('users').child(this.selectedItem['userId']).child('email').once('value', user=>{
+                this.plsdala.sendEmail(user.val(), `New Delivery Request`, `${this.username} requested to send an item`);
+              });
               this.navCtrl.pop();
               this.navCtrl.push(ChatPage,{
                 item: this.selectedItem

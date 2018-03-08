@@ -121,6 +121,9 @@ export class TransactionsPage {
       }
     }).then(()=>{
       this.plsdala.sendNotifs(transaction.senderId, 'Delivery Successful', `${transaction.receiverName} has successfully received the item`);
+      firebase.database().ref('users').child(transaction.senderId).child('email').once('value', user=>{
+        this.plsdala.sendEmail(user.val(), `Delivery Successful`, `${transaction.receiverName} has successfully received the item`);
+      });
       firebase.database().ref('transactions').child('ongoing').child(transaction.key).remove();
       firebase.database().ref('users').child(transaction.courierId).once("value", snapshot=>{
         if(snapshot.val().totaltransaction == 1){
@@ -154,6 +157,9 @@ export class TransactionsPage {
           });
 
           this.plsdala.sendNotifs(transaction.receiverId, 'Item Delivery', `The courier, ${transaction.courierName} has the item now`);
+          firebase.database().ref('users').child(transaction.receiverId).child('email').once('value', user=>{
+            this.plsdala.sendEmail(user.val(), `Item Delivery`, `The courier, ${transaction.courierName} has the item now`);
+          });
         }
       },
       {

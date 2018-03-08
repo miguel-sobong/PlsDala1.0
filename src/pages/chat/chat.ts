@@ -131,6 +131,12 @@ export class ChatPage {
       })
       .then(()=>{
         this.plsdala.addTransaction(item, senderName);
+        firebase.database().ref('users').child(item.senderId).child('email').once('value', user=>{
+          this.plsdala.sendEmail(user.val(), `Accepted Delivery Request`, `${this.username} has accepted the delivery request.`);
+        });
+        firebase.database().ref('users').child(item.receiverId).child('email').once('value', user=>{
+          this.plsdala.sendEmail(user.val(), `Someone sent you an item`, `${item.receiverName} has sent you an item via ${this.username}`);
+        });
       });
     })
   }

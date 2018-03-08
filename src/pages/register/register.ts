@@ -49,7 +49,8 @@ export class RegisterPage {
         if(this.registerForm.valid && this.registerForm.value.password1 == this.registerForm.value.password2)
         {
           this.registerForm.value.username = this.registerForm.value.username.toLowerCase();
-          this.authenticationProvider.checkUsernameAndEmail(this.registerForm.value.username, this.registerForm.value.email).then(fail=>{
+          this.authenticationProvider.checkUsernameAndEmail(this.registerForm.value.username, this.registerForm.value.email, 
+            this.registerForm.value.firstname, this.registerForm.value.lastname, this.registerForm.value.birthdate).then(fail=>{
             loader.dismiss();
             if(fail == "email-fail"){
                this.alertController.create({
@@ -68,6 +69,15 @@ export class RegisterPage {
                  role: 'cancel',
                }]
              }).present();
+            }
+            else if(fail == 'repeating-values'){
+              this.alertController.create({
+                message: `User ${this.registerForm.value.firstname} ${this.registerForm.value.lastname} with a birthday of ${this.registerForm.value.birthdate} is already registered in our system.`,
+                buttons: [{
+                  text: "Ok",
+                  role: 'cancel',
+                }]
+              }).present();
             }
             else{
               this.authenticationProvider.registerUser(this.registerForm.value)

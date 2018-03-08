@@ -24,6 +24,9 @@ export class ProfilePage {
   ListOfitems: Array<any>;
   userRating: any;
   userNode: any;
+  changePassword: any;
+  password1: any;
+  password2: any;
 
   constructor(public actionSheetCtrl: ActionSheetController, public camera: Camera, 
   	public toastCtrl: ToastController , public plsdala: PlsdalaProvider, 
@@ -71,6 +74,21 @@ export class ProfilePage {
 
   Round(number){
     return Math.round(number);
+  }
+
+  ChangePassword(){
+    this.changePassword = !this.changePassword;
+  }
+
+  submitChangePass(){
+    // if(this.password1 == this.password2){
+    //   firebase.auth().currentUser.updatePassword(this.password1).then(res=>{
+    //     this.toastCtrl.create({
+    //       message: 'Password successfully changed',
+    //       duration: 3000
+    //     }).present();
+    //   })
+    // }
   }
 
   presentActionSheet() {

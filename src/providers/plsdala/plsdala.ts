@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import { ToastController, Platform, AlertController } from 'ionic-angular';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 // import { Observable } from 'rxjs/Observable';
-import { Http } from '@angular/http';
+import { Http, Headers, Response, URLSearchParams, RequestOptions} from '@angular/http';
 import firebase from 'firebase';
 import { Geolocation } from '@ionic-native/geolocation';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
 import { Diagnostic } from '@ionic-native/diagnostic';
+import { HttpClient , HttpHeaders } from "@angular/common/http";
+
 @Injectable()
 export class PlsdalaProvider {
 
@@ -40,7 +42,7 @@ export class PlsdalaProvider {
         }).then(()=>{
           this.locationOnNotifs = false;
           this.locationOffNotifs = false;
-         this.watchUserLocation();
+         this.watchUserLocation(); 
         });
       }
       else
@@ -55,6 +57,27 @@ export class PlsdalaProvider {
       }
     });
     this.travelList = this.afd.list('travels');
+  }
+
+ sendEmail(to, subject, content) {
+    let url = `https://us-central1-plsdala-8609a.cloudfunctions.net/httpEmail`;
+    let params: URLSearchParams = new URLSearchParams();
+    let headers = new Headers({'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    let options = new RequestOptions({params});
+
+    params.set('to', to);
+    params.set('from', 'noreply@migueltsobong7.github.io');
+    params.set('subject', subject);
+    params.set('content', content + '<br><br>-PlsDala team &hearts;<br><br><b>This is an automated message, please do not reply to this email.</b>');
+
+    return this.http.post(url, params, options)
+                    .toPromise()
+                    .then( res => {
+                      console.log(res)
+                    })
+                    .catch(err => {
+                      console.log(err)
+                    })
   }
 
   backgroundGeo(){

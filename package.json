@@ -76,8 +76,8 @@
       "cordova.plugins.diagnostic": {}
     },
     "platforms": [
-      "android",
-      "ios"
+      "ios",
+      "android"
     ]
   }
 }

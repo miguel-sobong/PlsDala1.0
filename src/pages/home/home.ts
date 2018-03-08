@@ -35,6 +35,7 @@ export class HomePage
     this.currentUserId = firebase.auth().currentUser.uid;
     this.initializeItems();
     this.checkVerification();
+
   }
 
   addTravel(event){

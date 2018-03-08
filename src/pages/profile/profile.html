@@ -21,6 +21,8 @@
   <p class="description" *ngIf="profileDescription">{{profileDescription}}</p>
   <button ion-button (tap)="EditProfile()" *ngIf="!profileDescription">Add Description</button>
   <button ion-button (tap)="EditProfile()" *ngIf="profileDescription">Edit Description</button>
+  <button ion-button (tap)="ChangePassword()">Change Password</button>
+
   <div *ngIf="editProfile" class="editProfile">
     <form novalidate>
       <ion-list>
@@ -30,6 +32,23 @@
         </ion-item>
         <div padding>
           <button ion-button color="primary" round block (tap)="submitEdit()">Submit Description</button>
+        </div>
+      </ion-list>
+    </form>
+  </div>
+  <div *ngIf="changePassword" class="editProfile">
+    <form novalidate>
+      <ion-list>
+        <ion-item>
+          <ion-label floating>Password</ion-label>
+          <ion-textarea type="text" name="description" [(ngModel)]="password1"></ion-textarea>
+        </ion-item>
+        <ion-item>
+          <ion-label floating>Password</ion-label>
+          <ion-textarea type="text" name="description" [(ngModel)]="password2"></ion-textarea>
+        </ion-item>
+        <div padding>
+          <button ion-button color="primary" round block (tap)="submitChangePass()">Submit Change Password</button>
         </div>
       </ion-list>
     </form>

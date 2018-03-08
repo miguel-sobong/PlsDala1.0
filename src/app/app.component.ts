@@ -15,7 +15,6 @@ import { TermsandconditionPage } from '../pages/termsandcondition/termsandcondit
 import { LocalNotifications } from '@ionic-native/local-notifications';
 import { AuthenticationProvider } from '../providers/authentication/authentication';
 import { DatePipe } from '@angular/common';
-
 @Component({
   templateUrl: 'app.html'
 })

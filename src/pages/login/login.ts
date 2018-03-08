@@ -67,6 +67,7 @@ export class LoginPage {
                   }]
                 }).present();
               }
+              this.loginForm.reset();
           });
         }, fail=>{
           loader.dismiss();
@@ -78,6 +79,7 @@ export class LoginPage {
               role: 'cancel'
             }]
           }).present();
+          this.loginForm.reset();
         });
       }
     }

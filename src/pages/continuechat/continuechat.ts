@@ -126,6 +126,12 @@ export class ContinuechatPage {
           travelKey: item.travelKey
         });
         this.plsdala.addTransaction(item, senderName);
+        firebase.database().ref('users').child(item.senderId).child('email').once('value', user=>{
+          this.plsdala.sendEmail(user.val(), `Accepted Delivery Request`, `${this.user.val().firstname} ${this.user.val().lastname} (${this.username}) has accepted the delivery request.`);
+        });
+        firebase.database().ref('users').child(item.receiverId).child('email').once('value', user=>{
+          this.plsdala.sendEmail(user.val(), `Someone sent you an item`, `${item.receiverName} has sent you an item via ${this.user.val().firstname} ${this.user.val().lastname} (${this.username})`);
+        });
       })
     })
   }
