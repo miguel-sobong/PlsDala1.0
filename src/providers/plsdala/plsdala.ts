@@ -66,7 +66,7 @@ export class PlsdalaProvider {
     let options = new RequestOptions({params});
 
     params.set('to', to);
-    params.set('from', 'noreply@migueltsobong7.github.io');
+    params.set('from', 'noreply@plsdala.tk');
     params.set('subject', subject);
     params.set('content', content + '<br><br>-PlsDala team &hearts;<br><br><b>This is an automated message, please do not reply to this email.</b>');
 

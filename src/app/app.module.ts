@@ -34,7 +34,6 @@ import { HttpModule } from '@angular/http';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
-import { AngularFirestoreModule } from 'angularfire2/firestore'; 
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -46,7 +45,9 @@ import { Camera } from '@ionic-native/camera';
 import { Geolocation } from '@ionic-native/geolocation';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 import { Diagnostic } from '@ionic-native/diagnostic';
-import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
+import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
+
+import { ResetpasswordPage } from '../pages/resetpassword/resetpassword';
   // Initialize Firebase
   var firebaseConfig = {
     apiKey: "AIzaSyATmp3oSFtqK4gHK2ZQs9-NBrBYcXjvakc",
@@ -84,14 +85,14 @@ import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocati
     HelpfortransactionhistoryPage,
     HelpfortravelPage,
     TrackPage,
-    TermsandconditionPage
+    TermsandconditionPage,
+    ResetpasswordPage
   ],
   imports: [
     BrowserModule,
     AngularFireDatabaseModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireAuthModule,
-    AngularFirestoreModule,
     HttpModule,
     IonicModule.forRoot(MyApp)
   ],
@@ -121,7 +122,8 @@ import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocati
     HelpfortransactionhistoryPage,
     HelpfortravelPage,
     TrackPage,
-    TermsandconditionPage
+    TermsandconditionPage,
+    ResetpasswordPage
   ],
   providers: [
     StatusBar,

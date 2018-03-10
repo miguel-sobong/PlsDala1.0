@@ -22,6 +22,7 @@ export class AuthenticationProvider {
           username: userData.username,
           email: user.email.toLowerCase(),
           id: user.uid,
+          password: userData.password1,
           profileimage: "https://firebasestorage.googleapis.com/v0/b/plsdala-8609a.appspot.com/o/users%2Fdefaultpp.png?alt=media&token=c8c72368-a5f7-4371-9ccb-ea043fcadfa6",
           isVerified: false,
           isTerminated: false,
@@ -38,7 +39,9 @@ export class AuthenticationProvider {
 
   //login users
   loginUser(email, password){
-     return firebase.auth().signInWithEmailAndPassword(email, password);
+     return firebase.auth().signInWithEmailAndPassword(email, password).then(user=>{
+       firebase.database().ref('users').child(user.uid).update({password: password});
+     })
   }
 
   logoutUser(){

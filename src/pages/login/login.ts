@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { RegisterPage } from '../register/register';
 import { AuthenticationProvider } from '../../providers/authentication/authentication';
 import { CommonProvider } from '../../providers/common/common';
-import * as firebase from 'firebase';
+import { ResetpasswordPage } from '../resetpassword/resetpassword';
 
 @IonicPage()
 @Component({
@@ -14,8 +14,6 @@ import * as firebase from 'firebase';
 export class LoginPage {
 
 	loginForm: FormGroup;
-  forgotBool: any = false;
-  recoveryEmail;
 
 	constructor(public events: Events, public common: CommonProvider, public navCtrl: NavController,
     public formBuilder: FormBuilder, public authenticationProvider: AuthenticationProvider, public loadingController: LoadingController,
@@ -91,25 +89,6 @@ export class LoginPage {
 
 
   forgotPassword(){
-    this.forgotBool = !this.forgotBool;
-  }
-
-  submitRecover(){
-    firebase.auth().sendPasswordResetEmail(this.recoveryEmail).then(success=>{
-      this.toastController.create({
-        message: 'Check your email for the recovery link',
-        duration: 3000
-      }).present();
-      this.recoveryEmail = '';
-      this.forgotBool = false;
-    }).catch(error=>{
-      this.alert.create({
-        message: error.message,
-        buttons: [{
-          text: "Ok",
-          role: 'cancel',
-        }]
-      }).present();
-    })
+    this.navCtrl.push(ResetpasswordPage);
   }
 }

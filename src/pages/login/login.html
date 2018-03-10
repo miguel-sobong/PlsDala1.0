@@ -31,18 +31,5 @@
       <p class="brand" (tap)="goToRegister()">No account yet? <a>Register here!</a></p>
       <p class="brand" (tap)="forgotPassword()">Forgot password? <a>Reset my password!</a></p>
     </div>
-    <div *ngIf="forgotBool" class="forgotPassword">
-      <form>
-        <ion-list>
-          <ion-item>
-            <ion-label floating>Email Address</ion-label>
-            <ion-input type="email" name="email" [(ngModel)]="recoveryEmail"></ion-input>
-          </ion-item>
-          <div padding>
-            <button ion-button color="primary" round block (tap)="submitRecover()">Recover</button>
-          </div>
-        </ion-list>
-      </form>
-    </div>
   </div>
 </ion-content>
